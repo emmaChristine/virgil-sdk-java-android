@@ -52,12 +52,12 @@ Use this packages for Java projects.
   <dependency>
     <groupId>com.virgilsecurity.sdk</groupId>
     <artifactId>crypto</artifactId>
-    <version>4.1.0</version>
+    <version>4.1.1</version>
   </dependency>
   <dependency>
     <groupId>com.virgilsecurity.sdk</groupId>
     <artifactId>client</artifactId>
-    <version>4.1.0</version>
+    <version>4.1.1</version>
   </dependency>
 </dependencies>
 ```
@@ -66,7 +66,7 @@ Use this packages for Java projects.
 
 Use this packages for Android projects.
 ```
-compile 'com.virgilsecurity.sdk:android:4.1.0@aar'
+compile 'com.virgilsecurity.sdk:android:4.1.1@aar'
 compile 'com.google.code.gson:gson:2.7'
 compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 ```

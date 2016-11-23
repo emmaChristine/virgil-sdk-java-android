@@ -43,6 +43,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class virgil_crypto_javaJNI {
+	
+	private static final String MACOS_OS_NAME = "mac os";
+	private static final String LINUX_OS_NAME = "linux";
+	private static final String WINDOWS_OS_NAME = "windows";
+	private static final String SEPARATOR = "/";
+
 	public final static native long VirgilVersion_asNumber();
 
 	public final static native String VirgilVersion_asString();
@@ -502,18 +508,18 @@ public class virgil_crypto_javaJNI {
 		String osArch = System.getProperty("os.arch").toLowerCase();
 
 		StringBuilder resourceName = new StringBuilder();
-		for (String os : new String[] { "linux", "windows", "mac os" }) {
+		for (String os : new String[] { LINUX_OS_NAME, WINDOWS_OS_NAME, MACOS_OS_NAME }) {
 			if (osName.startsWith(os)) {
 				resourceName.append(os);
 
-				if ("windows".equals(os)) {
-					resourceName.append(File.separator).append(osArch);
+				if (WINDOWS_OS_NAME.equals(os)) {
+					resourceName.append(SEPARATOR).append(osArch);
 				}
 
 				break;
 			}
 		}
-		resourceName.append(File.separator).append(libraryName);
+		resourceName.append(SEPARATOR).append(libraryName);
 
 		InputStream in = virgil_crypto_javaJNI.class.getClassLoader().getResourceAsStream(resourceName.toString());
 		if (in == null) {
