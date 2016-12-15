@@ -43,7 +43,6 @@ public class ClientTest extends AndroidTestCase {
     private String APP_PRIVATE_KEY_PASSWORD = "{APP_PRIVATE_KEY_PASSWORD}";
     private String APP_PRIVATE_KEY = "{APP_PRIVATE_KEY}";
 
-
     public void testFlow() {
         crypto = new VirgilCrypto();
 

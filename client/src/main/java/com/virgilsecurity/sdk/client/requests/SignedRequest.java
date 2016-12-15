@@ -101,12 +101,12 @@ public abstract class SignedRequest {
 		return Collections.unmodifiableMap(signatures);
 	}
 
-	private SignedRequestModel getRequestModel() {
+	public SignedRequestModel getRequestModel() {
 		SignedRequestMetaModel meta = new SignedRequestMetaModel();
 		meta.setSignatures(this.signatures);
 
 		SignedRequestModel requestModel = new SignedRequestModel();
-		requestModel.setContentSnapshot(this.snapshot);
+		requestModel.setContentSnapshot(getSnapshot());
 		requestModel.setMeta(meta);
 
 		return requestModel;
@@ -117,11 +117,11 @@ public abstract class SignedRequest {
 	 * 
 	 * @return the request model as string.
 	 */
-	public String export() {
+	public String exportRequest() {
 		SignedRequestModel requestModel = this.getRequestModel();
 
 		String json = ConvertionUtils.getGson().toJson(requestModel);
-		return json;
+		return ConvertionUtils.toBase64String(json);
 	}
 
 	/**
@@ -133,11 +133,11 @@ public abstract class SignedRequest {
 	 *            the request class.
 	 * @return the request.
 	 */
-	public static <T extends SignedRequest> SignedRequest importRequest(String exportedRequest, Class<T> clazz) {
+	public static <T extends SignedRequest> T importRequest(String exportedRequest, Class<T> clazz) {
 		String jsonModel = ConvertionUtils.base64ToString(exportedRequest);
 		SignedRequestModel model = ConvertionUtils.getGson().fromJson(jsonModel, SignedRequestModel.class);
 
-		SignedRequest request = null;
+		T request = null;
 		try {
 			request = clazz.newInstance();
 			request.snapshot = model.getContentSnapshot();

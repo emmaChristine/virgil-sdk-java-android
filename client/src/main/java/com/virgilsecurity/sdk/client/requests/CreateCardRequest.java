@@ -54,6 +54,14 @@ public class CreateCardRequest extends SignedRequest {
 	/**
 	 * Create a new instance of {@code CreateCardRequest}
 	 *
+	 */
+	public CreateCardRequest() {
+		// Default constructor
+	}
+
+	/**
+	 * Create a new instance of {@code CreateCardRequest}
+	 *
 	 * @param identity
 	 *            The identity.
 	 * @param identityType
@@ -124,7 +132,8 @@ public class CreateCardRequest extends SignedRequest {
 			this.signatures.putAll(signatures);
 		}
 
-		CreateCardModel details = ConvertionUtils.getGson().fromJson(this.snapshot, CreateCardModel.class);
+		CreateCardModel details = ConvertionUtils.getGson().fromJson(ConvertionUtils.base64ToString(this.snapshot),
+				CreateCardModel.class);
 
 		this.identity = details.getIdentity();
 		this.identityType = details.getIdentityType();
