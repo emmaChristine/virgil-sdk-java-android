@@ -72,7 +72,7 @@ public class CreateCardRequestTest {
 	public void getSnapshot() {
 		String snapshot = request.getSnapshot();
 
-		CreateCardRequest restoredRequest = new CreateCardRequest(null, null, null);
+		CreateCardRequest restoredRequest = new CreateCardRequest();
 		restoredRequest.restoreRequest(snapshot, null);
 
 		assertEquals(request.getIdentity(), restoredRequest.getIdentity());
@@ -83,6 +83,21 @@ public class CreateCardRequestTest {
 		assertEquals(request.getSignatures(), restoredRequest.getSignatures());
 		assertEquals(request.getSnapshot(), restoredRequest.getSnapshot());
 		assertEquals(request.getPublicKey(), restoredRequest.getPublicKey());
+	}
+	
+	@Test
+	public void export_import() {
+		String exportedRequest = request.exportRequest();
+		CreateCardRequest importedRequest = SignedRequest.importRequest(exportedRequest, CreateCardRequest.class);
+		
+		assertEquals(request.getIdentity(), importedRequest.getIdentity());
+		assertEquals(request.getIdentityType(), importedRequest.getIdentityType());
+		assertEquals(request.getData(), importedRequest.getData());
+		assertEquals(request.getInfo().getDevice(), importedRequest.getInfo().getDevice());
+		assertEquals(request.getInfo().getDeviceName(), importedRequest.getInfo().getDeviceName());
+		assertEquals(request.getSignatures(), importedRequest.getSignatures());
+		assertEquals(request.getSnapshot(), importedRequest.getSnapshot());
+		assertEquals(request.getPublicKey(), importedRequest.getPublicKey());
 	}
 
 }

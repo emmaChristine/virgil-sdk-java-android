@@ -191,12 +191,14 @@ public class VirgilClient {
 			HttpPost postRequest = (HttpPost) createRequest(HttpPost.METHOD_NAME);
 			postRequest.setURI(builder.build());
 
-			String body = request.export();
+			String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
 			postRequest.setEntity(new StringEntity(body));
 
 			SignedResponseModel responseModel = execute(postRequest, SignedResponseModel.class);
 			return responseToCard(responseModel);
 
+		} catch (VirgilServiceException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new VirgilCardServiceException(e);
 		}
@@ -224,6 +226,8 @@ public class VirgilClient {
 
 			return card;
 
+		} catch (VirgilServiceException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new VirgilCardServiceException(e);
 		}
@@ -244,7 +248,7 @@ public class VirgilClient {
 			HttpEntityEnclosingRequestBase postRequest = (HttpEntityEnclosingRequestBase) createRequest(
 					HttpDelete.METHOD_NAME);
 			postRequest.setURI(builder.build());
-			postRequest.setEntity(new StringEntity(request.export()));
+			postRequest.setEntity(new StringEntity(ConvertionUtils.getGson().toJson(request.getRequestModel())));
 
 			execute(postRequest, Void.class);
 
@@ -303,6 +307,8 @@ public class VirgilClient {
 
 			return cards;
 
+		} catch (VirgilServiceException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new VirgilCardServiceException(e);
 		}
@@ -392,6 +398,8 @@ public class VirgilClient {
 					return ConvertionUtils.getGson().fromJson(body, clazz);
 				}
 			}
+		} catch (VirgilServiceException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new VirgilCardServiceException(e);
 		}

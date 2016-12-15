@@ -42,7 +42,7 @@ public abstract class VirgilServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = -1143173438484224903L;
 
-	private static final String ERROR_UNKNOWN = "Unknown error";
+	protected static final String ERROR_UNKNOWN = "Unknown error";
 
 	private int errorCode = 0;
 
@@ -109,7 +109,7 @@ public abstract class VirgilServiceException extends RuntimeException {
 			}
 		} catch (MissingResourceException e) {
 		}
-		return ERROR_UNKNOWN;
+		return ERROR_UNKNOWN + ": " + errorCode;
 	}
 
 	/**

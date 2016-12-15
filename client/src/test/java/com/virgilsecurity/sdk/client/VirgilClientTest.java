@@ -122,7 +122,6 @@ public class VirgilClientTest {
 		} catch (VirgilServiceException e) {
 			fail(e.getMessage());
 		}
-
 	}
 
 	@Test(dependsOnMethods = "createCard", priority = 2)
@@ -206,7 +205,7 @@ public class VirgilClientTest {
 		}
 	}
 
-	@Test(dependsOnMethods = "createCard", priority = 4)
+	@Test(dependsOnMethods = "createCard", priority = 4, enabled = false)
 	public void revokeCard() {
 		RevokeCardRequest revokeRequest = new RevokeCardRequest(cardId, RevocationReason.UNSPECIFIED);
 

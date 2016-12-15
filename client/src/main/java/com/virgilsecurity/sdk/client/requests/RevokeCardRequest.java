@@ -56,6 +56,14 @@ public class RevokeCardRequest extends SignedRequest {
 	/**
 	 * Create a new instance of {@code RevokeCardRequest}
 	 *
+	 */
+	public RevokeCardRequest() {
+		// Default constructor
+	}
+
+	/**
+	 * Create a new instance of {@code RevokeCardRequest}
+	 *
 	 * @param cardId
 	 *            the card identifier.
 	 * @param reason
@@ -78,7 +86,8 @@ public class RevokeCardRequest extends SignedRequest {
 		this.snapshot = snapshot;
 		this.signatures = signatures;
 
-		RevokeCardModel details = ConvertionUtils.getGson().fromJson(this.snapshot, RevokeCardModel.class);
+		RevokeCardModel details = ConvertionUtils.getGson().fromJson(ConvertionUtils.base64ToString(this.snapshot),
+				RevokeCardModel.class);
 
 		this.cardId = details.getCardId();
 		this.reason = details.getReason();

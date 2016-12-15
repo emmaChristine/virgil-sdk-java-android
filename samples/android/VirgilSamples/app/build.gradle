@@ -22,7 +22,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.virgilsecurity.sdk:android:4.0.0@aar'
+    compile 'com.virgilsecurity.sdk:android:4.1.2@aar'
     compile 'com.google.code.gson:gson:2.7'
     compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5.1'
 
