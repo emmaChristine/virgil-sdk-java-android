@@ -29,9 +29,12 @@
  */
 package com.virgilsecurity.sdk.client;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 
 import com.virgilsecurity.sdk.client.utils.StringUtils;
+import com.virgilsecurity.sdk.crypto.exception.VirgilException;
 
 /**
  * Virgil Client Context contains common configuration parameters of Virgil
@@ -44,11 +47,11 @@ public class VirgilClientContext {
 
 	private String accessToken;
 
-	private String cardsServiceAddress;
+	private URL cardsServiceURL;
 
-	private String readOnlyCardsServiceAddress;
+	private URL readOnlyCardsServiceURL;
 
-	private String identityServiceAddress;
+	private URL identityServiceURL;
 
 	/**
 	 * Create a new instance of {@code VirgilClientContext}
@@ -59,9 +62,14 @@ public class VirgilClientContext {
 	public VirgilClientContext(String accessToken) {
 		this.accessToken = accessToken;
 
-		this.cardsServiceAddress = "https://cards.virgilsecurity.com";
-		this.readOnlyCardsServiceAddress = "https://cards-ro.virgilsecurity.com";
-		this.identityServiceAddress = "https://identity.virgilsecurity.com";
+		try {
+			this.cardsServiceURL = new URL("https://cards.virgilsecurity.com");
+
+			this.readOnlyCardsServiceURL = new URL("https://cards-ro.virgilsecurity.com");
+			this.identityServiceURL = new URL("https://identity.virgilsecurity.com");
+		} catch (MalformedURLException e) {
+			throw new VirgilException(e.getMessage());
+		}
 	}
 
 	/**
@@ -82,66 +90,6 @@ public class VirgilClientContext {
 	}
 
 	/**
-	 * Gets the cards service URL.
-	 * 
-	 * @return the cardsServiceAddress
-	 */
-	public String getCardsServiceAddress() {
-		return cardsServiceAddress;
-	}
-
-	/**
-	 * @param address
-	 *            the cardsServiceAddress to set
-	 */
-	public void setCardsServiceAddress(String address) {
-		if (StringUtils.isBlank(address) && !isValidURI(address))
-			throw new IllegalArgumentException();
-
-		this.cardsServiceAddress = address;
-	}
-
-	/**
-	 * Gets the read only cards service address.
-	 * 
-	 * @return the readOnlyCardsServiceAddress
-	 */
-	public String getReadOnlyCardsServiceAddress() {
-		return readOnlyCardsServiceAddress;
-	}
-
-	/**
-	 * @param address
-	 *            the readOnlyCardsServiceAddress to set
-	 */
-	public void setReadOnlyCardsServiceAddress(String address) {
-		if (StringUtils.isBlank(address) && !isValidURI(address))
-			throw new IllegalArgumentException();
-
-		this.readOnlyCardsServiceAddress = address;
-	}
-
-	/**
-	 * Gets the identity service address.
-	 * 
-	 * @return the identityServiceAddress
-	 */
-	public String getIdentityServiceAddress() {
-		return identityServiceAddress;
-	}
-
-	/**
-	 * @param address
-	 *            the identityServiceAddress to set
-	 */
-	public void setIdentityServiceAddress(String address) {
-		if (StringUtils.isBlank(address) && !isValidURI(address))
-			throw new IllegalArgumentException();
-
-		this.identityServiceAddress = address;
-	}
-
-	/**
 	 * Verify is URI well-formed.
 	 * 
 	 * @param uri
@@ -158,6 +106,51 @@ public class VirgilClientContext {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	/**
+	 * @return the readOnlyCardsServiceURL
+	 */
+	public URL getReadOnlyCardsServiceURL() {
+		return readOnlyCardsServiceURL;
+	}
+
+	/**
+	 * @param readOnlyCardsServiceURL
+	 *            the readOnlyCardsServiceURL to set
+	 */
+	public void setReadOnlyCardsServiceURL(URL readOnlyCardsServiceURL) {
+		this.readOnlyCardsServiceURL = readOnlyCardsServiceURL;
+	}
+
+	/**
+	 * @return the cardsServiceURL
+	 */
+	public URL getCardsServiceURL() {
+		return cardsServiceURL;
+	}
+
+	/**
+	 * @param cardsServiceURL
+	 *            the cardsServiceURL to set
+	 */
+	public void setCardsServiceURL(URL cardsServiceURL) {
+		this.cardsServiceURL = cardsServiceURL;
+	}
+
+	/**
+	 * @return the identityServiceURL
+	 */
+	public URL getIdentityServiceURL() {
+		return identityServiceURL;
+	}
+
+	/**
+	 * @param identityServiceURL
+	 *            the identityServiceURL to set
+	 */
+	public void setIdentityServiceURL(URL identityServiceURL) {
+		this.identityServiceURL = identityServiceURL;
 	}
 
 }

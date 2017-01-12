@@ -122,6 +122,9 @@ public class VirgilCardServiceException extends VirgilServiceException {
 	 */
 	@Override
 	public String getMessage() {
+		if (getErrorCode() == -1) {
+			return super.getMessage();
+		}
 		String result = ERROR_MESSAGES.get(getErrorCode());
 		if (result == null) {
 			result =  ERROR_UNKNOWN + ": " + getErrorCode();

@@ -64,11 +64,6 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${version.httpclient}</version>
-			</dependency>
-			<dependency>
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
 				<version>${version.gson}</version>

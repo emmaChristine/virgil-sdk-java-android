@@ -84,6 +84,7 @@ public abstract class VirgilServiceException extends RuntimeException {
 	 */
 	public VirgilServiceException(Exception cause) {
 		super(cause);
+		this.errorCode = -1;
 	}
 
 	/**
@@ -100,6 +101,9 @@ public abstract class VirgilServiceException extends RuntimeException {
 	 */
 	@Override
 	public String getMessage() {
+		if (errorCode == -1) {
+			return super.getMessage();
+		}
 		ResourceBundle bundle = null;
 		try {
 			bundle = ResourceBundle.getBundle(getMessageBundleName());

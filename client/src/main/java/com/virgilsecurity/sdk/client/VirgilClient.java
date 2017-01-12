@@ -29,7 +29,12 @@
  */
 package com.virgilsecurity.sdk.client;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,22 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
-import com.virgilsecurity.sdk.client.exceptions.VirgilIdentityServiceException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
 import com.virgilsecurity.sdk.client.model.Card;
 import com.virgilsecurity.sdk.client.model.CardScope;
@@ -63,13 +54,12 @@ import com.virgilsecurity.sdk.client.model.dto.ErrorResponse;
 import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
 import com.virgilsecurity.sdk.client.model.dto.SearchRequest;
 import com.virgilsecurity.sdk.client.model.dto.SignedResponseModel;
-import com.virgilsecurity.sdk.client.model.identity.Action;
-import com.virgilsecurity.sdk.client.model.identity.Confirmation;
 import com.virgilsecurity.sdk.client.model.identity.Identity;
 import com.virgilsecurity.sdk.client.model.identity.Token;
 import com.virgilsecurity.sdk.client.requests.CreateCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
 import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
+import com.virgilsecurity.sdk.client.utils.StreamUtils;
 import com.virgilsecurity.sdk.client.utils.StringUtils;
 import com.virgilsecurity.sdk.crypto.exceptions.EmptyArgumentException;
 import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
@@ -115,23 +105,8 @@ public class VirgilClient {
 	 */
 	@Deprecated
 	private String verify(String type, String value) {
-		String body = ConvertionUtils.getGson().toJson(new Identity(type, value));
-
-		URIBuilder builder;
-		try {
-			builder = new URIBuilder(context.getIdentityServiceAddress());
-			builder.setPath("/v1/verify");
-
-			HttpPost postRequest = (HttpPost) createRequest(HttpPost.METHOD_NAME);
-			postRequest.setURI(builder.build());
-			postRequest.setEntity(new StringEntity(body));
-
-			Action action = execute(postRequest, Action.class);
-			return action.getActionId();
-
-		} catch (Exception e) {
-			throw new VirgilIdentityServiceException(e);
-		}
+		// Implementation removed
+		return null;
 	}
 
 	/**
@@ -149,28 +124,8 @@ public class VirgilClient {
 	 */
 	@Deprecated
 	private Identity confirm(String actionId, String confirmationCode, Token confirmationToken) {
-
-		Confirmation confirmation = new Confirmation();
-		confirmation.setActionId(actionId);
-		confirmation.setConfirmationCode(confirmationCode);
-		confirmation.setToken(confirmationToken);
-		String body = ConvertionUtils.getGson().toJson(confirmation);
-
-		URIBuilder builder;
-		try {
-			builder = new URIBuilder(context.getIdentityServiceAddress());
-			builder.setPath("/v1/confirm");
-
-			HttpPost postRequest = (HttpPost) createRequest(HttpPost.METHOD_NAME);
-			postRequest.setURI(builder.build());
-			postRequest.setEntity(new StringEntity(body));
-
-			Identity identity = execute(postRequest, Identity.class);
-			return identity;
-
-		} catch (Exception e) {
-			throw new VirgilIdentityServiceException(e);
-		}
+		// Implementation removed
+		return null;
 	}
 
 	/**
@@ -183,20 +138,14 @@ public class VirgilClient {
 	 *             if an error occurred.
 	 */
 	public Card createCard(CreateCardRequest request) throws VirgilServiceException {
-		URIBuilder builder;
 		try {
-			builder = new URIBuilder(context.getCardsServiceAddress());
-			builder.setPath("/v4/card");
-
-			HttpPost postRequest = (HttpPost) createRequest(HttpPost.METHOD_NAME);
-			postRequest.setURI(builder.build());
+			URL url = new URL(context.getCardsServiceURL(), "/v4/card");
 
 			String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
-			postRequest.setEntity(new StringEntity(body));
 
-			SignedResponseModel responseModel = execute(postRequest, SignedResponseModel.class);
+			SignedResponseModel responseModel = execute(url, "POST",
+					new ByteArrayInputStream(ConvertionUtils.toBytes(body)), SignedResponseModel.class);
 			return responseToCard(responseModel);
-
 		} catch (VirgilServiceException e) {
 			throw e;
 		} catch (Exception e) {
@@ -212,15 +161,10 @@ public class VirgilClient {
 	 * @return the card.
 	 */
 	public Card getCard(String cardId) {
-		URIBuilder builder;
 		try {
-			builder = new URIBuilder(context.getReadOnlyCardsServiceAddress());
-			builder.setPath("/v4/card/" + cardId);
+			URL url = new URL(context.getReadOnlyCardsServiceURL(), "/v4/card/" + cardId);
 
-			HttpGet postRequest = (HttpGet) createRequest(HttpGet.METHOD_NAME);
-			postRequest.setURI(builder.build());
-
-			SignedResponseModel responseModel = execute(postRequest, SignedResponseModel.class);
+			SignedResponseModel responseModel = execute(url, "GET", null, SignedResponseModel.class);
 			Card card = responseToCard(responseModel);
 			validateCards(Arrays.asList(card));
 
@@ -234,23 +178,48 @@ public class VirgilClient {
 	}
 
 	/**
+	 * Create and configure http connection.
+	 * 
+	 * @param url
+	 *            The URL.
+	 * @param methodName
+	 *            The HTTP method.
+	 * @return The connection.
+	 * @throws IOException
+	 */
+	private HttpURLConnection createConnection(URL url, String method) throws IOException {
+		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		urlConnection.setRequestMethod(method);
+		urlConnection.setUseCaches(false);
+
+		switch (method) {
+		case "DELETE":
+		case "POST":
+		case "PUT":
+		case "PATCH":
+			urlConnection.setDoOutput(true);
+			urlConnection.setChunkedStreamingMode(0);
+			break;
+		default:
+		}
+		urlConnection.setRequestProperty("Authorization", "VIRGIL " + context.getAccessToken());
+		urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+		return urlConnection;
+	}
+
+	/**
 	 * Revoke existing card.
 	 * 
 	 * @param request
 	 *            the revoke card request.
 	 */
 	public void revokeCard(RevokeCardRequest request) {
-		URIBuilder builder;
 		try {
-			builder = new URIBuilder(context.getCardsServiceAddress());
-			builder.setPath("/v4/card/" + request.getCardId());
+			URL url = new URL(context.getCardsServiceURL(), "/v4/card/" + request.getCardId());
+			String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
 
-			HttpEntityEnclosingRequestBase postRequest = (HttpEntityEnclosingRequestBase) createRequest(
-					HttpDelete.METHOD_NAME);
-			postRequest.setURI(builder.build());
-			postRequest.setEntity(new StringEntity(ConvertionUtils.getGson().toJson(request.getRequestModel())));
-
-			execute(postRequest, Void.class);
+			execute(url, "DELETE", new ByteArrayInputStream(ConvertionUtils.toBytes(body)), Void.class);
 
 		} catch (VirgilServiceException e) {
 			throw e;
@@ -287,16 +256,11 @@ public class VirgilClient {
 			body.setScope(criteria.getScope());
 		}
 
-		URIBuilder builder;
 		try {
-			builder = new URIBuilder(context.getReadOnlyCardsServiceAddress());
-			builder.setPath("/v4/card/actions/search");
-
-			HttpPost postRequest = (HttpPost) createRequest(HttpPost.METHOD_NAME);
-			postRequest.setURI(builder.build());
-			postRequest.setEntity(new StringEntity(ConvertionUtils.getGson().toJson(body)));
-
-			SignedResponseModel[] responseModels = execute(postRequest, SignedResponseModel[].class);
+			URL url = new URL(context.getReadOnlyCardsServiceURL(), "/v4/card/actions/search");
+			SignedResponseModel[] responseModels = execute(url, "POST",
+					new ByteArrayInputStream(ConvertionUtils.toBytes(ConvertionUtils.getGson().toJson(body))),
+					SignedResponseModel[].class);
 
 			List<Card> cards = new ArrayList<>();
 			for (SignedResponseModel responseModel : responseModels) {
@@ -348,59 +312,41 @@ public class VirgilClient {
 		return card;
 	}
 
-	private CloseableHttpClient getHttpClient() {
-		return HttpClients.createDefault();
-	}
-
-	private HttpRequestBase createRequest(String method) {
-		HttpRequestBase requestBase = null;
-		switch (method) {
-		case HttpPost.METHOD_NAME:
-			requestBase = new HttpPost();
-			break;
-		case HttpDelete.METHOD_NAME:
-			requestBase = new HttpEntityEnclosingRequestBase() {
-
-				@Override
-				public String getMethod() {
-					return HttpDelete.METHOD_NAME;
-				}
-			};
-			break;
-		default:
-			requestBase = new HttpGet();
-		}
-		requestBase.addHeader("Authorization", "VIRGIL " + context.getAccessToken());
-		requestBase.addHeader("Content-Type", "application/json; charset=utf-8");
-
-		return requestBase;
-	}
-
-	private <T> T execute(HttpRequestBase requestBase, Class<T> clazz) {
-		try (CloseableHttpResponse response = getHttpClient().execute(requestBase)) {
-			if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-
-				// Get error code from request
-				try (InputStream instream = response.getEntity().getContent();) {
-					String body = ConvertionUtils.toString(instream);
-					if (!StringUtils.isBlank(body)) {
-						ErrorResponse error = ConvertionUtils.getGson().fromJson(body, ErrorResponse.class);
-						throw new VirgilCardServiceException(error.getCode());
+	/**
+	 * @param url
+	 * @param methodName
+	 * @param class1
+	 * @return
+	 */
+	private <T> T execute(URL url, String method, InputStream inputStream, Class<T> clazz) {
+		try {
+			HttpURLConnection urlConnection = createConnection(url, method);
+			if (inputStream != null) {
+				StreamUtils.copyStream(inputStream, urlConnection.getOutputStream());
+			}
+			try {
+				if (urlConnection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
+					// Get error code from request
+					try (InputStream in = new BufferedInputStream(urlConnection.getErrorStream())) {
+						String body = ConvertionUtils.toString(in);
+						if (!StringUtils.isBlank(body)) {
+							ErrorResponse error = ConvertionUtils.getGson().fromJson(body, ErrorResponse.class);
+							throw new VirgilCardServiceException(error.getCode());
+						}
+					}
+					throw new VirgilCardServiceException();
+				} else if (clazz.isAssignableFrom(Void.class)) {
+					return null;
+				} else {
+					try (InputStream instream = new BufferedInputStream(urlConnection.getInputStream())) {
+						String body = ConvertionUtils.toString(instream);
+						return ConvertionUtils.getGson().fromJson(body, clazz);
 					}
 				}
-				throw new VirgilCardServiceException();
-			} else if (clazz.isAssignableFrom(Void.class)) {
-				return null;
-			} else {
-				HttpEntity entity = response.getEntity();
-				try (InputStream instream = entity.getContent();) {
-					String body = ConvertionUtils.toString(instream);
-					return ConvertionUtils.getGson().fromJson(body, clazz);
-				}
+			} finally {
+				urlConnection.disconnect();
 			}
-		} catch (VirgilServiceException e) {
-			throw e;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new VirgilCardServiceException(e);
 		}
 	}
