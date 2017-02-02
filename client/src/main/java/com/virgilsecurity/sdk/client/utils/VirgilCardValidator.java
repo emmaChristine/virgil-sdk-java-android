@@ -63,7 +63,7 @@ public class VirgilCardValidator implements CardValidator {
 	public VirgilCardValidator(Crypto crypto) {
 		this.crypto = crypto;
 
-		PublicKey servicePublicKey = crypto.importPublicKey(ConvertionUtils.base64ToArray(SERVICE_PUBLIC_KEY));
+		PublicKey servicePublicKey = crypto.importPublicKey(ConvertionUtils.base64ToBytes(SERVICE_PUBLIC_KEY));
 
 		this.verifiers = new HashMap<>();
 		this.verifiers.put(SERVICE_CARD_ID, servicePublicKey);

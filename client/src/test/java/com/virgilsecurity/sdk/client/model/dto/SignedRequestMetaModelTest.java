@@ -74,7 +74,7 @@ public class SignedRequestMetaModelTest {
 		JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
 		assertTrue(jsonObject.containsKey("signs"));
 		JSONObject jsonSigns = (JSONObject) jsonObject.get("signs");
-		assertEquals(ConvertionUtils.toBase64String(VALUE), jsonSigns.get(KEY));
+		assertEquals(VALUE, jsonSigns.get(KEY));
 
 		SignedRequestMetaModel restoredModel = ConvertionUtils.getGson().fromJson(json, SignedRequestMetaModel.class);
 

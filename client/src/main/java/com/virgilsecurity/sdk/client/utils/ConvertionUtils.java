@@ -33,6 +33,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
+import javax.xml.bind.DatatypeConverter;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.virgilsecurity.crypto.VirgilBase64;
@@ -84,6 +86,20 @@ public class ConvertionUtils {
 		}
 		return new String(bytes, UTF8_CHARSET);
 	}
+	
+	/**
+     * Convert byte array to HEX {@code String}.
+     * 
+     * @param bytes
+     *            the byte array to be converted.
+     * @return the HEX string.
+     */
+    public static String toHex(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return "";
+        }
+        return DatatypeConverter.printHexBinary(bytes);
+    }
 
 	/**
 	 * Encode string to Base64 string.
@@ -104,7 +120,7 @@ public class ConvertionUtils {
 	 *            the string to be converted.
 	 * @return the byte array.
 	 */
-	public static byte[] toBase64Array(String value) {
+	public static byte[] toBase64Bytes(String value) {
 		String str = VirgilBase64.encode(value.getBytes(UTF8_CHARSET));
 		return toBytes(str);
 	}
@@ -138,7 +154,7 @@ public class ConvertionUtils {
 	 *            The string to be converted.
 	 * @return the byte array.
 	 */
-	public static byte[] base64ToArray(String value) {
+	public static byte[] base64ToBytes(String value) {
 		return VirgilBase64.decode(value);
 	}
 
@@ -152,6 +168,17 @@ public class ConvertionUtils {
 	public static String base64ToString(byte[] bytes) {
 		return toString(VirgilBase64.decode(toString(bytes)));
 	}
+	
+	/**
+     * Decode HEX string to byte array.
+     * 
+     * @param value
+     *            The string to be converted.
+     * @return the byte array.
+     */
+    public static byte[] hexToBytes(String value) {
+        return DatatypeConverter.parseHexBinary(value);
+    }
 
 	/**
 	 * Get the contents of an <code>InputStream</code> as a String using UTF-8

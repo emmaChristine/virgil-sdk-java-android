@@ -35,6 +35,7 @@ import java.net.URL;
 
 import com.virgilsecurity.sdk.client.utils.StringUtils;
 import com.virgilsecurity.sdk.crypto.exception.VirgilException;
+import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
 
 /**
  * Virgil Client Context contains common configuration parameters of Virgil
@@ -60,6 +61,9 @@ public class VirgilClientContext {
 	 *            The application access token.
 	 */
 	public VirgilClientContext(String accessToken) {
+	    if (accessToken == null) {
+	        throw new NullArgumentException("accessToken");
+	    }
 		this.accessToken = accessToken;
 
 		try {
@@ -86,6 +90,9 @@ public class VirgilClientContext {
 	 *            the accessToken to set
 	 */
 	public void setAccessToken(String accessToken) {
+	    if (accessToken == null) {
+	        throw new NullArgumentException("accessToken");
+	    }
 		this.accessToken = accessToken;
 	}
 

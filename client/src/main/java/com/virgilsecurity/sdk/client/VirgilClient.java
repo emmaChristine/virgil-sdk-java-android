@@ -284,10 +284,10 @@ public class VirgilClient {
 
 		Card card = new Card();
 		card.setId(responseModel.getCardId());
-		card.setSnapshot(ConvertionUtils.base64ToArray(responseModel.getContentSnapshot()));
+		card.setSnapshot(ConvertionUtils.base64ToBytes(responseModel.getContentSnapshot()));
 		card.setIdentity(model.getIdentity());
 		card.setIdentityType(model.getIdentityType());
-		card.setPublicKey(ConvertionUtils.base64ToArray(model.getPublicKey()));
+		card.setPublicKey(ConvertionUtils.base64ToBytes(model.getPublicKey()));
 
 		if (model.getInfo() != null) {
 			card.setDevice(model.getInfo().getDevice());
@@ -303,7 +303,7 @@ public class VirgilClient {
 		Map<String, byte[]> signatures = new HashMap<>();
 		if ((responseModel.getMeta() != null) && (responseModel.getMeta().getSignatures() != null)) {
 			for (Entry<String, String> entry : responseModel.getMeta().getSignatures().entrySet()) {
-				signatures.put(entry.getKey(), ConvertionUtils.base64ToArray(entry.getValue()));
+				signatures.put(entry.getKey(), ConvertionUtils.base64ToBytes(entry.getValue()));
 			}
 		}
 

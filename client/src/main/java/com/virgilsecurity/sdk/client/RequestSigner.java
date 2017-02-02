@@ -65,7 +65,7 @@ public class RequestSigner {
 	 */
 	public void selfSign(SignedRequest request, PrivateKey privateKey) {
 		Fingerprint fingerprint = this.crypto
-				.calculateFingerprint(ConvertionUtils.base64ToArray(request.getSnapshot()));
+				.calculateFingerprint(ConvertionUtils.base64ToBytes(request.getSnapshot()));
 		byte[] signature = this.crypto.sign(fingerprint.getValue(), privateKey);
 
 		request.appendSignature(fingerprint.toHex(), ConvertionUtils.toBase64String(signature));
@@ -83,7 +83,7 @@ public class RequestSigner {
 	 */
 	public void authoritySign(SignedRequest request, String appdId, PrivateKey appKey) {
 		Fingerprint fingerprint = this.crypto
-				.calculateFingerprint(ConvertionUtils.base64ToArray(request.getSnapshot()));
+				.calculateFingerprint(ConvertionUtils.base64ToBytes(request.getSnapshot()));
 		byte[] signature = this.crypto.sign(fingerprint.getValue(), appKey);
 
 		request.appendSignature(appdId, ConvertionUtils.toBase64String(signature));
