@@ -34,6 +34,8 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,22 +77,22 @@ public class VirgilClientTest {
 	private String APP_PRIVATE_KEY = StringUtils.replace(getPropertyByName("APP_PRIVATE_KEY"), "\\n", "\n");
 
 	@BeforeSuite
-	public void setUp() {
+	public void setUp() throws MalformedURLException {
 		crypto = new VirgilCrypto();
 
 		VirgilClientContext ctx = new VirgilClientContext(APP_TOKEN);
 
 		String url = getPropertyByName("CARDS_SERVICE");
 		if (StringUtils.isNotBlank(url)) {
-			ctx.setCardsServiceAddress(url);
+			ctx.setCardsServiceURL(new URL(url));
 		}
 		url = getPropertyByName("RO_CARDS_SERVICE");
 		if (StringUtils.isNotBlank(url)) {
-			ctx.setReadOnlyCardsServiceAddress(url);
+			ctx.setReadOnlyCardsServiceURL(new URL(url));
 		}
 		url = getPropertyByName("IDENTITY_SERVICE");
 		if (StringUtils.isNotBlank(url)) {
-			ctx.setIdentityServiceAddress(url);
+			ctx.setIdentityServiceURL(new URL(url));
 		}
 
 		client = new VirgilClient(ctx);

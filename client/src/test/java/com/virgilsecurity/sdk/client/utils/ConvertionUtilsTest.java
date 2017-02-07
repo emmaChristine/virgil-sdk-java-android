@@ -53,7 +53,7 @@ public class ConvertionUtilsTest {
 
 	@Test
 	public void base64ByteArray() {
-		byte[] base64bytes = ConvertionUtils.toBase64Array(TEXT);
+		byte[] base64bytes = ConvertionUtils.toBase64Bytes(TEXT);
 		String str = ConvertionUtils.base64ToString(base64bytes);
 
 		assertEquals(TEXT, str);
@@ -65,5 +65,14 @@ public class ConvertionUtilsTest {
 		String str = ConvertionUtils.toString(bytes);
 		assertEquals(TEXT, str);
 	}
+
+	@Test
+    public void toHEX() {
+        byte[] bytes = ConvertionUtils.toBytes(TEXT);
+        String str = ConvertionUtils.toHex(bytes);
+        bytes = ConvertionUtils.hexToBytes(str);
+        str = ConvertionUtils.toString(bytes);
+        assertEquals(TEXT, str);
+    }
 
 }

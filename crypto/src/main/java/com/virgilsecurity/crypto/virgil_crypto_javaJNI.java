@@ -43,10 +43,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class virgil_crypto_javaJNI {
-	
+
 	private static final String MACOS_OS_NAME = "mac os";
 	private static final String LINUX_OS_NAME = "linux";
 	private static final String WINDOWS_OS_NAME = "windows";
+	private static final String UNKNOWN_OS = "unknown";
+
+	private static final String MACOS_LIBS_DIRECTORY = MACOS_OS_NAME;
+	private static final String LINUX_LIBS_DIRECTORY = LINUX_OS_NAME;
+	private static final String WINDOWS_LIBS_DIRECTORY = WINDOWS_OS_NAME;
+
 	private static final String SEPARATOR = "/";
 
 	public final static native long VirgilVersion_asNumber();
@@ -497,30 +503,22 @@ public class virgil_crypto_javaJNI {
 
 		try {
 			System.loadLibrary(libraryName);
-			// Library is loaded (Android). We can exit
+			// Library is loaded (Android or exists in java.library.path). We
+			// can exit
 			return;
 		} catch (Throwable e) {
-			// Library couldn't be loaded (non-Android). We'll load it later.
+			// Library couldn't be loaded yet. We'll load it later.
 		}
 
 		// Build native library name according to current system
 		String osName = System.getProperty("os.name").toLowerCase();
+		String os = getOS(osName);
 		String osArch = System.getProperty("os.arch").toLowerCase();
 
 		StringBuilder resourceName = new StringBuilder();
-		for (String os : new String[] { LINUX_OS_NAME, WINDOWS_OS_NAME, MACOS_OS_NAME }) {
-			if (osName.startsWith(os)) {
-				resourceName.append(os);
+		resourceName.append(getResourceDirectory(os, osArch)).append(SEPARATOR).append(libraryName);
 
-				if (WINDOWS_OS_NAME.equals(os)) {
-					resourceName.append(SEPARATOR).append(osArch);
-				}
-
-				break;
-			}
-		}
-		resourceName.append(SEPARATOR).append(libraryName);
-
+		// Save native library as temporary file
 		InputStream in = virgil_crypto_javaJNI.class.getClassLoader().getResourceAsStream(resourceName.toString());
 		if (in == null) {
 			throw new FileNotFoundException("Resource '" + resourceName.toString() + "' not found");
@@ -528,7 +526,8 @@ public class virgil_crypto_javaJNI {
 
 		byte[] buffer = new byte[1024];
 		int read = -1;
-		File temp = File.createTempFile(libraryName, "");
+		File temp = File.createTempFile(libraryName, getLibraryFileSuffix(os));
+
 		FileOutputStream fos = new FileOutputStream(temp);
 
 		while ((read = in.read(buffer)) != -1) {
@@ -538,5 +537,44 @@ public class virgil_crypto_javaJNI {
 		in.close();
 
 		System.load(temp.getAbsolutePath());
+	}
+
+	/**
+	 * Get operation system by operation system name
+	 * 
+	 * @param osName
+	 *            The OS name.
+	 * @return
+	 */
+	private static final String getOS(String osName) {
+		for (String os : new String[] { LINUX_OS_NAME, WINDOWS_OS_NAME, MACOS_OS_NAME }) {
+			if (osName.startsWith(os)) {
+				return os;
+			}
+		}
+		return UNKNOWN_OS;
+	}
+
+	private static final String getResourceDirectory(String os, String osArch) {
+		switch (os) {
+		case LINUX_OS_NAME:
+			return LINUX_LIBS_DIRECTORY;
+		case MACOS_OS_NAME:
+			return MACOS_LIBS_DIRECTORY;
+		case WINDOWS_OS_NAME:
+			return WINDOWS_LIBS_DIRECTORY + SEPARATOR + osArch;
+		}
+		return "";
+	}
+
+	private static final String getLibraryFileSuffix(String os) {
+		switch (os) {
+		case LINUX_OS_NAME:
+		case MACOS_OS_NAME:
+			return ".so";
+		case WINDOWS_OS_NAME:
+			return ".dll";
+		}
+		return "";
 	}
 }
