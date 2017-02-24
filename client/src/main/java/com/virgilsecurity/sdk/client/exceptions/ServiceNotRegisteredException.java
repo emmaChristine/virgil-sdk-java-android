@@ -29,8 +29,6 @@
  */
 package com.virgilsecurity.sdk.client.exceptions;
 
-import com.virgilsecurity.sdk.highlevel.ServiceContainer;
-
 /**
  * This exception occurred when service is not registered at service container.
  *
@@ -41,16 +39,16 @@ import com.virgilsecurity.sdk.highlevel.ServiceContainer;
  */
 public class ServiceNotRegisteredException extends VirgilException {
 
-	private static final long serialVersionUID = -6631870333752127474L;
+    private static final long serialVersionUID = -6631870333752127474L;
 
-	/**
-	 * Create a new instance of {@code ServiceNotRegisteredException}
-	 *
-	 * @param message
-	 *            The message of exception.
-	 */
-	public ServiceNotRegisteredException(String message) {
-		super(message);
-	}
+    /**
+     * Create a new instance of {@code ServiceNotRegisteredException}
+     *
+     * @param message
+     *            The message of exception.
+     */
+    public ServiceNotRegisteredException(String message) {
+        super(message);
+    }
 
 }

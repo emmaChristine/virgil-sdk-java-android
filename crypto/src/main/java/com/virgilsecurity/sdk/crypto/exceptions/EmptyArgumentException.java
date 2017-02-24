@@ -30,24 +30,23 @@
 package com.virgilsecurity.sdk.crypto.exceptions;
 
 /**
- * Thrown to indicate that an argument was <code>null</code> or empty and should
- * not have been.
+ * Thrown to indicate that an argument was <code>null</code> or empty and should not have been.
  *
  * @author Andrii Iakovenko
  *
  */
 public class EmptyArgumentException extends IllegalArgumentException {
 
-	private static final long serialVersionUID = -7883321347455886411L;
+    private static final long serialVersionUID = -7883321347455886411L;
 
-	/**
-	 * Create a new instance of {@code NullArgumentException}
-	 *
-	 * @param argName
-	 *            the name of the argument that was {@code null} or empty.
-	 */
-	public EmptyArgumentException(String argName) {
-		super((argName == null ? "Argument" : argName) + " must not be empty.");
-	}
+    /**
+     * Create a new instance of {@code NullArgumentException}
+     *
+     * @param argName
+     *            the name of the argument that was {@code null} or empty.
+     */
+    public EmptyArgumentException(String argName) {
+        super((argName == null ? "Argument" : argName) + " must not be empty.");
+    }
 
 }

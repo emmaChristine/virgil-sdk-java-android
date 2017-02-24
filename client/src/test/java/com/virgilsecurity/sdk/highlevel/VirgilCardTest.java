@@ -29,19 +29,11 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.UUID;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.virgilsecurity.sdk.client.model.Card;
-import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
-import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.KeyPair;
+import com.virgilsecurity.sdk.highlevel.impl.VirgilApiContext;
+import com.virgilsecurity.sdk.highlevel.impl.VirgilApiImpl;
 
 /**
  * Unit tests for {@linkplain VirgilCard}.
@@ -52,7 +44,28 @@ import com.virgilsecurity.sdk.crypto.KeyPair;
 public class VirgilCardTest {
 
 	private static final String TEXT = "Let's try to encrypt this text";
-
+	private static final String ALICE_IDENTITY = "alice";
+	
+	private VirgilApiContext context;
+    private VirgilApi virgil;
+    private VirgilKey virgilKey;
+	private VirgilCard virgilCard;
+	
+	@Before
+    public void setUp() {
+        context = new VirgilApiContext();
+        virgil = new VirgilApiImpl(context);
+        virgilKey = virgil.getKeys().generate();
+        virgilCard = virgil.getCards().create(ALICE_IDENTITY, virgilKey);
+	}
+	
+	@Test
+	public void instantiate() {
+//	    VirgilCard card = virgil.getCards().
+	}
+	
+	
+/*
 	private Crypto crypto;
 	private KeyPair keyPair;
 	private Card card;
@@ -110,5 +123,5 @@ public class VirgilCardTest {
 
 		assertTrue(virgilCard.verifyText(TEXT, signature));
 	}
-
+*/
 }

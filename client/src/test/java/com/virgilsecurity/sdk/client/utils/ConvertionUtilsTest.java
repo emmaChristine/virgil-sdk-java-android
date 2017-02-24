@@ -67,12 +67,12 @@ public class ConvertionUtilsTest {
 	}
 
 	@Test
-    public void toHEX() {
-        byte[] bytes = ConvertionUtils.toBytes(TEXT);
-        String str = ConvertionUtils.toHex(bytes);
-        bytes = ConvertionUtils.hexToBytes(str);
-        str = ConvertionUtils.toString(bytes);
-        assertEquals(TEXT, str);
-    }
+	public void toHEX() {
+		byte[] bytes = ConvertionUtils.toBytes(TEXT);
+		String str = ConvertionUtils.toHex(bytes);
+		bytes = ConvertionUtils.hexToBytes(str);
+		str = ConvertionUtils.toString(bytes);
+		assertEquals(TEXT, str);
+	}
 
 }

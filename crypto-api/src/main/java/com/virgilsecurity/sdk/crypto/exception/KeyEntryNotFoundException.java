@@ -37,13 +37,13 @@ package com.virgilsecurity.sdk.crypto.exception;
  */
 public class KeyEntryNotFoundException extends KeyStorageException {
 
-	private static final long serialVersionUID = 3298336334182492503L;
+    private static final long serialVersionUID = 3298336334182492503L;
 
-	/**
-	 * Create a new instance of {@code KeyEntryNotFoundException}
-	 *
-	 */
-	public KeyEntryNotFoundException() {
-	}
+    /**
+     * Create a new instance of {@code KeyEntryNotFoundException}
+     *
+     */
+    public KeyEntryNotFoundException() {
+    }
 
 }

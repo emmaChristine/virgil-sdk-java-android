@@ -37,154 +37,148 @@
 package com.virgilsecurity.crypto;
 
 /**
- * This class provides high-level interface to encrypt / decrypt data splitted
- * to chunks.
+ * This class provides high-level interface to encrypt / decrypt data splitted to chunks.
  *
  * @author Andrii Iakovenko
  *
  */
 public class VirgilChunkCipher extends VirgilCipherBase implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
+    private transient long swigCPtr;
 
-	protected VirgilChunkCipher(long cPtr, boolean cMemoryOwn) {
-		super(virgil_crypto_javaJNI.VirgilChunkCipher_SWIGUpcast(cPtr), cMemoryOwn);
-		swigCPtr = cPtr;
-	}
+    protected VirgilChunkCipher(long cPtr, boolean cMemoryOwn) {
+        super(virgil_crypto_javaJNI.VirgilChunkCipher_SWIGUpcast(cPtr), cMemoryOwn);
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilChunkCipher obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilChunkCipher obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilChunkCipher(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-		super.delete();
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilChunkCipher(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+        super.delete();
+    }
 
-	@Override
-	public void close() {
-		delete();
-	}
+    @Override
+    public void close() {
+        delete();
+    }
 
-	/**
-	 * Encrypt data read from given source and write it the sink.
-	 * 
-	 * @param source
-	 *            The source of the data to be encrypted.
-	 * @param sink
-	 *            The target sink for encrypted data.
-	 * @param embedContentInfo
-	 *            Determines whether to embed content info the the encrypted
-	 *            data, or not.
-	 * @param preferredChunkSize
-	 *            Chunk size that will appropriate.
-	 */
-	public void encrypt(VirgilDataSource source, VirgilDataSink sink, boolean embedContentInfo,
-			long preferredChunkSize) {
-		virgil_crypto_javaJNI.VirgilChunkCipher_encrypt__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink, embedContentInfo, preferredChunkSize);
-	}
+    /**
+     * Encrypt data read from given source and write it the sink.
+     * 
+     * @param source
+     *            The source of the data to be encrypted.
+     * @param sink
+     *            The target sink for encrypted data.
+     * @param embedContentInfo
+     *            Determines whether to embed content info the the encrypted data, or not.
+     * @param preferredChunkSize
+     *            Chunk size that will appropriate.
+     */
+    public void encrypt(VirgilDataSource source, VirgilDataSink sink, boolean embedContentInfo,
+            long preferredChunkSize) {
+        virgil_crypto_javaJNI.VirgilChunkCipher_encrypt__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink, embedContentInfo, preferredChunkSize);
+    }
 
-	/**
-	 * Encrypt data read from given source and write it the sink.
-	 * 
-	 * @param source
-	 *            The source of the data to be encrypted.
-	 * @param sink
-	 *            The target sink for encrypted data.
-	 * @param embedContentInfo
-	 *            Determines whether to embed content info the the encrypted
-	 *            data, or not.
-	 */
-	public void encrypt(VirgilDataSource source, VirgilDataSink sink, boolean embedContentInfo) {
-		virgil_crypto_javaJNI.VirgilChunkCipher_encrypt__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink, embedContentInfo);
-	}
+    /**
+     * Encrypt data read from given source and write it the sink.
+     * 
+     * @param source
+     *            The source of the data to be encrypted.
+     * @param sink
+     *            The target sink for encrypted data.
+     * @param embedContentInfo
+     *            Determines whether to embed content info the the encrypted data, or not.
+     */
+    public void encrypt(VirgilDataSource source, VirgilDataSink sink, boolean embedContentInfo) {
+        virgil_crypto_javaJNI.VirgilChunkCipher_encrypt__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink, embedContentInfo);
+    }
 
-	/**
-	 * Encrypt data read from given source and write it the sink.
-	 * 
-	 * @param source
-	 *            The source of the data to be encrypted.
-	 * @param sink
-	 *            The target sink for encrypted data.
-	 */
-	public void encrypt(VirgilDataSource source, VirgilDataSink sink) {
-		virgil_crypto_javaJNI.VirgilChunkCipher_encrypt__SWIG_2(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink);
-	}
+    /**
+     * Encrypt data read from given source and write it the sink.
+     * 
+     * @param source
+     *            The source of the data to be encrypted.
+     * @param sink
+     *            The target sink for encrypted data.
+     */
+    public void encrypt(VirgilDataSource source, VirgilDataSink sink) {
+        virgil_crypto_javaJNI.VirgilChunkCipher_encrypt__SWIG_2(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink);
+    }
 
-	/**
-	 * Decrypt data read from given source for recipient defined by id and
-	 * private key, and write it to the sink.
-	 * 
-	 * @param source
-	 *            The source of the data to be decrypted.
-	 * @param sink
-	 *            The target sink for decrypted data.
-	 * @param recipientId
-	 *            The recipient identifier.
-	 * @param privateKey
-	 *            Recipient's private key protected with password.
-	 * @param privateKeyPassword
-	 *            The private key password.
-	 */
-	public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey,
-			byte[] privateKeyPassword) {
-		virgil_crypto_javaJNI.VirgilChunkCipher_decryptWithKey__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey, privateKeyPassword);
-	}
+    /**
+     * Decrypt data read from given source for recipient defined by id and private key, and write it to the sink.
+     * 
+     * @param source
+     *            The source of the data to be decrypted.
+     * @param sink
+     *            The target sink for decrypted data.
+     * @param recipientId
+     *            The recipient identifier.
+     * @param privateKey
+     *            Recipient's private key protected with password.
+     * @param privateKeyPassword
+     *            The private key password.
+     */
+    public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey,
+            byte[] privateKeyPassword) {
+        virgil_crypto_javaJNI.VirgilChunkCipher_decryptWithKey__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey, privateKeyPassword);
+    }
 
-	/**
-	 * Decrypt data read from given source for recipient defined by id and
-	 * private key, and write it to the sink.
-	 * 
-	 * @param source
-	 *            The source of the data to be decrypted.
-	 * @param sink
-	 *            The target sink for decrypted data.
-	 * @param recipientId
-	 *            The recipient identifier.
-	 * @param privateKey
-	 *            Recipient's private key.
-	 */
-	public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey) {
-		virgil_crypto_javaJNI.VirgilChunkCipher_decryptWithKey__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey);
-	}
+    /**
+     * Decrypt data read from given source for recipient defined by id and private key, and write it to the sink.
+     * 
+     * @param source
+     *            The source of the data to be decrypted.
+     * @param sink
+     *            The target sink for decrypted data.
+     * @param recipientId
+     *            The recipient identifier.
+     * @param privateKey
+     *            Recipient's private key.
+     */
+    public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey) {
+        virgil_crypto_javaJNI.VirgilChunkCipher_decryptWithKey__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey);
+    }
 
-	/**
-	 * Decrypt data read from given source for recipient defined by id and
-	 * private key, and write it to the sink.
-	 * 
-	 * @param source
-	 *            The source of the data to be decrypted.
-	 * @param sink
-	 *            The target sink for decrypted data.
-	 * @param pwd
-	 *            The password.
-	 */
-	public void decryptWithPassword(VirgilDataSource source, VirgilDataSink sink, byte[] pwd) {
-		virgil_crypto_javaJNI.VirgilChunkCipher_decryptWithPassword(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink, pwd);
-	}
+    /**
+     * Decrypt data read from given source for recipient defined by id and private key, and write it to the sink.
+     * 
+     * @param source
+     *            The source of the data to be decrypted.
+     * @param sink
+     *            The target sink for decrypted data.
+     * @param pwd
+     *            The password.
+     */
+    public void decryptWithPassword(VirgilDataSource source, VirgilDataSink sink, byte[] pwd) {
+        virgil_crypto_javaJNI.VirgilChunkCipher_decryptWithPassword(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink, pwd);
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilChunkCipher}
-	 *
-	 */
-	public VirgilChunkCipher() {
-		this(virgil_crypto_javaJNI.new_VirgilChunkCipher(), true);
-	}
+    /**
+     * Create a new instance of {@code VirgilChunkCipher}
+     *
+     */
+    public VirgilChunkCipher() {
+        this(virgil_crypto_javaJNI.new_VirgilChunkCipher(), true);
+    }
 
-	public final static long kPreferredChunkSize = virgil_crypto_javaJNI.VirgilChunkCipher_kPreferredChunkSize_get();
+    public final static long kPreferredChunkSize = virgil_crypto_javaJNI.VirgilChunkCipher_kPreferredChunkSize_get();
 }

@@ -30,6 +30,7 @@
 package com.virgilsecurity.sdk.client.utils;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
@@ -37,6 +38,13 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.virgilsecurity.crypto.VirgilBase64;
 
 /**
@@ -47,47 +55,48 @@ import com.virgilsecurity.crypto.VirgilBase64;
  */
 public class ConvertionUtils {
 
-	private static Gson gson = null;
+    private static Gson gson = null;
 
-	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
-	public static synchronized Gson getGson() {
-		if (gson == null) {
-			GsonBuilder builder = new GsonBuilder();
-			gson = builder.disableHtmlEscaping().create();
-		}
-		return gson;
-	}
+    public static synchronized Gson getGson() {
+        if (gson == null) {
+            GsonBuilder builder = new GsonBuilder();
+            gson = builder.registerTypeHierarchyAdapter(byte[].class, new ByteArrayToBase64TypeAdapter())
+                    .disableHtmlEscaping().create();
+        }
+        return gson;
+    }
 
-	/**
-	 * Convert {@code String} to byte array.
-	 * 
-	 * @param string
-	 *            the string to converted.
-	 * @return the byte array.
-	 */
-	public static byte[] toBytes(String string) {
-		if (string == null) {
-			return new byte[0];
-		}
-		return string.getBytes(UTF8_CHARSET);
-	}
+    /**
+     * Convert {@code String} to byte array.
+     * 
+     * @param string
+     *            the string to converted.
+     * @return the byte array.
+     */
+    public static byte[] toBytes(String string) {
+        if (string == null) {
+            return new byte[0];
+        }
+        return string.getBytes(UTF8_CHARSET);
+    }
 
-	/**
-	 * Convert byte array to {@code String}.
-	 * 
-	 * @param bytes
-	 *            the byte array to be converted.
-	 * @return the string.
-	 */
-	public static String toString(byte[] bytes) {
-		if (bytes == null || bytes.length == 0) {
-			return "";
-		}
-		return new String(bytes, UTF8_CHARSET);
-	}
-	
-	/**
+    /**
+     * Convert byte array to {@code String}.
+     * 
+     * @param bytes
+     *            the byte array to be converted.
+     * @return the string.
+     */
+    public static String toString(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return "";
+        }
+        return new String(bytes, UTF8_CHARSET);
+    }
+
+    /**
      * Convert byte array to HEX {@code String}.
      * 
      * @param bytes
@@ -101,75 +110,75 @@ public class ConvertionUtils {
         return DatatypeConverter.printHexBinary(bytes);
     }
 
-	/**
-	 * Encode string to Base64 string.
-	 * 
-	 * @param value
-	 *            the string to be converted.
-	 * @return the base64 string.
-	 */
-	public static String toBase64String(String value) {
-		byte[] bytes = value.getBytes(UTF8_CHARSET);
-		return VirgilBase64.encode(bytes);
-	}
+    /**
+     * Encode string to Base64 string.
+     * 
+     * @param value
+     *            the string to be converted.
+     * @return the base64 string.
+     */
+    public static String toBase64String(String value) {
+        byte[] bytes = value.getBytes(UTF8_CHARSET);
+        return VirgilBase64.encode(bytes);
+    }
 
-	/**
-	 * Convert string to Base64 byte array.
-	 * 
-	 * @param value
-	 *            the string to be converted.
-	 * @return the byte array.
-	 */
-	public static byte[] toBase64Bytes(String value) {
-		String str = VirgilBase64.encode(value.getBytes(UTF8_CHARSET));
-		return toBytes(str);
-	}
+    /**
+     * Convert string to Base64 byte array.
+     * 
+     * @param value
+     *            the string to be converted.
+     * @return the byte array.
+     */
+    public static byte[] toBase64Bytes(String value) {
+        String str = VirgilBase64.encode(value.getBytes(UTF8_CHARSET));
+        return toBytes(str);
+    }
 
-	/**
-	 * Encode byte array as Base64 string.
-	 * 
-	 * @param bytes
-	 *            the byte array to be encoded.
-	 * @return the base64-encoded string.
-	 */
-	public static String toBase64String(byte[] bytes) {
-		return VirgilBase64.encode(bytes);
-	}
+    /**
+     * Encode byte array as Base64 string.
+     * 
+     * @param bytes
+     *            the byte array to be encoded.
+     * @return the base64-encoded string.
+     */
+    public static String toBase64String(byte[] bytes) {
+        return VirgilBase64.encode(bytes);
+    }
 
-	/**
-	 * Decode Base64 string to string.
-	 * 
-	 * @param value
-	 *            the base64-encoded string to be converted.
-	 * @return the decoded string.
-	 */
-	public static String base64ToString(String value) {
-		return toString(VirgilBase64.decode(value));
-	}
+    /**
+     * Decode Base64 string to string.
+     * 
+     * @param value
+     *            the base64-encoded string to be converted.
+     * @return the decoded string.
+     */
+    public static String base64ToString(String value) {
+        return toString(VirgilBase64.decode(value));
+    }
 
-	/**
-	 * Decode Base64 string to byte array.
-	 * 
-	 * @param value
-	 *            The string to be converted.
-	 * @return the byte array.
-	 */
-	public static byte[] base64ToBytes(String value) {
-		return VirgilBase64.decode(value);
-	}
+    /**
+     * Decode Base64 string to byte array.
+     * 
+     * @param value
+     *            The string to be converted.
+     * @return the byte array.
+     */
+    public static byte[] base64ToBytes(String value) {
+        return VirgilBase64.decode(value);
+    }
 
-	/**
-	 * Decode Base64 byte array to string.
-	 * 
-	 * @param bytes
-	 *            the base64-encoded byte array.
-	 * @return the decoded string.
-	 */
-	public static String base64ToString(byte[] bytes) {
-		return toString(VirgilBase64.decode(toString(bytes)));
-	}
-	
-	/**
+    /**
+     * Decode Base64 byte array to string.
+     * 
+     * @param bytes
+     *            the base64-encoded byte array.
+     * @return the decoded string.
+     */
+    public static String base64ToString(byte[] bytes) {
+        return toString(VirgilBase64.decode(toString(bytes)));
+    }
+
+    /**
      * Decode HEX string to byte array.
      * 
      * @param value
@@ -180,19 +189,41 @@ public class ConvertionUtils {
         return DatatypeConverter.parseHexBinary(value);
     }
 
-	/**
-	 * Get the contents of an <code>InputStream</code> as a String using UTF-8
-	 * character encoding.
-	 * 
-	 * @param is
-	 *            the input stream.
-	 * @return the input stream data as string.
-	 */
-	public static String toString(InputStream is) {
-		try (Scanner s = new Scanner(is, "UTF-8")) {
-			s.useDelimiter("\\A");
-			return s.hasNext() ? s.next() : "";
-		}
-	}
+    /**
+     * Get the contents of an <code>InputStream</code> as a String using UTF-8 character encoding.
+     * 
+     * @param is
+     *            the input stream.
+     * @return the input stream data as string.
+     */
+    public static String toString(InputStream is) {
+        try (Scanner s = new Scanner(is, "UTF-8")) {
+            s.useDelimiter("\\A");
+            return s.hasNext() ? s.next() : "";
+        }
+    }
 
+    /**
+     * Take an accurate snapshot of the object, and convert it into the binary data.
+     * 
+     * @param snapshotModel
+     * @return
+     */
+    public static byte[] captureSnapshot(Object snapshotModel) {
+        String snapshotModelJson = ConvertionUtils.getGson().toJson(snapshotModel);
+        byte[] takenSnapshot = ConvertionUtils.toBytes(snapshotModelJson);
+
+        return takenSnapshot;
+    }
+
+    private static class ByteArrayToBase64TypeAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
+        public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            return base64ToBytes(json.getAsString());
+        }
+
+        public JsonElement serialize(byte[] src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(toBase64String(src));
+        }
+    }
 }

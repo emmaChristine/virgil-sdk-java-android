@@ -37,37 +37,34 @@ package com.virgilsecurity.sdk.crypto.exception;
  */
 public class KeyStorageException extends RuntimeException {
 
-	private static final long serialVersionUID = 6911846070390159175L;
+    private static final long serialVersionUID = 6911846070390159175L;
 
-	/**
-	 * Create a new instance of {@code KeyStorageException}
-	 *
-	 */
-	public KeyStorageException() {
-	}
+    /**
+     * Create a new instance of {@code KeyStorageException}
+     *
+     */
+    public KeyStorageException() {
+    }
 
-	/**
-	 * Create a new instance of {@code KeyStorageException}
-	 *
-	 * @param cause
-	 *            the cause (which is saved for later retrieval by the
-	 *            {@link #getCause()} method). (A <tt>null</tt> value is
-	 *            permitted, and indicates that the cause is nonexistent or
-	 *            unknown.)
-	 */
-	public KeyStorageException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Create a new instance of {@code KeyStorageException}
+     *
+     * @param cause
+     *            the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
+     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     */
+    public KeyStorageException(Throwable cause) {
+        super(cause);
+    }
 
-	/**
-	 * Create a new instance of {@code KeyStorageException} with the specified
-	 * detail message.
-	 *
-	 * @param message
-	 *            the detail message. The detail message is saved for later
-	 *            retrieval by the {@link #getMessage()} method.
-	 */
-	public KeyStorageException(String message) {
-		super(message);
-	}
+    /**
+     * Create a new instance of {@code KeyStorageException} with the specified detail message.
+     *
+     * @param message
+     *            the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
+     *            method.
+     */
+    public KeyStorageException(String message) {
+        super(message);
+    }
 }

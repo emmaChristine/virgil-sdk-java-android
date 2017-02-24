@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -29,334 +29,251 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.virgilsecurity.sdk.client.VirgilClient;
-import com.virgilsecurity.sdk.client.exceptions.VirgilCardIsNotFoundException;
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.RequestSigner;
+import com.virgilsecurity.sdk.client.exceptions.NotSupportedException;
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.GlobalIdentityType;
-import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
-import com.virgilsecurity.sdk.client.requests.CreateCardRequest;
-import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
+import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
+import com.virgilsecurity.sdk.client.requests.PublishGlobalCardRequest;
 import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
-import com.virgilsecurity.sdk.client.utils.StringUtils;
-import com.virgilsecurity.sdk.crypto.Crypto;
+import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
-import com.virgilsecurity.sdk.crypto.exceptions.EmptyArgumentException;
 import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
+import com.virgilsecurity.sdk.highlevel.impl.VirgilApiContext;
 
 /**
- * A Virgil Card is the main entity of the Virgil Security services, it includes
- * an information about the user and his public key. The Virgil Card identifies
- * the user by one of his available types, such as an email, a phone number,
- * etc.
- *
+ * A Virgil Card is the main entity of the Virgil Security services, it includes an information about the user and his
+ * public key. The Virgil Card identifies the user by one of his available types, such as an email, a phone number, etc.
+ * 
  * @author Andrii Iakovenko
  *
  */
 public class VirgilCard {
 
-	private Card model;
+    private VirgilApiContext context;
+    private CardModel card;
+    private PublicKey publicKey;
 
-	/**
-	 * Create a new instance of {@code VirgilCard}
-	 *
-	 */
-	VirgilCard(Card model) {
-		this.model = model;
-	}
+    /**
+     * Create new instance of {@link VirgilCard}.
+     * 
+     * @param context
+     * @param card
+     */
+    public VirgilCard(VirgilApiContext context, CardModel card) {
+        this.context = context;
+        this.card = card;
 
-	/**
-	 * Encrypts the specified data for current {@linkplain VirgilCard}
-	 * recipient.
-	 * 
-	 * @param data
-	 *            the data to be encrypted.
-	 * @return encrypted data.
-	 */
-	public byte[] encrypt(byte[] data) {
-		if (data == null) {
-			throw new NullArgumentException("data");
-		}
+        this.publicKey = this.context.getCrypto().importPublicKey(this.card.getSnapshotModel().getPublicKeyData());
+    }
 
-		Crypto crypto = VirgilConfig.getService(Crypto.class);
-		PublicKey publicKey = crypto.importPublicKey(this.getPublicKey());
+    /**
+     * Gets the unique identifier for the Virgil Card.
+     * 
+     * @return
+     */
+    public String getId() {
+        return this.card.getId();
+    }
 
-		byte[] cipherdata = crypto.encrypt(data, publicKey);
+    /**
+     * Gets the value of current Virgil Card identity.
+     * 
+     * @return
+     */
+    public String getIdentity() {
+        return this.card.getSnapshotModel().getIdentity();
+    }
 
-		return cipherdata;
-	}
+    /**
+     * Gets the identityType of current Virgil Card identity.
+     * 
+     * @return
+     */
+    public String getIdentityType() {
+        return this.card.getSnapshotModel().getIdentityType();
+    }
 
-	/**
-	 * Verifies the specified data and signature with current
-	 * {@linkplain VirgilCard} recipient.
-	 * 
-	 * @param data
-	 *            The data to be verified.
-	 * @param signature
-	 *            The signature used to verify the data integrity.
-	 * @return {@code true} if verification successed.
-	 */
-	public boolean verify(byte[] data, byte[] signature) {
-		if (data == null) {
-			throw new NullArgumentException("data");
-		}
+    /**
+     * Gets the custom Virgil Card parameters.
+     * 
+     * @return
+     */
+    public Map<String, String> getCustomFields() {
+        return this.card.getSnapshotModel().getData();
+    }
 
-		if (signature == null) {
-			throw new NullArgumentException("signature");
-		}
+    /**
+     * Gets a Public key that is assigned to current Virgil Card.
+     * 
+     * @return
+     */
+    PublicKey getPublicKey() {
+        return this.publicKey;
+    }
 
-		Crypto crypto = VirgilConfig.getService(Crypto.class);
-		PublicKey publicKey = crypto.importPublicKey(this.getPublicKey());
+    /**
+     * Encrypts the specified data for current {@linkplain VirgilCard} recipient.
+     * 
+     * @param data
+     *            The data to be encrypted.
+     * @return
+     */
+    public VirgilBuffer encrypt(VirgilBuffer data) {
+        if (data == null) {
+            throw new NullArgumentException("data");
+        }
 
-		boolean isValid = crypto.verify(data, signature, publicKey);
+        byte[] cipherdata = this.context.getCrypto().encrypt(data.getBytes(), this.publicKey);
+        return VirgilBuffer.from(cipherdata);
+    }
 
-		return isValid;
-	}
+    /**
+     * / Verifies the specified buffer and signature with current {@linkplain VirgilCard} recipient.
+     * 
+     * @param data
+     *            The data to be verified.
+     * @param signature
+     *            The signature used to verify the data integrity.
+     * @return
+     */
+    public boolean verify(VirgilBuffer data, VirgilBuffer signature) {
+        if (data == null) {
+            throw new NullArgumentException("data");
+        }
+        if (signature == null) {
+            throw new NullArgumentException("signature");
+        }
+        boolean isValid = this.context.getCrypto().verify(data.getBytes(), signature.getBytes(), this.publicKey);
 
-	/**
-	 * Gets the {@code VirgilCard} by specified identifier.
-	 * 
-	 * @param cardId
-	 *            The identifier that represents a {@linkplain VirgilCard}.
-	 * @return The Virgil Card.
-	 */
-	public static VirgilCard get(String cardId) {
-		VirgilClient client = VirgilConfig.getService(VirgilClient.class);
-		Card virgilCardDto = client.getCard(cardId);
+        return isValid;
+    }
 
-		if (virgilCardDto == null) {
-			throw new VirgilCardIsNotFoundException();
-		}
+    /**
+     * / Verifies the specified plain text and signature with current {@linkplain VirgilCard} recipient.
+     * 
+     * @param plaintext
+     *            The plain text to be verified.
+     * @param signature
+     *            The signature used to verify the data integrity.
+     * @return
+     */
+    public boolean verify(String plaintext, VirgilBuffer signature) {
+        if (plaintext == null) {
+            throw new NullArgumentException("plaintext");
+        }
+        return verify(VirgilBuffer.from(plaintext), signature);
+    }
 
-		return new VirgilCard(virgilCardDto);
-	}
+    /**
+     * Exports a current {@linkplain VirgilCard} instance into base64 encoded string.
+     * 
+     * @return A string that represents a {@linkplain VirgilCard}
+     */
+    public String export() {
+        String serializedCard = ConvertionUtils.getGson().toJson(this.card);
+        return VirgilBuffer.from(serializedCard).toString(StringEncoding.Base64);
+    }
 
-	/**
-	 * Finds the {@linkplain VirgilCard}s in global scope by specified criteria.
-	 * 
-	 * @param identity
-	 *            The identity.
-	 * @return A list of found {@linkplain VirgilCard}s.
-	 */
-	public static VirgilCards findGlobal(String identity) {
-		return findGlobal(identity, GlobalIdentityType.EMAIL);
-	}
+    /**
+     * Initiates an identity verification process for current Card identity type. It is only working for Global identity
+     * types like Email.
+     * 
+     * @return An instance of {@link IdentityVerificationAttempt} that contains information about operation etc...
+     */
+    public IdentityVerificationAttempt checkIdentity() {
+        return checkIdentity(null);
+    }
 
-	/**
-	 * Finds the {@linkplain VirgilCard}s in global scope by specified criteria.
-	 * 
-	 * @param identity
-	 *            The identity.
-	 * @param type
-	 *            Type of the identity.
-	 * @return A list of found {@linkplain VirgilCard}s.
-	 */
-	public static VirgilCards findGlobal(String identity, GlobalIdentityType type) {
-		if (identity == null) {
-			throw new NullArgumentException("identity");
-		}
+    /**
+     * Initiates an identity verification process for current Card identity type. It is only working for Global identity
+     * types like Email.
+     * 
+     * @param options
+     * @return An instance of {@link IdentityVerificationAttempt} that contains information about operation etc...
+     */
+    public IdentityVerificationAttempt checkIdentity(IdentityVerificationOptions options) {
+        Map<String, String> extraFields = null;
+        if (options != null) {
+            extraFields = options.getExtraFields();
+        }
+        String actionId = this.context.getClient().verifyIdentity(this.getIdentity(), this.getIdentityType(),
+                extraFields);
 
-		return findGlobal(Arrays.asList(identity), type);
-	}
+        IdentityVerificationAttempt attempt = new IdentityVerificationAttempt(this.context);
+        attempt.setActionId(actionId);
+        attempt.setIdentity(this.getIdentity());
+        attempt.setIdentityType(this.getIdentityType());
+        if (options != null) {
+            attempt.setTimeToLive(options.getTimeToLive());
+            attempt.setCountToLive(options.getCountToLive());
+        }
 
-	/**
-	 * Finds the {@linkplain VirgilCard}s in global scope by specified criteria.
-	 * 
-	 * @param identities
-	 *            The identities.
-	 * @return A list of found {@linkplain VirgilCard}s.
-	 */
-	public static VirgilCards findGlobal(List<String> identities) {
-		return findGlobal(identities, GlobalIdentityType.EMAIL);
-	}
+        return attempt;
+    }
 
-	/**
-	 * Finds the {@linkplain VirgilCard}s in global scope by specified criteria.
-	 * 
-	 * @param identities
-	 *            The identities.
-	 * @param type
-	 *            Type of the identity.
-	 * @return A list of found {@linkplain VirgilCard}s.
-	 */
-	public static VirgilCards findGlobal(List<String> identities, GlobalIdentityType type) {
-		if (identities == null) {
-			throw new NullArgumentException("identities");
-		}
+    /**
+     * Publishes a current {@linkplain VirgilCard} to the Virgil Security services.
+     */
+    public void publish() {
+        PublishCardRequest publishCardRequest = new PublishCardRequest(this.card.getSnapshot(),
+                this.card.getMeta().getSignatures());
 
-		VirgilClient client = VirgilConfig.getService(VirgilClient.class);
+        String appId = this.context.getCredentials().getAppId();
+        PrivateKey appKey = this.context.getCredentials().getAppKey(this.context.getCrypto());
 
-		SearchCriteria criteria = new SearchCriteria();
-		criteria.addIdentities(identities);
-		criteria.setIdentityType(type.getValue());
-		criteria.setScope(CardScope.GLOBAL);
+        RequestSigner requestSigner = new RequestSigner(this.context.getCrypto());
+        requestSigner.authoritySign(publishCardRequest, appId, appKey);
 
-		List<Card> cardModels = client.searchCards(criteria);
+        CardModel updatedModel = this.context.getClient().publishCard(publishCardRequest);
 
-		VirgilCards virgilCards = new VirgilCards();
-		for (Card card : cardModels) {
-			virgilCards.add(new VirgilCard(card));
-		}
+        this.card.setMeta(updatedModel.getMeta());
+    }
 
-		return virgilCards;
-	}
+    /**
+     * Publishes a current {@linkplain VirgilCard} to the Virgil Security services into global scope.
+     * 
+     * @param identityToken
+     */
+    public void publishAsGlobal(IdentityValidationToken identityToken) {
+        if (identityToken == null) {
+            throw new NullArgumentException("identityToken");
+        }
 
-	/**
-	 * Finds the {@linkplain VirgilCard}s by specified criteria.
-	 * 
-	 * @param identity
-	 *            The identity.
-	 * @param type
-	 *            Type of the identity.
-	 * @return A list of found {@linkplain VirgilCard}s.
-	 */
-	public static VirgilCards find(String identity, String type) {
-		if (identity == null) {
-			throw new NullArgumentException("identity");
-		}
+        if (!CardScope.GLOBAL.equals(this.card.getSnapshotModel().getScope())) {
+            throw new NotSupportedException();
+        }
 
-		return find(Arrays.asList(identity), type);
-	}
+        PublishGlobalCardRequest publishCardRequest = new PublishGlobalCardRequest(this.card.getSnapshot(),
+                identityToken.getValue(), this.card.getMeta().getSignatures());
 
-	/**
-	 * Finds the {@linkplain VirgilCard}s by specified criteria.
-	 * 
-	 * @param identities
-	 *            The identities.
-	 * @param type
-	 *            Type of the identity.
-	 * @return A list of found {@linkplain VirgilCard}s.
-	 */
-	public static VirgilCards find(List<String> identities, String type) {
-		if (identities == null) {
-			throw new NullArgumentException("identities");
-		}
-		for (String identity : identities) {
-			if (identity == null) {
-				throw new NullArgumentException("identity");
-			}
-		}
+        CardModel updatedModel = this.context.getClient().publishGlobalCard(publishCardRequest);
 
-		VirgilClient client = VirgilConfig.getService(VirgilClient.class);
+        this.card.setMeta(updatedModel.getMeta());
+    }
 
-		SearchCriteria criteria = SearchCriteria.byIdentities(identities);
-		criteria.setIdentityType(type);
+    /**
+     * Encrypts data for list of recipients Cards.
+     * 
+     * @param data
+     * @param recipients
+     * @return A new {@link VirgilBuffer} with encrypted data.
+     */
+    VirgilBuffer encrypt(VirgilBuffer data, Collection<VirgilCard> recipients) {
+        List<PublicKey> publicKeyRecipients = new ArrayList<>();
+        if (recipients != null && !recipients.isEmpty()) {
+            for (VirgilCard card : recipients) {
+                publicKeyRecipients.add(card.publicKey);
+            }
+        }
 
-		List<Card> cardModels = client.searchCards(criteria);
-
-		VirgilCards virgilCards = new VirgilCards();
-		for (Card card : cardModels) {
-			virgilCards.add(new VirgilCard(card));
-		}
-
-		return virgilCards;
-	}
-
-	/**
-	 * Creates a new {@linkplain VirgilCard} by request.
-	 * 
-	 * @param request
-	 *            The request.
-	 * @return The created card.
-	 */
-	public static VirgilCard create(CreateCardRequest request) {
-		VirgilClient client = VirgilConfig.getService(VirgilClient.class);
-		Card card = client.createCard(request);
-
-		return new VirgilCard(card);
-	}
-
-	/**
-	 * Revokes a {@linkplain VirgilCard} by revocation request.
-	 * 
-	 * @param request
-	 *            The request.
-	 */
-	public static void revoke(RevokeCardRequest request) {
-		VirgilClient client = VirgilConfig.getService(VirgilClient.class);
-		client.revokeCard(request);
-	}
-
-	/**
-	 * Encrypts the text.
-	 * 
-	 * @param text
-	 *            The text to encrypt.
-	 * @return The encrypted data.
-	 * 
-	 * @throws EmptyArgumentException
-	 */
-	public byte[] encryptText(String text) {
-		if (StringUtils.isBlank(text)) {
-			throw new EmptyArgumentException("text");
-		}
-
-		return encrypt(ConvertionUtils.toBytes(text));
-	}
-
-	/**
-	 * Verifies that a digital signature is valid for specified text.
-	 * 
-	 * @param text
-	 *            The text to encrypt.
-	 * @param signature
-	 *            The signature.
-	 * @return {@code true} if the signature is valid; otherwise, {@code false}.
-	 */
-	public boolean verifyText(String text, byte[] signature) {
-		if (StringUtils.isBlank(text)) {
-			throw new EmptyArgumentException("text");
-		}
-
-		return verify(ConvertionUtils.toBytes(text), signature);
-	}
-
-	/**
-	 * Gets the unique identifier for the Virgil Card.
-	 * 
-	 * @return the unique identifier for the Virgil Card.
-	 */
-	public String getId() {
-		return model.getId();
-	}
-
-	/**
-	 * Gets the value of current Virgil Card identity.
-	 * 
-	 * @return the value of current Virgil Card identity.
-	 */
-	public String getIdentity() {
-		return model.getIdentity();
-	}
-
-	/**
-	 * Gets the type of current Virgil Card identity.
-	 * 
-	 * @return the type of current Virgil Card identity.
-	 */
-	public String getIdentityType() {
-		return model.getIdentityType();
-	}
-
-	/**
-	 * Gets the custom parameters.
-	 * 
-	 * @return the custom parameters.
-	 */
-	public Map<String, String> getData() {
-		return model.getData();
-	}
-
-	/**
-	 * Gets the Public Key of current Virgil Card.
-	 * 
-	 * @return the Public Key of current Virgil Card.
-	 */
-	public byte[] getPublicKey() {
-		return model.getPublicKey();
-	}
+        byte[] cipherdata = this.context.getCrypto().encrypt(data.getBytes(),
+                publicKeyRecipients.toArray(new PublicKey[0]));
+        return VirgilBuffer.from(cipherdata);
+    }
 }

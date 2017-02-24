@@ -39,8 +39,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public enum CardScope {
 
-	@SerializedName("application") APPLICATION,
-	
-	@SerializedName("global") GLOBAL;
+    @SerializedName("application")
+    APPLICATION,
+
+    @SerializedName("global")
+    GLOBAL;
 
 }

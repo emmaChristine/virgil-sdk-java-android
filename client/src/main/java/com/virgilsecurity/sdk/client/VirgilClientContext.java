@@ -35,129 +35,145 @@ import java.net.URL;
 
 import com.virgilsecurity.sdk.client.utils.StringUtils;
 import com.virgilsecurity.sdk.crypto.exception.VirgilException;
-import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
 
 /**
- * Virgil Client Context contains common configuration parameters of Virgil
- * Client.
+ * Virgil Client Context contains common configuration parameters of Virgil Client.
  *
  * @author Andrii Iakovenko
  *
  */
 public class VirgilClientContext {
 
-	private String accessToken;
+    private String accessToken;
 
-	private URL cardsServiceURL;
+    private URL cardsServiceURL;
 
-	private URL readOnlyCardsServiceURL;
+    private URL readOnlyCardsServiceURL;
 
-	private URL identityServiceURL;
+    private URL identityServiceURL;
 
-	/**
-	 * Create a new instance of {@code VirgilClientContext}
-	 *
-	 * @param accessToken
-	 *            The application access token.
-	 */
-	public VirgilClientContext(String accessToken) {
-	    if (accessToken == null) {
-	        throw new NullArgumentException("accessToken");
-	    }
-		this.accessToken = accessToken;
+    private URL raServiceURL;
+    
+    /**
+     * Create new instance of {@link VirgilClientContext}.
+     */
+    public VirgilClientContext() {
+        try {
+            this.cardsServiceURL = new URL("https://cards.virgilsecurity.com");
 
-		try {
-			this.cardsServiceURL = new URL("https://cards.virgilsecurity.com");
+            this.readOnlyCardsServiceURL = new URL("https://cards-ro.virgilsecurity.com");
+            this.identityServiceURL = new URL("https://identity.virgilsecurity.com");
+            this.raServiceURL = new URL("https://ra.virgilsecurity.com");
+        } catch (MalformedURLException e) {
+            throw new VirgilException(e.getMessage());
+        }
+    }
 
-			this.readOnlyCardsServiceURL = new URL("https://cards-ro.virgilsecurity.com");
-			this.identityServiceURL = new URL("https://identity.virgilsecurity.com");
-		} catch (MalformedURLException e) {
-			throw new VirgilException(e.getMessage());
-		}
-	}
+    /**
+     * Create a new instance of {@code VirgilClientContext}
+     *
+     * @param accessToken
+     *            The application access token.
+     */
+    public VirgilClientContext(String accessToken) {
+        this();
+        this.accessToken = accessToken;
+    }
 
-	/**
-	 * Gets the access token.
-	 * 
-	 * @return the accessToken
-	 */
-	public String getAccessToken() {
-		return accessToken;
-	}
+    /**
+     * Gets the access token.
+     * 
+     * @return the accessToken
+     */
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-	/**
-	 * @param accessToken
-	 *            the accessToken to set
-	 */
-	public void setAccessToken(String accessToken) {
-	    if (accessToken == null) {
-	        throw new NullArgumentException("accessToken");
-	    }
-		this.accessToken = accessToken;
-	}
+    /**
+     * @param accessToken
+     *            the accessToken to set
+     */
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-	/**
-	 * Verify is URI well-formed.
-	 * 
-	 * @param uri
-	 *            The URI to be verified.
-	 * @return {@code true} if URI is well-formed, {@code false} in other case.
-	 */
-	public static boolean isValidURI(String uri) {
-		if (StringUtils.isBlank(uri)) {
-			return false;
-		}
-		try {
-			URI theUri = URI.create(uri);
-			return theUri.isAbsolute();
-		} catch (Exception e) {
-			return false;
-		}
-	}
+    /**
+     * Verify is URI well-formed.
+     * 
+     * @param uri
+     *            The URI to be verified.
+     * @return {@code true} if URI is well-formed, {@code false} in other case.
+     */
+    public static boolean isValidURI(String uri) {
+        if (StringUtils.isBlank(uri)) {
+            return false;
+        }
+        try {
+            URI theUri = URI.create(uri);
+            return theUri.isAbsolute();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-	/**
-	 * @return the readOnlyCardsServiceURL
-	 */
-	public URL getReadOnlyCardsServiceURL() {
-		return readOnlyCardsServiceURL;
-	}
+    /**
+     * @return the readOnlyCardsServiceURL
+     */
+    public URL getReadOnlyCardsServiceURL() {
+        return readOnlyCardsServiceURL;
+    }
 
-	/**
-	 * @param readOnlyCardsServiceURL
-	 *            the readOnlyCardsServiceURL to set
-	 */
-	public void setReadOnlyCardsServiceURL(URL readOnlyCardsServiceURL) {
-		this.readOnlyCardsServiceURL = readOnlyCardsServiceURL;
-	}
+    /**
+     * @param readOnlyCardsServiceURL
+     *            the readOnlyCardsServiceURL to set
+     */
+    public void setReadOnlyCardsServiceURL(URL readOnlyCardsServiceURL) {
+        this.readOnlyCardsServiceURL = readOnlyCardsServiceURL;
+    }
 
-	/**
-	 * @return the cardsServiceURL
-	 */
-	public URL getCardsServiceURL() {
-		return cardsServiceURL;
-	}
+    /**
+     * @return the cardsServiceURL
+     */
+    public URL getCardsServiceURL() {
+        return cardsServiceURL;
+    }
 
-	/**
-	 * @param cardsServiceURL
-	 *            the cardsServiceURL to set
-	 */
-	public void setCardsServiceURL(URL cardsServiceURL) {
-		this.cardsServiceURL = cardsServiceURL;
-	}
+    /**
+     * @param cardsServiceURL
+     *            the cardsServiceURL to set
+     */
+    public void setCardsServiceURL(URL cardsServiceURL) {
+        this.cardsServiceURL = cardsServiceURL;
+    }
 
-	/**
-	 * @return the identityServiceURL
-	 */
-	public URL getIdentityServiceURL() {
-		return identityServiceURL;
-	}
+    /**
+     * @return the identityServiceURL
+     */
+    public URL getIdentityServiceURL() {
+        return identityServiceURL;
+    }
 
-	/**
-	 * @param identityServiceURL
-	 *            the identityServiceURL to set
-	 */
-	public void setIdentityServiceURL(URL identityServiceURL) {
-		this.identityServiceURL = identityServiceURL;
-	}
+    /**
+     * @param identityServiceURL
+     *            the identityServiceURL to set
+     */
+    public void setIdentityServiceURL(URL identityServiceURL) {
+        this.identityServiceURL = identityServiceURL;
+    }
+
+    /**
+     * @return the raServiceURL
+     */
+    public URL getRaServiceURL() {
+        return raServiceURL;
+    }
+
+    /**
+     * @param raServiceURL
+     *            the raServiceURL to set
+     */
+    public void setRaServiceURL(URL raServiceURL) {
+        this.raServiceURL = raServiceURL;
+    }
 
 }

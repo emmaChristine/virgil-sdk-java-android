@@ -46,296 +46,296 @@ import com.virgilsecurity.sdk.crypto.exception.VerificationException;
  */
 public interface Crypto {
 
-	/**
-	 * Calculate fingerprint.
-	 * 
-	 * @param content
-	 *            The data to calculate fingerprint for.
-	 * @return the fingerprint as {@code String}.
-	 */
-	Fingerprint calculateFingerprint(byte[] content);
+    /**
+     * Calculate fingerprint.
+     * 
+     * @param content
+     *            The data to calculate fingerprint for.
+     * @return the fingerprint as {@code String}.
+     */
+    Fingerprint calculateFingerprint(byte[] content);
 
-	/**
-	 * Compute data hash with algorithm specified.
-	 * 
-	 * @param data
-	 *            the data for hashing.
-	 * @param algorithm
-	 *            the algorithm to be used for hash calculation.
-	 * @return the hash code.
-	 */
-	byte[] computeHash(byte[] data, HashAlgorithm algorithm);
+    /**
+     * Compute data hash with algorithm specified.
+     * 
+     * @param data
+     *            the data for hashing.
+     * @param algorithm
+     *            the algorithm to be used for hash calculation.
+     * @return the hash code.
+     */
+    byte[] computeHash(byte[] data, HashAlgorithm algorithm);
 
-	/**
-	 * Decrypt byte array with private key.
-	 * 
-	 * @param data
-	 *            the data to be decrypted.
-	 * @param privateKey
-	 *            the recipients private key.
-	 * @return the decrypted data as byte array.
-	 */
-	byte[] decrypt(byte[] data, PrivateKey privateKey);
+    /**
+     * Decrypt byte array with private key.
+     * 
+     * @param data
+     *            the data to be decrypted.
+     * @param privateKey
+     *            the recipients private key.
+     * @return the decrypted data as byte array.
+     */
+    byte[] decrypt(byte[] data, PrivateKey privateKey);
 
-	/**
-	 * Decrypt stream data with private key.
-	 * 
-	 * @param inputStream
-	 *            the input stream to be decrypted.
-	 * @param outputStream
-	 *            the decrypted data as stream.
-	 * @param privateKey
-	 *            the recipients private key.
-	 * @throws DecryptionException
-	 * 
-	 * @see PublicKey
-	 * @see PrivateKey
-	 */
-	void decrypt(InputStream inputStream, OutputStream outputStream, PrivateKey privateKey);
-	
-	/**
-	 * Encrypt byte array for single recipient.
-	 * 
-	 * @param data
-	 *            the data to be encrypted.
-	 * @param recipient
-	 *            the recipient's public key.
-	 * @return the encrypted data as byte array.
-	 * 
-	 * @see PublicKey
-	 */
-	byte[] encrypt(byte[] data, PublicKey recipient);
+    /**
+     * Decrypt stream data with private key.
+     * 
+     * @param inputStream
+     *            the input stream to be decrypted.
+     * @param outputStream
+     *            the decrypted data as stream.
+     * @param privateKey
+     *            the recipients private key.
+     * @throws DecryptionException
+     * 
+     * @see PublicKey
+     * @see PrivateKey
+     */
+    void decrypt(InputStream inputStream, OutputStream outputStream, PrivateKey privateKey);
 
-	/**
-	 * Encrypt byte array with public key set.
-	 * 
-	 * @param data
-	 *            the data to be encrypted.
-	 * @param recipients
-	 *            the recipients public key set.
-	 * @return the encrypted data as byte array.
-	 * 
-	 * @see PublicKey
-	 */
-	byte[] encrypt(byte[] data, PublicKey[] recipients);
-	
-	/**
-	 * Encrypt stream data with public key.
-	 * 
-	 * @param inputStream
-	 *            the input stream to be encrypted.
-	 * @param outputStream
-	 *            the output stream encrypted data written to.
-	 * @param recipient
-	 *            the recipient's public key.
-	 * @throws EncryptionException
-	 *             if encryption failed.
-	 */
-	void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey recipient);
+    /**
+     * Encrypt byte array for single recipient.
+     * 
+     * @param data
+     *            the data to be encrypted.
+     * @param recipient
+     *            the recipient's public key.
+     * @return the encrypted data as byte array.
+     * 
+     * @see PublicKey
+     */
+    byte[] encrypt(byte[] data, PublicKey recipient);
 
-	/**
-	 * Encrypt stream data with public key set.
-	 * 
-	 * @param inputStream
-	 *            the input stream to be encrypted.
-	 * @param outputStream
-	 *            the output stream encrypted data written to.
-	 * @param recipients
-	 *            the recipients public key set.
-	 * @throws EncryptionException
-	 *             if encryption failed.
-	 */
-	void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey[] recipients);
+    /**
+     * Encrypt byte array with public key set.
+     * 
+     * @param data
+     *            the data to be encrypted.
+     * @param recipients
+     *            the recipients public key set.
+     * @return the encrypted data as byte array.
+     * 
+     * @see PublicKey
+     */
+    byte[] encrypt(byte[] data, PublicKey[] recipients);
 
-	/**
-	 * Export private key as byte array.
-	 * 
-	 * @param privateKey
-	 *            the private key.
-	 * @return the exported private key as byte array.
-	 * 
-	 * @see PrivateKey
-	 */
-	byte[] exportPrivateKey(PrivateKey privateKey);
+    /**
+     * Encrypt stream data with public key.
+     * 
+     * @param inputStream
+     *            the input stream to be encrypted.
+     * @param outputStream
+     *            the output stream encrypted data written to.
+     * @param recipient
+     *            the recipient's public key.
+     * @throws EncryptionException
+     *             if encryption failed.
+     */
+    void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey recipient);
 
-	/**
-	 * Export private key as byte array.
-	 * 
-	 * @param privateKey
-	 *            the private key.
-	 * @param password
-	 *            the private key password.
-	 * @return the exported private key as byte array.
-	 * 
-	 * @see PrivateKey
-	 */
+    /**
+     * Encrypt stream data with public key set.
+     * 
+     * @param inputStream
+     *            the input stream to be encrypted.
+     * @param outputStream
+     *            the output stream encrypted data written to.
+     * @param recipients
+     *            the recipients public key set.
+     * @throws EncryptionException
+     *             if encryption failed.
+     */
+    void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey[] recipients);
 
-	byte[] exportPrivateKey(PrivateKey privateKey, String password);
+    /**
+     * Export private key as byte array.
+     * 
+     * @param privateKey
+     *            the private key.
+     * @return the exported private key as byte array.
+     * 
+     * @see PrivateKey
+     */
+    byte[] exportPrivateKey(PrivateKey privateKey);
 
-	/**
-	 * Export public key as byte array.
-	 * 
-	 * @param publicKey
-	 *            the public key.
-	 * @return the exported public key as byte array.
-	 * 
-	 * @see PublicKey
-	 */
+    /**
+     * Export private key as byte array.
+     * 
+     * @param privateKey
+     *            the private key.
+     * @param password
+     *            the private key password.
+     * @return the exported private key as byte array.
+     * 
+     * @see PrivateKey
+     */
 
-	byte[] exportPublicKey(PublicKey publicKey);
+    byte[] exportPrivateKey(PrivateKey privateKey, String password);
 
-	/**
-	 * Extract public key from private key.
-	 * 
-	 * @param privateKey
-	 *            the private key.
-	 * @return the extracted public key.
-	 */
-	PublicKey extractPublicKey(PrivateKey privateKey);
+    /**
+     * Export public key as byte array.
+     * 
+     * @param publicKey
+     *            the public key.
+     * @return the exported public key as byte array.
+     * 
+     * @see PublicKey
+     */
 
-	/**
-	 * Generate key pair.
-	 * 
-	 * @return the generated key pair.
-	 * 
-	 * @see PrivateKey
-	 * @see PublicKey
-	 */
-	KeyPair generateKeys();
+    byte[] exportPublicKey(PublicKey publicKey);
 
-	/**
-	 * Import private key from byte array.
-	 * 
-	 * @param keyData
-	 *            the Base64 encoded private key.
-	 * @return the private key.
-	 * @throws CryptoException
-	 *             if private key couldn't be imported.
-	 * 
-	 * @see PrivateKey
-	 */
-	PrivateKey importPrivateKey(byte[] keyData);
+    /**
+     * Extract public key from private key.
+     * 
+     * @param privateKey
+     *            the private key.
+     * @return the extracted public key.
+     */
+    PublicKey extractPublicKey(PrivateKey privateKey);
 
-	/**
-	 * Import private key from byte array.
-	 * 
-	 * @param keyData
-	 *            the Base64 encoded private key.
-	 * @param password
-	 *            the private key password.
-	 * @return the private key.
-	 * @throws CryptoException
-	 *             if private key couldn't be imported.
-	 * 
-	 * @see PrivateKey
-	 */
-	PrivateKey importPrivateKey(byte[] keyData, String password);
+    /**
+     * Generate key pair.
+     * 
+     * @return the generated key pair.
+     * 
+     * @see PrivateKey
+     * @see PublicKey
+     */
+    KeyPair generateKeys();
 
-	/**
-	 * Import public key from byte array.
-	 * 
-	 * @param publicKey
-	 *            the public key.
-	 * @return the public key.
-	 * 
-	 * @see PublicKey
-	 */
-	PublicKey importPublicKey(byte[] publicKey);
+    /**
+     * Import private key from byte array.
+     * 
+     * @param keyData
+     *            the Base64 encoded private key.
+     * @return the private key.
+     * @throws CryptoException
+     *             if private key couldn't be imported.
+     * 
+     * @see PrivateKey
+     */
+    PrivateKey importPrivateKey(byte[] keyData);
 
-	/**
-	 * Sign byte array data with private key.
-	 * 
-	 * @param data
-	 *            the data to be signed.
-	 * @param privateKey
-	 *            the signer's private key.
-	 * @return the signature.
-	 * 
-	 * @see PrivateKey
-	 */
-	byte[] sign(byte[] data, PrivateKey privateKey);
+    /**
+     * Import private key from byte array.
+     * 
+     * @param keyData
+     *            the Base64 encoded private key.
+     * @param password
+     *            the private key password.
+     * @return the private key.
+     * @throws CryptoException
+     *             if private key couldn't be imported.
+     * 
+     * @see PrivateKey
+     */
+    PrivateKey importPrivateKey(byte[] keyData, String password);
 
-	/**
-	 * Sign stream data with private key.
-	 * 
-	 * @param inputStream
-	 *            the input stream to be signed.
-	 * @param privateKey
-	 *            the signer's private key.
-	 * @return the signature.
-	 * @throws SigningException
-	 *             if stream couldn't be signed.
-	 * 
-	 * @see PrivateKey
-	 */
-	byte[] sign(InputStream inputStream, PrivateKey privateKey);
+    /**
+     * Import public key from byte array.
+     * 
+     * @param publicKey
+     *            the public key.
+     * @return the public key.
+     * 
+     * @see PublicKey
+     */
+    PublicKey importPublicKey(byte[] publicKey);
 
-	/**
-	 * Verify byte array with signature.
-	 * 
-	 * @param data
-	 *            the data to be verified.
-	 * @param signature
-	 *            the signature.
-	 * @param signer
-	 *            the signer's public key.
-	 * @return {@code true} if signature is valid. {@code false} in other case.
-	 * @throws VerificationException
-	 *             if data couldn't be verified.
-	 */
-	boolean verify(byte[] data, byte[] signature, PublicKey signer);
+    /**
+     * Sign byte array data with private key.
+     * 
+     * @param data
+     *            the data to be signed.
+     * @param privateKey
+     *            the signer's private key.
+     * @return the signature.
+     * 
+     * @see PrivateKey
+     */
+    byte[] sign(byte[] data, PrivateKey privateKey);
 
-	/**
-	 * Verify stream data with signature.
-	 * 
-	 * @param inputStream
-	 *            the input stream to be verified.
-	 * @param signature
-	 *            the signature.
-	 * @param signer
-	 *            the signer's public key.
-	 * @return {@code true} if signature is valid. {@code false} in other case.
-	 * @throws VerificationException
-	 *             if data couldn't be verified.
-	 */
-	boolean verify(InputStream inputStream, byte[] signature, PublicKey signer);
-	
-	/**
-	 * Sign data and encrypt.
-	 * 
-	 * @param data
-	 *            the data to be signed and encrypted.
-	 * @param privateKey
-	 *            the private key used for signing.
-	 * @param recipient
-	 *            the recipient's public key.
-	 * @return the signed and encrypted data.
-	 */
-	byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient);
+    /**
+     * Sign stream data with private key.
+     * 
+     * @param inputStream
+     *            the input stream to be signed.
+     * @param privateKey
+     *            the signer's private key.
+     * @return the signature.
+     * @throws SigningException
+     *             if stream couldn't be signed.
+     * 
+     * @see PrivateKey
+     */
+    byte[] sign(InputStream inputStream, PrivateKey privateKey);
 
-	/**
-	 * Sign data and encrypt.
-	 * 
-	 * @param data
-	 *            the data to be signed and encrypted.
-	 * @param privateKey
-	 *            the private key used for signing.
-	 * @param recipients
-	 *            the recipient public keys.
-	 * @return the signed and encrypted data.
-	 */
-	byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients);
+    /**
+     * Verify byte array with signature.
+     * 
+     * @param data
+     *            the data to be verified.
+     * @param signature
+     *            the signature.
+     * @param signer
+     *            the signer's public key.
+     * @return {@code true} if signature is valid. {@code false} in other case.
+     * @throws VerificationException
+     *             if data couldn't be verified.
+     */
+    boolean verify(byte[] data, byte[] signature, PublicKey signer);
 
-	/**
-	 * Decrypt data and verify.
-	 * 
-	 * @param cipherData
-	 *            the encrypted data to be decrypted.
-	 * @param privateKey
-	 *            the private key used for decryption.
-	 * @param publicKey
-	 *            the public key used for verify.
-	 * @return the decrypted data.
-	 */
-	byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey);
+    /**
+     * Verify stream data with signature.
+     * 
+     * @param inputStream
+     *            the input stream to be verified.
+     * @param signature
+     *            the signature.
+     * @param signer
+     *            the signer's public key.
+     * @return {@code true} if signature is valid. {@code false} in other case.
+     * @throws VerificationException
+     *             if data couldn't be verified.
+     */
+    boolean verify(InputStream inputStream, byte[] signature, PublicKey signer);
+
+    /**
+     * Sign data and encrypt.
+     * 
+     * @param data
+     *            the data to be signed and encrypted.
+     * @param privateKey
+     *            the private key used for signing.
+     * @param recipient
+     *            the recipient's public key.
+     * @return the signed and encrypted data.
+     */
+    byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient);
+
+    /**
+     * Sign data and encrypt.
+     * 
+     * @param data
+     *            the data to be signed and encrypted.
+     * @param privateKey
+     *            the private key used for signing.
+     * @param recipients
+     *            the recipient public keys.
+     * @return the signed and encrypted data.
+     */
+    byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients);
+
+    /**
+     * Decrypt data and verify.
+     * 
+     * @param cipherData
+     *            the encrypted data to be decrypted.
+     * @param privateKey
+     *            the private key used for decryption.
+     * @param publicKey
+     *            the public key used for verify.
+     * @return the decrypted data.
+     */
+    byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey);
 }

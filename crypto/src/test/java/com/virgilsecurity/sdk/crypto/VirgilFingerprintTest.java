@@ -44,27 +44,27 @@ import org.junit.Test;
  */
 public class VirgilFingerprintTest {
 
-	private static final String FINGERPRINT = "3058300d060960864801650304020205000447304502210094faae1dda67f32a654cdecba0ba555000584d30099c5127cd839a95940ea80702200db99d08bbb31e6214e73c7ded430ce2415de3a4c6a55b3291b13285d92430ec";
+    private static final String FINGERPRINT = "3058300d060960864801650304020205000447304502210094faae1dda67f32a654cdecba0ba555000584d30099c5127cd839a95940ea80702200db99d08bbb31e6214e73c7ded430ce2415de3a4c6a55b3291b13285d92430ec";
 
-	@Test
-	public void create_fromByteArray() {
-		Fingerprint fingerprint = new VirgilFingerprint(DatatypeConverter.parseHexBinary(FINGERPRINT));
-		assertNotNull(fingerprint.getValue());
-		assertEquals(FINGERPRINT, DatatypeConverter.printHexBinary(fingerprint.getValue()).toLowerCase());
-	}
+    @Test
+    public void create_fromByteArray() {
+        Fingerprint fingerprint = new VirgilFingerprint(DatatypeConverter.parseHexBinary(FINGERPRINT));
+        assertNotNull(fingerprint.getValue());
+        assertEquals(FINGERPRINT, DatatypeConverter.printHexBinary(fingerprint.getValue()).toLowerCase());
+    }
 
-	@Test
-	public void create_fromString() {
-		Fingerprint fingerprint = new VirgilFingerprint(FINGERPRINT);
-		assertNotNull(fingerprint.getValue());
-		assertEquals(FINGERPRINT, DatatypeConverter.printHexBinary(fingerprint.getValue()).toLowerCase());
-	}
+    @Test
+    public void create_fromString() {
+        Fingerprint fingerprint = new VirgilFingerprint(FINGERPRINT);
+        assertNotNull(fingerprint.getValue());
+        assertEquals(FINGERPRINT, DatatypeConverter.printHexBinary(fingerprint.getValue()).toLowerCase());
+    }
 
-	@Test
-	public void toHex() {
-		Fingerprint fingerprint = new VirgilFingerprint(FINGERPRINT);
-		assertNotNull(fingerprint.getValue());
-		assertEquals(FINGERPRINT, fingerprint.toHex());
-	}
+    @Test
+    public void toHex() {
+        Fingerprint fingerprint = new VirgilFingerprint(FINGERPRINT);
+        assertNotNull(fingerprint.getValue());
+        assertEquals(FINGERPRINT, fingerprint.toHex());
+    }
 
 }

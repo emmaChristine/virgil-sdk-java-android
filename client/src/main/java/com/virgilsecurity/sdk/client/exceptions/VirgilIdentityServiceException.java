@@ -37,27 +37,26 @@ package com.virgilsecurity.sdk.client.exceptions;
  */
 public class VirgilIdentityServiceException extends VirgilServiceException {
 
-	private static final long serialVersionUID = 6947954770582210688L;
+    private static final long serialVersionUID = 6947954770582210688L;
 
-	/**
-	 * Create a new instance of {@code VirgilIdentityServiceException}
-	 *
-	 * @param e
-	 *            the exception.
-	 */
-	public VirgilIdentityServiceException(Exception e) {
-		super(e);
-	}
+    /**
+     * Create a new instance of {@code VirgilIdentityServiceException}
+     *
+     * @param e
+     *            the exception.
+     */
+    public VirgilIdentityServiceException(Exception e) {
+        super(e);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.client.exceptions.VirgilServiceException#
-	 * getMessageBundleName()
-	 */
-	@Override
-	protected String getMessageBundleName() {
-		return "IdentityServiceMessages";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.exceptions.VirgilServiceException# getMessageBundleName()
+     */
+    @Override
+    protected String getMessageBundleName() {
+        return "IdentityServiceMessages";
+    }
 
 }

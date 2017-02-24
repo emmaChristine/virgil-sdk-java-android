@@ -39,39 +39,39 @@ import java.util.Map;
  */
 public interface KeyEntry {
 
-	/**
-	 * Gets the key entry name.
-	 * 
-	 * @return the key entry name.
-	 */
-	String getName();
+    /**
+     * Gets the key entry name.
+     * 
+     * @return the key entry name.
+     */
+    String getName();
 
-	/**
-	 * Sets the key entry name.
-	 * 
-	 * @param name
-	 *            the key entry name.
-	 */
-	void setName(String name);
+    /**
+     * Sets the key entry name.
+     * 
+     * @param name
+     *            the key entry name.
+     */
+    void setName(String name);
 
-	/**
-	 * Gets the key entry value.
-	 * 
-	 * @return the key entry value.
-	 */
-	byte[] getValue();
+    /**
+     * Gets the key entry value.
+     * 
+     * @return the key entry value.
+     */
+    byte[] getValue();
 
-	/**
-	 * Sets the key entry value.
-	 * 
-	 * @param value
-	 *            the key entry value.
-	 */
-	void setValue(byte[] value);
+    /**
+     * Sets the key entry value.
+     * 
+     * @param value
+     *            the key entry value.
+     */
+    void setValue(byte[] value);
 
-	/**
-	 * @return the key entry metadata.
-	 */
-	Map<String, String> getMetadata();
+    /**
+     * @return the key entry metadata.
+     */
+    Map<String, String> getMetadata();
 
 }

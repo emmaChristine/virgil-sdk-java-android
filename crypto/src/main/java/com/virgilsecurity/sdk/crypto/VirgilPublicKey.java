@@ -41,68 +41,68 @@ import java.io.Serializable;
  */
 public class VirgilPublicKey implements PublicKey, Serializable {
 
-	private static final long serialVersionUID = 1806825984983845090L;
+    private static final long serialVersionUID = 1806825984983845090L;
 
-	/** The Public key identifier */
-	private byte[] id;
+    /** The Public key identifier */
+    private byte[] id;
 
-	/** The Public key value */
-	private byte[] value;
+    /** The Public key value */
+    private byte[] value;
 
-	/**
-	 * Create a new instance of {@code VirgilPublicKey}
-	 *
-	 */
-	VirgilPublicKey() {
-	}
+    /**
+     * Create a new instance of {@code VirgilPublicKey}
+     *
+     */
+    VirgilPublicKey() {
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilPublicKey}
-	 *
-	 * @param id
-	 * @param value
-	 */
-	VirgilPublicKey(byte[] id, byte[] value) {
-		this.id = id;
-		this.value = value;
-	}
+    /**
+     * Create a new instance of {@code VirgilPublicKey}
+     *
+     * @param id
+     * @param value
+     */
+    VirgilPublicKey(byte[] id, byte[] value) {
+        this.id = id;
+        this.value = value;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.PublicKey#getId()
-	 */
-	public byte[] getId() {
-		return id;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.PublicKey#getId()
+     */
+    public byte[] getId() {
+        return id;
+    }
 
-	/**
-	 * Set the Public key hash.
-	 * 
-	 * @param id
-	 *            the Id to set
-	 */
-	public void setId(byte[] id) {
-		this.id = id;
-	}
+    /**
+     * Set the Public key hash.
+     * 
+     * @param id
+     *            the Id to set
+     */
+    public void setId(byte[] id) {
+        this.id = id;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.PublicKey#getValue()
-	 */
-	public byte[] getValue() {
-		return value;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.PublicKey#getValue()
+     */
+    public byte[] getValue() {
+        return value;
+    }
 
-	/**
-	 * Set the Public key value.
-	 * 
-	 * @param value
-	 *            the value to set
-	 */
-	public void setValue(byte[] value) {
-		this.value = value;
-	}
+    /**
+     * Set the Public key value.
+     * 
+     * @param value
+     *            the value to set
+     */
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
 
 }

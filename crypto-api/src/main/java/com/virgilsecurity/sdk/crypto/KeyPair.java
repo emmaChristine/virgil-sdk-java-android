@@ -37,58 +37,58 @@ package com.virgilsecurity.sdk.crypto;
  */
 public class KeyPair {
 
-	private PublicKey publicKey;
+    private PublicKey publicKey;
 
-	private PrivateKey privateKey;
+    private PrivateKey privateKey;
 
-	/**
-	 * Create a new instance of {@code KeyPair}
-	 *
-	 */
-	public KeyPair() {
-	}
+    /**
+     * Create a new instance of {@code KeyPair}
+     *
+     */
+    public KeyPair() {
+    }
 
-	/**
-	 * Create a new instance of {@code KeyPair}
-	 *
-	 * @param publicKey
-	 *            the public key.
-	 * @param privateKey
-	 *            the private key.
-	 */
-	public KeyPair(PublicKey publicKey, PrivateKey privateKey) {
-		this.publicKey = publicKey;
-		this.privateKey = privateKey;
-	}
+    /**
+     * Create a new instance of {@code KeyPair}
+     *
+     * @param publicKey
+     *            the public key.
+     * @param privateKey
+     *            the private key.
+     */
+    public KeyPair(PublicKey publicKey, PrivateKey privateKey) {
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+    }
 
-	/**
-	 * @return the publicKey
-	 */
-	public PublicKey getPublicKey() {
-		return publicKey;
-	}
+    /**
+     * @return the publicKey
+     */
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
 
-	/**
-	 * @param publicKey
-	 *            the public key to set
-	 */
-	public void setPublicKey(PublicKey publicKey) {
-		this.publicKey = publicKey;
-	}
+    /**
+     * @param publicKey
+     *            the public key to set
+     */
+    public void setPublicKey(PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
 
-	/**
-	 * @return the privateKey
-	 */
-	public PrivateKey getPrivateKey() {
-		return privateKey;
-	}
+    /**
+     * @return the privateKey
+     */
+    public PrivateKey getPrivateKey() {
+        return privateKey;
+    }
 
-	/**
-	 * @param privateKey
-	 *            the privateKey to set
-	 */
-	public void setPrivateKey(PrivateKey privateKey) {
-		this.privateKey = privateKey;
-	}
+    /**
+     * @param privateKey
+     *            the privateKey to set
+     */
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = privateKey;
+    }
 
 }

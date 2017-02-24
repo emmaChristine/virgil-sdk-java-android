@@ -32,7 +32,7 @@ package com.virgilsecurity.sdk.client.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.model.CardModel;
 
 /**
  * This exception occurred when card validation failed.
@@ -42,28 +42,28 @@ import com.virgilsecurity.sdk.client.model.Card;
  */
 public class CardValidationException extends VirgilException {
 
-	private static final long serialVersionUID = 8029782256278798813L;
+    private static final long serialVersionUID = 8029782256278798813L;
 
-	private List<Card> invalidCards;
+    private List<CardModel> invalidCards;
 
-	/**
-	 * Create a new instance of {@code CardValidationException}
-	 *
-	 * @param invalidCards
-	 *            the list of invalid cards.
-	 */
-	public CardValidationException(List<Card> invalidCards) {
-		super("One or more cards didn't pass the validation");
-		this.invalidCards = new ArrayList<>(invalidCards);
-	}
+    /**
+     * Create a new instance of {@code CardValidationException}
+     *
+     * @param invalidCards
+     *            the list of invalid cards.
+     */
+    public CardValidationException(List<CardModel> invalidCards) {
+        super("One or more cards didn't pass the validation");
+        this.invalidCards = new ArrayList<>(invalidCards);
+    }
 
-	/**
-	 * Gets the invalid cards.
-	 * 
-	 * @return the invalidCards
-	 */
-	public List<Card> getInvalidCards() {
-		return invalidCards;
-	}
+    /**
+     * Gets the invalid cards.
+     * 
+     * @return the invalidCards
+     */
+    public List<CardModel> getInvalidCards() {
+        return invalidCards;
+    }
 
 }

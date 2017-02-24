@@ -29,11 +29,8 @@
  */
 package com.virgilsecurity.sdk.client.exceptions;
 
-import com.virgilsecurity.sdk.highlevel.ServiceContainer;
-
 /**
- * This exception occurred when service is already registered at service
- * container.
+ * This exception occurred when service is already registered at service container.
  *
  * @author Andrii Iakovenko
  * 
@@ -42,14 +39,14 @@ import com.virgilsecurity.sdk.highlevel.ServiceContainer;
  */
 public class ServiceIsAlreadyRegisteredException extends VirgilException {
 
-	private static final long serialVersionUID = 6902673496744378044L;
+    private static final long serialVersionUID = 6902673496744378044L;
 
-	/**
-	 * Create a new instance of {@code ServiceIsAlreadyRegistered}
-	 *
-	 */
-	public ServiceIsAlreadyRegisteredException() {
-		super("Type is already registered");
-	}
+    /**
+     * Create a new instance of {@code ServiceIsAlreadyRegistered}
+     *
+     */
+    public ServiceIsAlreadyRegisteredException() {
+        super("Type is already registered");
+    }
 
 }

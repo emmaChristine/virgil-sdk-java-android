@@ -38,26 +38,29 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.dto.CreateCardModel;
 import com.virgilsecurity.sdk.client.model.dto.ErrorResponse;
+import com.virgilsecurity.sdk.client.model.dto.IdentityConfirmationRequestModel;
+import com.virgilsecurity.sdk.client.model.dto.IdentityConfirmationResponseModel;
+import com.virgilsecurity.sdk.client.model.dto.IdentityValidationRequestModel;
+import com.virgilsecurity.sdk.client.model.dto.IdentityVerificationRequestModel;
+import com.virgilsecurity.sdk.client.model.dto.IdentityVerificationResponseModel;
+import com.virgilsecurity.sdk.client.model.dto.RevokeCardSnapshotModel;
 import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
 import com.virgilsecurity.sdk.client.model.dto.SearchRequest;
-import com.virgilsecurity.sdk.client.model.dto.SignedResponseModel;
-import com.virgilsecurity.sdk.client.model.identity.Identity;
-import com.virgilsecurity.sdk.client.model.identity.Token;
-import com.virgilsecurity.sdk.client.requests.CreateCardRequest;
+import com.virgilsecurity.sdk.client.model.dto.SignableRequestModel;
+import com.virgilsecurity.sdk.client.model.dto.Token;
+import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
+import com.virgilsecurity.sdk.client.requests.PublishGlobalCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
+import com.virgilsecurity.sdk.client.requests.RevokeGlobalCardRequest;
 import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.client.utils.StreamUtils;
 import com.virgilsecurity.sdk.client.utils.StringUtils;
@@ -70,316 +73,430 @@ import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
  */
 public class VirgilClient {
 
-	private VirgilClientContext context;
+    private VirgilClientContext context;
 
-	private CardValidator cardValidator;
+    private CardValidator cardValidator;
 
-	/**
-	 * Create a new instance of {@code VirgilClient}
-	 *
-	 * @param accessToken
-	 *            the access token.
-	 */
-	public VirgilClient(String accessToken) {
-		this.context = new VirgilClientContext(accessToken);
-	}
+    /**
+     * Create a new instance of {@code VirgilClient}
+     *
+     * @param accessToken
+     *            the access token.
+     */
+    public VirgilClient(String accessToken) {
+        this.context = new VirgilClientContext(accessToken);
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilClient}
-	 *
-	 * @param context
-	 *            the virgil client context.
-	 */
-	public VirgilClient(VirgilClientContext context) {
-		this.context = context;
-	}
+    /**
+     * Create a new instance of {@code VirgilClient}
+     *
+     * @param context
+     *            the virgil client context.
+     */
+    public VirgilClient(VirgilClientContext context) {
+        this.context = context;
+    }
 
-	/**
-	 * Verify identity.
-	 * 
-	 * @param type
-	 *            The type of verified identity.
-	 * @param value
-	 *            The value of verified identity.
-	 * @return action id.
-	 */
-	@Deprecated
-	private String verify(String type, String value) {
-		// Implementation removed
-		return null;
-	}
+    /**
+     * Sends the request for identity verification, that's will be processed depending of specified type.
+     * 
+     * @param identity
+     *            An unique string that represents identity.
+     * @param identityType
+     *            The type of identity.
+     * @return action id.
+     * 
+     * @see #confirmIdentity(String, String, Token)
+     */
+    public String verifyIdentity(String identity, String identityType) {
+        return verifyIdentity(identity, identityType, null);
+    }
 
-	/**
-	 * Confirms the identity from the {@linkplain #verify(String, String)
-	 * verify} step to obtain an identity confirmation token.
-	 * 
-	 * @param actionId
-	 *            the action identifier.
-	 * @param confirmationCode
-	 *            the confirmation code.
-	 * @param confirmationToken
-	 *            the confirmation token.
-	 * @return
-	 * @throws ServiceException
-	 */
-	@Deprecated
-	private Identity confirm(String actionId, String confirmationCode, Token confirmationToken) {
-		// Implementation removed
-		return null;
-	}
+    /**
+     * Sends the request for identity verification, that's will be processed depending of specified type.
+     * 
+     * @param identity
+     *            An unique string that represents identity.
+     * @param identityType
+     *            The type of identity.
+     * @param extraFields
+     *            The extra fields.
+     * @return action id.
+     * 
+     * @see #confirmIdentity(String, String, Token)
+     */
+    public String verifyIdentity(String identity, String identityType, Map<String, String> extraFields) {
+        IdentityVerificationRequestModel requestModel = new IdentityVerificationRequestModel(identity, identityType,
+                extraFields);
 
-	/**
-	 * Register a new card.
-	 * 
-	 * @param request
-	 *            the create card request.
-	 * @return the created card.
-	 * @throws VirgilServiceException
-	 *             if an error occurred.
-	 */
-	public Card createCard(CreateCardRequest request) throws VirgilServiceException {
-		try {
-			URL url = new URL(context.getCardsServiceURL(), "/v4/card");
+        try {
+            URL url = new URL(context.getIdentityServiceURL(), "v1/verify");
 
-			String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
+            String body = ConvertionUtils.getGson().toJson(requestModel);
 
-			SignedResponseModel responseModel = execute(url, "POST",
-					new ByteArrayInputStream(ConvertionUtils.toBytes(body)), SignedResponseModel.class);
-			return responseToCard(responseModel);
-		} catch (VirgilServiceException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new VirgilCardServiceException(e);
-		}
-	}
+            IdentityVerificationResponseModel responseModel = execute(url, "POST",
+                    new ByteArrayInputStream(ConvertionUtils.toBytes(body)), IdentityVerificationResponseModel.class);
+            return responseModel.getActionId();
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
 
-	/**
-	 * Get card by identifier.
-	 * 
-	 * @param cardId
-	 *            the card identifier.
-	 * @return the card.
-	 */
-	public Card getCard(String cardId) {
-		try {
-			URL url = new URL(context.getReadOnlyCardsServiceURL(), "/v4/card/" + cardId);
+    /**
+     * Confirms the identity from the {@linkplain #verify(String, String) verify} step to obtain an identity
+     * confirmation token.
+     * 
+     * @param actionId
+     *            the action identifier.
+     * @param confirmationCode
+     *            the confirmation code.
+     * @return The validation token.
+     */
+    public String confirmIdentity(String actionId, String confirmationCode) {
+        return confirmIdentity(actionId, confirmationCode, new Token(3600, 1));
+    }
 
-			SignedResponseModel responseModel = execute(url, "GET", null, SignedResponseModel.class);
-			Card card = responseToCard(responseModel);
-			validateCards(Arrays.asList(card));
+    /**
+     * Confirms the identity from the {@linkplain #verify(String, String) verify} step to obtain an identity
+     * confirmation token.
+     * 
+     * @param actionId
+     *            the action identifier.
+     * @param confirmationCode
+     *            the confirmation code.
+     * @param confirmationToken
+     *            the confirmation token.
+     * @return The validation token.
+     */
+    public String confirmIdentity(String actionId, String confirmationCode, Token confirmationToken) {
+        IdentityConfirmationRequestModel requestModel = new IdentityConfirmationRequestModel(actionId, confirmationCode,
+                confirmationToken);
 
-			return card;
+        try {
+            URL url = new URL(context.getIdentityServiceURL(), "v1/confirm");
 
-		} catch (VirgilServiceException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new VirgilCardServiceException(e);
-		}
-	}
+            String body = ConvertionUtils.getGson().toJson(requestModel);
 
-	/**
-	 * Create and configure http connection.
-	 * 
-	 * @param url
-	 *            The URL.
-	 * @param methodName
-	 *            The HTTP method.
-	 * @return The connection.
-	 * @throws IOException
-	 */
-	private HttpURLConnection createConnection(URL url, String method) throws IOException {
-		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-		urlConnection.setRequestMethod(method);
-		urlConnection.setUseCaches(false);
+            IdentityConfirmationResponseModel responseModel = execute(url, "POST",
+                    new ByteArrayInputStream(ConvertionUtils.toBytes(body)), IdentityConfirmationResponseModel.class);
+            return responseModel.getValidationToken();
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
 
-		switch (method) {
-		case "DELETE":
-		case "POST":
-		case "PUT":
-		case "PATCH":
-			urlConnection.setDoOutput(true);
-			urlConnection.setChunkedStreamingMode(0);
-			break;
-		default:
-		}
-		urlConnection.setRequestProperty("Authorization", "VIRGIL " + context.getAccessToken());
-		urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+    /**
+     * Checks validated token.
+     * 
+     * @param identity
+     *            The value of identity.
+     * @param identityType
+     *            The type of identity.
+     * @param validationToken
+     *            The validation token.
+     * @return {@code true} if validation token is valid.
+     */
+    public boolean isIdentityValid(String identity, String identityType, String validationToken) {
+        IdentityValidationRequestModel requestModel = new IdentityValidationRequestModel(identity, identityType,
+                validationToken);
 
-		return urlConnection;
-	}
+        try {
+            URL url = new URL(context.getIdentityServiceURL(), "v1/validate");
 
-	/**
-	 * Revoke existing card.
-	 * 
-	 * @param request
-	 *            the revoke card request.
-	 */
-	public void revokeCard(RevokeCardRequest request) {
-		try {
-			URL url = new URL(context.getCardsServiceURL(), "/v4/card/" + request.getCardId());
-			String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
+            String body = ConvertionUtils.getGson().toJson(requestModel);
 
-			execute(url, "DELETE", new ByteArrayInputStream(ConvertionUtils.toBytes(body)), Void.class);
+            execute(url, "POST", new ByteArrayInputStream(ConvertionUtils.toBytes(body)), Void.class);
+            return true;
+        } catch (VirgilServiceException e) {
+            return false;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
 
-		} catch (VirgilServiceException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new VirgilCardServiceException(e);
-		}
-	}
+    /**
+     * Register a new card.
+     * 
+     * @param request
+     *            the create card request.
+     * @return the created card.
+     * @throws VirgilServiceException
+     *             if an error occurred.
+     */
+    public CardModel publishCard(PublishCardRequest request) throws VirgilServiceException {
+        try {
+            URL url = new URL(context.getCardsServiceURL(), "/v4/card");
 
-	/**
-	 * Search cards by criteria.
-	 * 
-	 * @param criteria
-	 *            the criteria for search.
-	 * @return the found cards list.
-	 */
-	public List<Card> searchCards(SearchCriteria criteria) {
-		if (criteria == null) {
-			throw new NullArgumentException("criteria");
-		}
+            String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
 
-		if (criteria.getIdentities().isEmpty()) {
-			throw new EmptyArgumentException("criteria");
-		}
+            CardModel cardModel = execute(url, "POST", new ByteArrayInputStream(ConvertionUtils.toBytes(body)),
+                    CardModel.class);
 
-		SearchRequest body = new SearchRequest();
+            validateCards(Arrays.asList(cardModel));
 
-		body.setIdentities(criteria.getIdentities());
+            return cardModel;
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
 
-		if (!StringUtils.isBlank(criteria.getIdentityType())) {
-			body.setIdentityType(criteria.getIdentityType());
-		}
+    /**
+     * Register a new card.
+     * 
+     * @param request
+     *            The create card request.
+     * @return The created card.
+     * @throws VirgilServiceException
+     *             if an error occurred.
+     */
+    public CardModel publishGlobalCard(PublishGlobalCardRequest request) {
+        try {
+            URL url = new URL(context.getRaServiceURL(), "/v1/card");
 
-		if (criteria.getScope() == CardScope.GLOBAL) {
-			body.setScope(criteria.getScope());
-		}
+            SignableRequestModel requestModel = request.getRequestModel();
 
-		try {
-			URL url = new URL(context.getReadOnlyCardsServiceURL(), "/v4/card/actions/search");
-			SignedResponseModel[] responseModels = execute(url, "POST",
-					new ByteArrayInputStream(ConvertionUtils.toBytes(ConvertionUtils.getGson().toJson(body))),
-					SignedResponseModel[].class);
+            String body = ConvertionUtils.getGson().toJson(requestModel);
 
-			List<Card> cards = new ArrayList<>();
-			for (SignedResponseModel responseModel : responseModels) {
-				cards.add(responseToCard(responseModel));
-			}
+            CardModel cardModel = execute(url, "POST", new ByteArrayInputStream(ConvertionUtils.toBytes(body)),
+                    CardModel.class);
 
-			validateCards(cards);
+            validateCards(Arrays.asList(cardModel));
 
-			return cards;
+            return cardModel;
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
 
-		} catch (VirgilServiceException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new VirgilCardServiceException(e);
-		}
-	}
+    /**
+     * Get card by identifier.
+     * 
+     * @param cardId
+     *            the card identifier.
+     * @return the card.
+     */
+    public CardModel getCard(String cardId) {
+        try {
+            URL url = new URL(context.getReadOnlyCardsServiceURL(), "/v4/card/" + cardId);
 
-	private Card responseToCard(SignedResponseModel responseModel) {
-		CreateCardModel model = ConvertionUtils.getGson()
-				.fromJson(ConvertionUtils.base64ToString(responseModel.getContentSnapshot()), CreateCardModel.class);
+            CardModel cardModel = execute(url, "GET", null, CardModel.class);
 
-		Card card = new Card();
-		card.setId(responseModel.getCardId());
-		card.setSnapshot(ConvertionUtils.base64ToBytes(responseModel.getContentSnapshot()));
-		card.setIdentity(model.getIdentity());
-		card.setIdentityType(model.getIdentityType());
-		card.setPublicKey(ConvertionUtils.base64ToBytes(model.getPublicKey()));
+            validateCards(Arrays.asList(cardModel));
 
-		if (model.getInfo() != null) {
-			card.setDevice(model.getInfo().getDevice());
-			card.setDeviceName(model.getInfo().getDeviceName());
-		}
+            return cardModel;
 
-		if (model.getData() != null) {
-			card.setData(Collections.unmodifiableMap(model.getData()));
-		}
-		card.setScope(model.getScope());
-		card.setVersion(responseModel.getMeta().getVersion());
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
 
-		Map<String, byte[]> signatures = new HashMap<>();
-		if ((responseModel.getMeta() != null) && (responseModel.getMeta().getSignatures() != null)) {
-			for (Entry<String, String> entry : responseModel.getMeta().getSignatures().entrySet()) {
-				signatures.put(entry.getKey(), ConvertionUtils.base64ToBytes(entry.getValue()));
-			}
-		}
+    /**
+     * Create and configure http connection.
+     * 
+     * @param url
+     *            The URL.
+     * @param methodName
+     *            The HTTP method.
+     * @return The connection.
+     * @throws IOException
+     */
+    private HttpURLConnection createConnection(URL url, String method) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod(method);
+        urlConnection.setUseCaches(false);
 
-		card.setSignatures(signatures);
+        switch (method) {
+        case "DELETE":
+        case "POST":
+        case "PUT":
+        case "PATCH":
+            urlConnection.setDoOutput(true);
+            urlConnection.setChunkedStreamingMode(0);
+            break;
+        default:
+        }
+        String accessToken = context.getAccessToken();
+        if (!StringUtils.isBlank(accessToken)) {
+            urlConnection.setRequestProperty("Authorization", "VIRGIL " + context.getAccessToken());
+        }
+        urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 
-		return card;
-	}
+        return urlConnection;
+    }
 
-	/**
-	 * @param url
-	 * @param methodName
-	 * @param class1
-	 * @return
-	 */
-	private <T> T execute(URL url, String method, InputStream inputStream, Class<T> clazz) {
-		try {
-			HttpURLConnection urlConnection = createConnection(url, method);
-			if (inputStream != null) {
-				StreamUtils.copyStream(inputStream, urlConnection.getOutputStream());
-			}
-			try {
-				if (urlConnection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
-					// Get error code from request
-					try (InputStream in = new BufferedInputStream(urlConnection.getErrorStream())) {
-						String body = ConvertionUtils.toString(in);
-						if (!StringUtils.isBlank(body)) {
-							ErrorResponse error = ConvertionUtils.getGson().fromJson(body, ErrorResponse.class);
-							throw new VirgilCardServiceException(error.getCode());
-						}
-					}
-					throw new VirgilCardServiceException();
-				} else if (clazz.isAssignableFrom(Void.class)) {
-					return null;
-				} else {
-					try (InputStream instream = new BufferedInputStream(urlConnection.getInputStream())) {
-						String body = ConvertionUtils.toString(instream);
-						return ConvertionUtils.getGson().fromJson(body, clazz);
-					}
-				}
-			} finally {
-				urlConnection.disconnect();
-			}
-		} catch (IOException e) {
-			throw new VirgilCardServiceException(e);
-		}
-	}
+    /**
+     * Revoke existing card.
+     * 
+     * @param request
+     *            the revoke card request.
+     */
+    public void revokeCard(RevokeCardRequest request) {
+        try {
+            RevokeCardSnapshotModel snapshotModel = request.extractSnapshotModel();
 
-	private void validateCards(Collection<Card> cards) {
-		if (this.cardValidator == null) {
-			return;
-		}
-		List<Card> invalidCards = new ArrayList<>();
+            URL url = new URL(context.getCardsServiceURL(), "/v4/card/" + snapshotModel.getCardId());
+            String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
 
-		for (Card card : cards) {
-			if (!this.cardValidator.validate(card)) {
-				invalidCards.add(card);
-			}
-		}
+            execute(url, "DELETE", new ByteArrayInputStream(ConvertionUtils.toBytes(body)), Void.class);
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
 
-		if (!invalidCards.isEmpty()) {
-			throw new CardValidationException(invalidCards);
-		}
-	}
+    /**
+     * Revoke existing card.
+     * 
+     * @param request
+     *            The revoke card request.
+     * @param validationToken
+     *            The validation token.
+     */
+    public void revokeGlobalCard(RevokeGlobalCardRequest request) {
+        try {
+            RevokeCardSnapshotModel snapshotModel = request.extractSnapshotModel();
+            URL url = new URL(context.getRaServiceURL(), "/v1/card/" + snapshotModel.getCardId());
 
-	/**
-	 * Sets the card validator.
-	 * 
-	 * @param cardValidator
-	 *            the cardValidator to set
-	 */
-	public void setCardValidator(CardValidator cardValidator) {
-		if (cardValidator == null) {
-			throw new NullArgumentException("cardValidator");
-		}
+            String body = ConvertionUtils.getGson().toJson(request.getRequestModel());
 
-		this.cardValidator = cardValidator;
-	}
+            execute(url, "DELETE", new ByteArrayInputStream(ConvertionUtils.toBytes(body)), Void.class);
+
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
+
+    /**
+     * Search cards by criteria.
+     * 
+     * @param criteria
+     *            the criteria for search.
+     * @return the found cards list.
+     */
+    public List<CardModel> searchCards(SearchCriteria criteria) {
+        if (criteria == null) {
+            throw new NullArgumentException("criteria");
+        }
+
+        if (criteria.getIdentities().isEmpty()) {
+            throw new EmptyArgumentException("criteria");
+        }
+
+        SearchRequest request = new SearchRequest();
+
+        request.setIdentities(criteria.getIdentities());
+
+        if (!StringUtils.isBlank(criteria.getIdentityType())) {
+            request.setIdentityType(criteria.getIdentityType());
+        }
+
+        if (criteria.getScope() == CardScope.GLOBAL) {
+            request.setScope(criteria.getScope());
+        }
+
+        try {
+            URL url = new URL(context.getReadOnlyCardsServiceURL(), "/v4/card/actions/search");
+            String body = ConvertionUtils.getGson().toJson(request);
+
+            CardModel[] cardModels = execute(url, "POST", new ByteArrayInputStream(ConvertionUtils.toBytes(body)),
+                    CardModel[].class);
+
+            List<CardModel> cards = Arrays.asList(cardModels);
+            validateCards(cards);
+
+            return cards;
+
+        } catch (VirgilServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
+
+    /**
+     * @param url
+     * @param methodName
+     * @param class1
+     * @return
+     */
+    private <T> T execute(URL url, String method, InputStream inputStream, Class<T> clazz) {
+        try {
+            HttpURLConnection urlConnection = createConnection(url, method);
+            if (inputStream != null) {
+                StreamUtils.copyStream(inputStream, urlConnection.getOutputStream());
+            }
+            try {
+                if (urlConnection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
+                    // Get error code from request
+                    try (InputStream in = new BufferedInputStream(urlConnection.getErrorStream())) {
+                        String body = ConvertionUtils.toString(in);
+                        if (!StringUtils.isBlank(body)) {
+                            ErrorResponse error = ConvertionUtils.getGson().fromJson(body, ErrorResponse.class);
+                            throw new VirgilCardServiceException(error.getCode());
+                        }
+                    }
+                    if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        return null;
+                    }
+                    throw new VirgilCardServiceException();
+                } else if (clazz.isAssignableFrom(Void.class)) {
+                    return null;
+                } else {
+                    try (InputStream instream = new BufferedInputStream(urlConnection.getInputStream())) {
+                        String body = ConvertionUtils.toString(instream);
+                        return ConvertionUtils.getGson().fromJson(body, clazz);
+                    }
+                }
+            } finally {
+                urlConnection.disconnect();
+            }
+        } catch (IOException e) {
+            throw new VirgilCardServiceException(e);
+        }
+    }
+
+    private void validateCards(Collection<CardModel> cards) {
+        if (this.cardValidator == null) {
+            return;
+        }
+        List<CardModel> invalidCards = new ArrayList<>();
+
+        for (CardModel card : cards) {
+            if (!this.cardValidator.validate(card)) {
+                invalidCards.add(card);
+            }
+        }
+
+        if (!invalidCards.isEmpty()) {
+            throw new CardValidationException(invalidCards);
+        }
+    }
+
+    /**
+     * Sets the card validator.
+     * 
+     * @param cardValidator
+     *            the cardValidator to set
+     */
+    public void setCardValidator(CardValidator cardValidator) {
+        if (cardValidator == null) {
+            throw new NullArgumentException("cardValidator");
+        }
+
+        this.cardValidator = cardValidator;
+    }
 
 }

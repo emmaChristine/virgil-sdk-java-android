@@ -45,80 +45,80 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilDataSink implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
-	protected transient boolean swigCMemOwn;
+    private transient long swigCPtr;
+    protected transient boolean swigCMemOwn;
 
-	protected VirgilDataSink(long cPtr, boolean cMemoryOwn) {
-		swigCMemOwn = cMemoryOwn;
-		swigCPtr = cPtr;
-	}
+    protected VirgilDataSink(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilDataSink obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilDataSink obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilDataSink(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilDataSink(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+    }
 
-	protected void swigDirectorDisconnect() {
-		swigCMemOwn = false;
-		delete();
-	}
+    protected void swigDirectorDisconnect() {
+        swigCMemOwn = false;
+        delete();
+    }
 
-	public void swigReleaseOwnership() {
-		swigCMemOwn = false;
-		virgil_crypto_javaJNI.VirgilDataSink_change_ownership(this, swigCPtr, false);
-	}
+    public void swigReleaseOwnership() {
+        swigCMemOwn = false;
+        virgil_crypto_javaJNI.VirgilDataSink_change_ownership(this, swigCPtr, false);
+    }
 
-	public void swigTakeOwnership() {
-		swigCMemOwn = true;
-		virgil_crypto_javaJNI.VirgilDataSink_change_ownership(this, swigCPtr, true);
-	}
+    public void swigTakeOwnership() {
+        swigCMemOwn = true;
+        virgil_crypto_javaJNI.VirgilDataSink_change_ownership(this, swigCPtr, true);
+    }
 
-	@Override
-	public void close() throws java.io.IOException {
-		delete();
-	}
+    @Override
+    public void close() throws java.io.IOException {
+        delete();
+    }
 
-	/**
-	 * @return Return {@code true} if target object is able to write data.
-	 * @throws java.io.IOException
-	 *             if an error occurred.
-	 */
-	public boolean isGood() throws java.io.IOException {
-		return virgil_crypto_javaJNI.VirgilDataSink_isGood(swigCPtr, this);
-	}
+    /**
+     * @return Return {@code true} if target object is able to write data.
+     * @throws java.io.IOException
+     *             if an error occurred.
+     */
+    public boolean isGood() throws java.io.IOException {
+        return virgil_crypto_javaJNI.VirgilDataSink_isGood(swigCPtr, this);
+    }
 
-	/**
-	 * Write data to the target object.
-	 * 
-	 * @param data
-	 *            the data.
-	 * @throws java.io.IOException
-	 *             if an error occurred.
-	 */
-	public void write(byte[] data) throws java.io.IOException {
-		virgil_crypto_javaJNI.VirgilDataSink_write(swigCPtr, this, data);
-	}
+    /**
+     * Write data to the target object.
+     * 
+     * @param data
+     *            the data.
+     * @throws java.io.IOException
+     *             if an error occurred.
+     */
+    public void write(byte[] data) throws java.io.IOException {
+        virgil_crypto_javaJNI.VirgilDataSink_write(swigCPtr, this, data);
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilDataSink}
-	 *
-	 */
-	public VirgilDataSink() {
-		this(virgil_crypto_javaJNI.new_VirgilDataSink(), true);
-		virgil_crypto_javaJNI.VirgilDataSink_director_connect(this, swigCPtr, swigCMemOwn, true);
-	}
+    /**
+     * Create a new instance of {@code VirgilDataSink}
+     *
+     */
+    public VirgilDataSink() {
+        this(virgil_crypto_javaJNI.new_VirgilDataSink(), true);
+        virgil_crypto_javaJNI.VirgilDataSink_director_connect(this, swigCPtr, swigCMemOwn, true);
+    }
 
 }

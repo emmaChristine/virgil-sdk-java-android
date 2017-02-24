@@ -39,17 +39,18 @@ import org.junit.Test;
  *
  */
 public class VirgilClientContextTest {
-	
+
 	@Test
 	public void isValidURI_invalidURI() {
 		assertFalse(VirgilClientContext.isValidURI(null));
 		assertFalse(VirgilClientContext.isValidURI(""));
 		assertFalse(VirgilClientContext.isValidURI("\t \n"));
 		assertFalse(VirgilClientContext.isValidURI("hello"));
-		assertFalse(VirgilClientContext.isValidURI("http//www.virgilsecurity.com/about/what-is-virgil"));;
+		assertFalse(VirgilClientContext.isValidURI("http//www.virgilsecurity.com/about/what-is-virgil"));
+		;
 		assertFalse(VirgilClientContext.isValidURI("https://"));
 	}
-	
+
 	@Test
 	public void isValidURI_validURI() {
 		assertTrue(VirgilClientContext.isValidURI("http://virgilsecurity.com"));

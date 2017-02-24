@@ -52,129 +52,128 @@ import com.virgilsecurity.sdk.crypto.exception.KeyStorageException;
  */
 public class VirgilKeyStorage implements KeyStorage {
 
-	private String keysPath;
+    private String keysPath;
 
-	/**
-	 * Create a new instance of {@code VirgilKeyStorage}
-	 *
-	 */
-	public VirgilKeyStorage() {
-		StringBuilder path = new StringBuilder(System.getProperty("user.home"));
-		path.append(File.pathSeparator).append("VirgilSecurity");
-		path.append(File.pathSeparator).append("Keys");
+    /**
+     * Create a new instance of {@code VirgilKeyStorage}
+     *
+     */
+    public VirgilKeyStorage() {
+        StringBuilder path = new StringBuilder(System.getProperty("user.home"));
+        path.append(File.separator).append("VirgilSecurity");
+        path.append(File.separator).append("Keys");
 
-		this.keysPath = path.toString();
-	}
+        this.keysPath = path.toString();
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilKeyStorage}
-	 *
-	 * @param keysPath
-	 *            The path to key storage folder.
-	 */
-	public VirgilKeyStorage(String keysPath) {
-		this.keysPath = keysPath;
-	}
+    /**
+     * Create a new instance of {@code VirgilKeyStorage}
+     *
+     * @param keysPath
+     *            The path to key storage folder.
+     */
+    public VirgilKeyStorage(String keysPath) {
+        this.keysPath = keysPath;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyStore#store(com.virgilsecurity.sdk.
-	 * crypto.KeyEntry)
-	 */
-	@Override
-	public void store(KeyEntry keyEntry) {
-		File dir = new File(keysPath);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyStore#store(com.virgilsecurity.sdk. crypto.KeyEntry)
+     */
+    @Override
+    public void store(KeyEntry keyEntry) {
+        File dir = new File(keysPath);
 
-		if (dir.exists()) {
-			if (!dir.isDirectory()) {
-				throw new InvalidPathException(keysPath, "Is not a directory");
-			}
-		} else {
-			dir.mkdirs();
-		}
+        if (dir.exists()) {
+            if (!dir.isDirectory()) {
+                throw new InvalidPathException(keysPath, "Is not a directory");
+            }
+        } else {
+            dir.mkdirs();
+        }
 
-		String name = keyEntry.getName();
-		if (exists(name)) {
-			throw new KeyEntryAlreadyExistsException();
-		}
+        String name = keyEntry.getName();
+        if (exists(name)) {
+            throw new KeyEntryAlreadyExistsException();
+        }
 
-		String json = getGson().toJson(keyEntry);
-		File file = new File(dir, name.toLowerCase());
-		try (FileOutputStream os = new FileOutputStream(file)) {
-			os.write(json.getBytes(Charset.forName("UTF-8")));
-		} catch (Exception e) {
-			throw new KeyStorageException(e);
-		}
-	}
+        String json = getGson().toJson(keyEntry);
+        File file = new File(dir, name.toLowerCase());
+        try (FileOutputStream os = new FileOutputStream(file)) {
+            os.write(json.getBytes(Charset.forName("UTF-8")));
+        } catch (Exception e) {
+            throw new KeyStorageException(e);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyStore#load(java.lang.String)
-	 */
-	@Override
-	public KeyEntry load(String keyName) {
-		if (!exists(keyName)) {
-			throw new KeyEntryNotFoundException();
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyStore#load(java.lang.String)
+     */
+    @Override
+    public KeyEntry load(String keyName) {
+        if (!exists(keyName)) {
+            throw new KeyEntryNotFoundException();
+        }
 
-		File file = new File(keysPath, keyName.toLowerCase());
-		try (FileInputStream is = new FileInputStream(file)) {
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
+        File file = new File(keysPath, keyName.toLowerCase());
+        try (FileInputStream is = new FileInputStream(file)) {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-			byte[] buffer = new byte[4096];
-			int n = 0;
-			while (-1 != (n = is.read(buffer))) {
-				os.write(buffer, 0, n);
-			}
+            byte[] buffer = new byte[4096];
+            int n = 0;
+            while (-1 != (n = is.read(buffer))) {
+                os.write(buffer, 0, n);
+            }
 
-			byte[] bytes = os.toByteArray();
+            byte[] bytes = os.toByteArray();
 
-			VirgilKeyEntry entry = getGson().fromJson(new String(bytes, Charset.forName("UTF-8")),
-					VirgilKeyEntry.class);
-			entry.setName(keyName);
+            VirgilKeyEntry entry = getGson().fromJson(new String(bytes, Charset.forName("UTF-8")),
+                    VirgilKeyEntry.class);
+            entry.setName(keyName);
 
-			return entry;
-		} catch (Exception e) {
-			throw new KeyStorageException(e);
-		}
-	}
+            return entry;
+        } catch (Exception e) {
+            throw new KeyStorageException(e);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyStore#exists(java.lang.String)
-	 */
-	@Override
-	public boolean exists(String keyName) {
-		if (keyName == null) {
-			return false;
-		}
-		File file = new File(keysPath, keyName);
-		return file.exists();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyStore#exists(java.lang.String)
+     */
+    @Override
+    public boolean exists(String keyName) {
+        if (keyName == null) {
+            return false;
+        }
+        File file = new File(keysPath, keyName);
+        return file.exists();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyStore#delete(java.lang.String)
-	 */
-	@Override
-	public void delete(String keyName) {
-		if (!exists(keyName)) {
-			throw new KeyEntryNotFoundException();
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyStore#delete(java.lang.String)
+     */
+    @Override
+    public void delete(String keyName) {
+        if (!exists(keyName)) {
+            throw new KeyEntryNotFoundException();
+        }
 
-		File file = new File(keysPath, keyName);
-		file.delete();
-	}
+        File file = new File(keysPath, keyName);
+        file.delete();
+    }
 
-	private Gson getGson() {
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
+    private Gson getGson() {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
 
-		return gson;
-	}
+        return gson;
+    }
 
 }

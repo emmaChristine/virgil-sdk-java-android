@@ -37,18 +37,18 @@ package com.virgilsecurity.sdk.crypto;
  */
 public interface Fingerprint {
 
-	/**
-	 * Returns fingerprint value.
-	 * 
-	 * @return the fingerprint value.
-	 */
-	byte[] getValue();
+    /**
+     * Returns fingerprint value.
+     * 
+     * @return the fingerprint value.
+     */
+    byte[] getValue();
 
-	/**
-	 * To the hexadecimal.
-	 * 
-	 * @return fingerprint as hax string.
-	 */
-	String toHex();
+    /**
+     * To the hexadecimal.
+     * 
+     * @return fingerprint as hax string.
+     */
+    String toHex();
 
 }

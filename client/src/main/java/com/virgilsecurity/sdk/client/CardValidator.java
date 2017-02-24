@@ -29,7 +29,7 @@
  */
 package com.virgilsecurity.sdk.client;
 
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.model.CardModel;
 
 /**
  * @author Andrii Iakovenko
@@ -37,13 +37,13 @@ import com.virgilsecurity.sdk.client.model.Card;
  */
 public interface CardValidator {
 
-	/**
-	 * Validates the specified {@link Card}
-	 * 
-	 * @param card
-	 *            The card to be validated.
-	 * @return {@code true} if card passed the validation.
-	 */
-	boolean validate(Card card);
+    /**
+     * Validates the specified {@link CardModel}
+     * 
+     * @param card
+     *            The card to be validated.
+     * @return {@code true} if card passed the validation.
+     */
+    boolean validate(CardModel card);
 
 }

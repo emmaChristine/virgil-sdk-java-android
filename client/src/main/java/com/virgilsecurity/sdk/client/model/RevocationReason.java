@@ -39,10 +39,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public enum RevocationReason {
 
-	@SerializedName("unspecified")
-	UNSPECIFIED,
+    @SerializedName("unspecified")
+    UNSPECIFIED,
 
-	@SerializedName("compromised")
-	COMPROMISED;
+    @SerializedName("compromised")
+    COMPROMISED;
 
 }

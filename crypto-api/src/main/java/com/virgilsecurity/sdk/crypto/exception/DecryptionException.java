@@ -37,26 +37,24 @@ package com.virgilsecurity.sdk.crypto.exception;
  */
 public class DecryptionException extends CryptoException {
 
-	private static final long serialVersionUID = -4006283921503784462L;
+    private static final long serialVersionUID = -4006283921503784462L;
 
-	/**
-	 * Create a new instance of {@code EncryptionException}
-	 *
-	 */
-	public DecryptionException() {
-	}
+    /**
+     * Create a new instance of {@code EncryptionException}
+     *
+     */
+    public DecryptionException() {
+    }
 
-	/**
-	 * Create a new instance of {@code EncryptionException}
-	 *
-	 * @param cause
-	 *            the cause (which is saved for later retrieval by the
-	 *            {@link #getCause()} method). (A <tt>null</tt> value is
-	 *            permitted, and indicates that the cause is nonexistent or
-	 *            unknown.)
-	 */
-	public DecryptionException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Create a new instance of {@code EncryptionException}
+     *
+     * @param cause
+     *            the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
+     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     */
+    public DecryptionException(Throwable cause) {
+        super(cause);
+    }
 
 }

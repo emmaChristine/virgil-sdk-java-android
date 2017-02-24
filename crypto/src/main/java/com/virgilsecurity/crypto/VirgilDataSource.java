@@ -45,78 +45,78 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilDataSource implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
-	protected transient boolean swigCMemOwn;
+    private transient long swigCPtr;
+    protected transient boolean swigCMemOwn;
 
-	protected VirgilDataSource(long cPtr, boolean cMemoryOwn) {
-		swigCMemOwn = cMemoryOwn;
-		swigCPtr = cPtr;
-	}
+    protected VirgilDataSource(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilDataSource obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilDataSource obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilDataSource(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilDataSource(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+    }
 
-	protected void swigDirectorDisconnect() {
-		swigCMemOwn = false;
-		delete();
-	}
+    protected void swigDirectorDisconnect() {
+        swigCMemOwn = false;
+        delete();
+    }
 
-	public void swigReleaseOwnership() {
-		swigCMemOwn = false;
-		virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, false);
-	}
+    public void swigReleaseOwnership() {
+        swigCMemOwn = false;
+        virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, false);
+    }
 
-	public void swigTakeOwnership() {
-		swigCMemOwn = true;
-		virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, true);
-	}
+    public void swigTakeOwnership() {
+        swigCMemOwn = true;
+        virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, true);
+    }
 
-	@Override
-	public void close() throws java.io.IOException {
-		delete();
-	}
+    @Override
+    public void close() throws java.io.IOException {
+        delete();
+    }
 
-	/**
-	 * @return Return {@code true} if target source still contains unread data.
-	 * @throws java.io.IOException
-	 *             if an error occurred.
-	 */
-	public boolean hasData() throws java.io.IOException {
-		return virgil_crypto_javaJNI.VirgilDataSource_hasData(swigCPtr, this);
-	}
+    /**
+     * @return Return {@code true} if target source still contains unread data.
+     * @throws java.io.IOException
+     *             if an error occurred.
+     */
+    public boolean hasData() throws java.io.IOException {
+        return virgil_crypto_javaJNI.VirgilDataSource_hasData(swigCPtr, this);
+    }
 
-	/**
-	 * @return Return next portion of read data from target source.
-	 * 
-	 * @throws java.io.IOException
-	 *             if an error occurred.
-	 */
-	public byte[] read() throws java.io.IOException {
-		return virgil_crypto_javaJNI.VirgilDataSource_read(swigCPtr, this);
-	}
+    /**
+     * @return Return next portion of read data from target source.
+     * 
+     * @throws java.io.IOException
+     *             if an error occurred.
+     */
+    public byte[] read() throws java.io.IOException {
+        return virgil_crypto_javaJNI.VirgilDataSource_read(swigCPtr, this);
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilDataSource}
-	 *
-	 */
-	public VirgilDataSource() {
-		this(virgil_crypto_javaJNI.new_VirgilDataSource(), true);
-		virgil_crypto_javaJNI.VirgilDataSource_director_connect(this, swigCPtr, swigCMemOwn, true);
-	}
+    /**
+     * Create a new instance of {@code VirgilDataSource}
+     *
+     */
+    public VirgilDataSource() {
+        this(virgil_crypto_javaJNI.new_VirgilDataSource(), true);
+        virgil_crypto_javaJNI.VirgilDataSource_director_connect(this, swigCPtr, swigCMemOwn, true);
+    }
 
 }

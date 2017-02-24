@@ -59,154 +59,154 @@ import com.virgilsecurity.crypto.VirgilBase64;
  */
 public class CryptoIT {
 
-	private static final String SAMPLE_RESOURCE = "sdk_compatibility_data.json";
+    private static final String SAMPLE_RESOURCE = "sdk_compatibility_data.json";
 
-	private Crypto crypto;
-	private JsonObject sampleJson;
+    private Crypto crypto;
+    private JsonObject sampleJson;
 
-	@Before
-	public void setUp() throws JsonSyntaxException, IOException {
-		crypto = new VirgilCrypto();
+    @Before
+    public void setUp() throws JsonSyntaxException, IOException {
+        crypto = new VirgilCrypto();
 
-		String sample = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(SAMPLE_RESOURCE));
-		JsonParser parser = new JsonParser();
-		sampleJson = (JsonObject) parser.parse(sample);
-	}
+        String sample = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(SAMPLE_RESOURCE));
+        JsonParser parser = new JsonParser();
+        sampleJson = (JsonObject) parser.parse(sample);
+    }
 
-	@Test
-	public void encryptSingleRecipient() {
-		JsonObject data = sampleJson.getAsJsonObject("encrypt_single_recipient");
-		byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
-		byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
-		byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
+    @Test
+    public void encryptSingleRecipient() {
+        JsonObject data = sampleJson.getAsJsonObject("encrypt_single_recipient");
+        byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
+        byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
+        byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
 
-		PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
-		PublicKey publicKey = crypto.extractPublicKey(privateKey);
+        PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
+        PublicKey publicKey = crypto.extractPublicKey(privateKey);
 
-		// Test decryption
-		byte[] decrypted = crypto.decrypt(cipherData, privateKey);
-		assertArrayEquals(originalData, decrypted);
+        // Test decryption
+        byte[] decrypted = crypto.decrypt(cipherData, privateKey);
+        assertArrayEquals(originalData, decrypted);
 
-		// Test encryption
-		byte[] encrypted = crypto.encrypt(originalData, publicKey);
-		decrypted = crypto.decrypt(encrypted, privateKey);
-		assertArrayEquals(originalData, decrypted);
-	}
+        // Test encryption
+        byte[] encrypted = crypto.encrypt(originalData, publicKey);
+        decrypted = crypto.decrypt(encrypted, privateKey);
+        assertArrayEquals(originalData, decrypted);
+    }
 
-	@Test
-	public void encryptMultipleRecipient() {
-		JsonObject data = sampleJson.getAsJsonObject("encrypt_multiple_recipients");
+    @Test
+    public void encryptMultipleRecipient() {
+        JsonObject data = sampleJson.getAsJsonObject("encrypt_multiple_recipients");
 
-		byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
-		byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
+        byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
+        byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
 
-		JsonArray privateKeysData = data.getAsJsonArray("private_keys");
-		List<PrivateKey> privateKeys = new ArrayList<>();
-		List<PublicKey> publicKeys = new ArrayList<>();
+        JsonArray privateKeysData = data.getAsJsonArray("private_keys");
+        List<PrivateKey> privateKeys = new ArrayList<>();
+        List<PublicKey> publicKeys = new ArrayList<>();
 
-		for (Iterator<JsonElement> it = privateKeysData.iterator(); it.hasNext();) {
-			byte[] privateKeyData = VirgilBase64.decode(it.next().getAsString());
+        for (Iterator<JsonElement> it = privateKeysData.iterator(); it.hasNext();) {
+            byte[] privateKeyData = VirgilBase64.decode(it.next().getAsString());
 
-			PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
-			PublicKey publicKey = crypto.extractPublicKey(privateKey);
+            PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
+            PublicKey publicKey = crypto.extractPublicKey(privateKey);
 
-			privateKeys.add(privateKey);
-			publicKeys.add(publicKey);
-		}
+            privateKeys.add(privateKey);
+            publicKeys.add(publicKey);
+        }
 
-		// Test decryption
-		for (PrivateKey privateKey : privateKeys) {
-			byte[] decrypted = crypto.decrypt(cipherData, privateKey);
-			assertArrayEquals(originalData, decrypted);
-		}
+        // Test decryption
+        for (PrivateKey privateKey : privateKeys) {
+            byte[] decrypted = crypto.decrypt(cipherData, privateKey);
+            assertArrayEquals(originalData, decrypted);
+        }
 
-		// Test encryption
-		byte[] encrypted = crypto.encrypt(originalData, publicKeys.toArray(new PublicKey[0]));
+        // Test encryption
+        byte[] encrypted = crypto.encrypt(originalData, publicKeys.toArray(new PublicKey[0]));
 
-		for (PrivateKey privateKey : privateKeys) {
-			byte[] decrypted = crypto.decrypt(encrypted, privateKey);
-			assertArrayEquals(originalData, decrypted);
-		}
-	}
+        for (PrivateKey privateKey : privateKeys) {
+            byte[] decrypted = crypto.decrypt(encrypted, privateKey);
+            assertArrayEquals(originalData, decrypted);
+        }
+    }
 
-	@Test
-	public void signThenEncryptSingleRecipient() {
-		JsonObject data = sampleJson.getAsJsonObject("sign_then_encrypt_single_recipient");
-		byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
-		byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
-		byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
+    @Test
+    public void signThenEncryptSingleRecipient() {
+        JsonObject data = sampleJson.getAsJsonObject("sign_then_encrypt_single_recipient");
+        byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
+        byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
+        byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
 
-		PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
-		PublicKey publicKey = crypto.extractPublicKey(privateKey);
+        PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
+        PublicKey publicKey = crypto.extractPublicKey(privateKey);
 
-		// Test decryption
-		byte[] decrypted = crypto.decryptThenVerify(cipherData, privateKey, publicKey);
-		assertArrayEquals(originalData, decrypted);
+        // Test decryption
+        byte[] decrypted = crypto.decryptThenVerify(cipherData, privateKey, publicKey);
+        assertArrayEquals(originalData, decrypted);
 
-		// Test encryption
-		byte[] encrypted = crypto.signThenEncrypt(originalData, privateKey, publicKey);
-		decrypted = crypto.decryptThenVerify(encrypted, privateKey, publicKey);
-		assertArrayEquals(originalData, decrypted);
-	}
+        // Test encryption
+        byte[] encrypted = crypto.signThenEncrypt(originalData, privateKey, publicKey);
+        decrypted = crypto.decryptThenVerify(encrypted, privateKey, publicKey);
+        assertArrayEquals(originalData, decrypted);
+    }
 
-	@Test
-	public void signThenEncryptMultipleRecipients() {
-		JsonObject data = sampleJson.getAsJsonObject("sign_then_encrypt_multiple_recipients");
+    @Test
+    public void signThenEncryptMultipleRecipients() {
+        JsonObject data = sampleJson.getAsJsonObject("sign_then_encrypt_multiple_recipients");
 
-		byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
-		byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
+        byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
+        byte[] cipherData = VirgilBase64.decode(data.get("cipher_data").getAsString());
 
-		JsonArray privateKeysData = data.getAsJsonArray("private_keys");
-		Map<PrivateKey, PublicKey> keys = new HashMap<>();
+        JsonArray privateKeysData = data.getAsJsonArray("private_keys");
+        Map<PrivateKey, PublicKey> keys = new HashMap<>();
 
-		PublicKey sendersKey = null;
-		for (Iterator<JsonElement> it = privateKeysData.iterator(); it.hasNext();) {
-			byte[] privateKeyData = VirgilBase64.decode(it.next().getAsString());
+        PublicKey sendersKey = null;
+        for (Iterator<JsonElement> it = privateKeysData.iterator(); it.hasNext();) {
+            byte[] privateKeyData = VirgilBase64.decode(it.next().getAsString());
 
-			PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
-			PublicKey publicKey = crypto.extractPublicKey(privateKey);
+            PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
+            PublicKey publicKey = crypto.extractPublicKey(privateKey);
 
-			keys.put(privateKey, publicKey);
+            keys.put(privateKey, publicKey);
 
-			if (sendersKey == null) {
-				sendersKey = publicKey;
-			}
-		}
+            if (sendersKey == null) {
+                sendersKey = publicKey;
+            }
+        }
 
-		// Test decryption
-		for (Entry<PrivateKey, PublicKey> entry : keys.entrySet()) {
-			byte[] decrypted = crypto.decryptThenVerify(cipherData, entry.getKey(), sendersKey);
-			assertArrayEquals(originalData, decrypted);
-		}
+        // Test decryption
+        for (Entry<PrivateKey, PublicKey> entry : keys.entrySet()) {
+            byte[] decrypted = crypto.decryptThenVerify(cipherData, entry.getKey(), sendersKey);
+            assertArrayEquals(originalData, decrypted);
+        }
 
-		// Test encryption
-		for (Entry<PrivateKey, PublicKey> entry : keys.entrySet()) {
-			PrivateKey privateKey = entry.getKey();
+        // Test encryption
+        for (Entry<PrivateKey, PublicKey> entry : keys.entrySet()) {
+            PrivateKey privateKey = entry.getKey();
 
-			byte[] encrypted = crypto.signThenEncrypt(originalData, privateKey,
-					keys.values().toArray(new PublicKey[0]));
-			byte[] decrypted = crypto.decryptThenVerify(encrypted, privateKey, entry.getValue());
-			assertArrayEquals(originalData, decrypted);
-		}
-	}
+            byte[] encrypted = crypto.signThenEncrypt(originalData, privateKey,
+                    keys.values().toArray(new PublicKey[0]));
+            byte[] decrypted = crypto.decryptThenVerify(encrypted, privateKey, entry.getValue());
+            assertArrayEquals(originalData, decrypted);
+        }
+    }
 
-	@Test
-	public void generateSignature() {
-		JsonObject data = sampleJson.getAsJsonObject("generate_signature");
-		byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
-		byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
-		byte[] signature = VirgilBase64.decode(data.get("signature").getAsString());
+    @Test
+    public void generateSignature() {
+        JsonObject data = sampleJson.getAsJsonObject("generate_signature");
+        byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
+        byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
+        byte[] signature = VirgilBase64.decode(data.get("signature").getAsString());
 
-		PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
-		PublicKey publicKey = crypto.extractPublicKey(privateKey);
+        PrivateKey privateKey = crypto.importPrivateKey(privateKeyData);
+        PublicKey publicKey = crypto.extractPublicKey(privateKey);
 
-		// Test signing
-		byte[] sign = crypto.sign(originalData, privateKey);
-		assertArrayEquals(signature, sign);
+        // Test signing
+        byte[] sign = crypto.sign(originalData, privateKey);
+        assertArrayEquals(signature, sign);
 
-		// Test verification
-		boolean valid = crypto.verify(originalData, signature, publicKey);
-		assertTrue(valid);
-	}
+        // Test verification
+        boolean valid = crypto.verify(originalData, signature, publicKey);
+        assertTrue(valid);
+    }
 
 }

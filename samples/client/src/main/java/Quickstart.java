@@ -35,10 +35,10 @@ import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.client.RequestSigner;
 import com.virgilsecurity.sdk.client.VirgilClient;
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.RevocationReason;
 import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
-import com.virgilsecurity.sdk.client.requests.CreateCardRequest;
+import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
 import com.virgilsecurity.sdk.client.utils.VirgilCardValidator;
 import com.virgilsecurity.sdk.crypto.Crypto;
@@ -47,75 +47,74 @@ import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 
 /**
- * This sample will help you get started using the Crypto Library and Virgil
- * Keys Services for the most popular platforms and languages.
+ * This sample will help you get started using the Crypto Library and Virgil Keys Services for the most popular
+ * platforms and languages.
  * 
  * @author Andrii Iakovenko
  *
  */
 public class Quickstart {
 
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-		// Initializing an API Client
-		VirgilClient client = new VirgilClient("{ACCESS_TOKEN}");
+        // Initializing an API Client
+        VirgilClient client = new VirgilClient("{ACCESS_TOKEN}");
 
-		// Initializing Crypto
-		Crypto crypto = new VirgilCrypto();
+        // Initializing Crypto
+        Crypto crypto = new VirgilCrypto();
 
-		// Creating a Virgil Card
-		String appID = "[YOUR_APP_ID_HERE]";
-		String appKeyPassword = "[YOUR_APP_KEY_PASSWORD_HERE]";
-		byte[] appKeyData = "[YOUR_APP_KEY_HERE]".getBytes();
+        // Creating a Virgil Card
+        String appID = "[YOUR_APP_ID_HERE]";
+        String appKeyPassword = "[YOUR_APP_KEY_PASSWORD_HERE]";
+        byte[] appKeyData = "[YOUR_APP_KEY_HERE]".getBytes();
 
-		PrivateKey appKey = crypto.importPrivateKey(appKeyData, appKeyPassword);
+        PrivateKey appKey = crypto.importPrivateKey(appKeyData, appKeyPassword);
 
-		/** Generate a new Public/Private keypair using VirgilCrypto class. */
-		KeyPair aliceKeys = crypto.generateKeys();
+        /** Generate a new Public/Private keypair using VirgilCrypto class. */
+        KeyPair aliceKeys = crypto.generateKeys();
 
-		/** Prepare request */
-		byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
-		CreateCardRequest createCardRequest = new CreateCardRequest("alice", "username", exportedPublicKey);
+        /** Prepare request */
+        byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
+        PublishCardRequest createCardRequest = new PublishCardRequest("alice", "username", exportedPublicKey);
 
-		/**
-		 * then, use RequestSigner class to sign request with owner and app
-		 * keys.
-		 */
-		RequestSigner requestSigner = new RequestSigner(crypto);
+        /**
+         * then, use RequestSigner class to sign request with owner and app keys.
+         */
+        RequestSigner requestSigner = new RequestSigner(crypto);
 
-		requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
-		requestSigner.authoritySign(createCardRequest, appID, appKey);
+        requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
+        requestSigner.authoritySign(createCardRequest, appID, appKey);
 
-		/** Publish a Virgil Card */
-		Card aliceCard = client.createCard(createCardRequest);
-		
-		// Get Virgil Card
-		Card foundCard = client.getCard(aliceCard.getId());
+        /** Publish a Virgil Card */
+        CardModel aliceCard = client.publishCard(createCardRequest);
 
-		// Search for Virgil Cards
-		SearchCriteria criteria = SearchCriteria.byIdentity("alice");
-		List<Card> cards = client.searchCards(criteria);
+        // Get Virgil Card
+        CardModel foundCard = client.getCard(aliceCard.getId());
 
-		// Validating a Virgil Cards
-		CardValidator cardValidator = new VirgilCardValidator(crypto);
-		client.setCardValidator(cardValidator);
+        // Search for Virgil Cards
+        SearchCriteria criteria = SearchCriteria.byIdentity("alice");
+        List<CardModel> cards = client.searchCards(criteria);
 
-		try {
-			cards = client.searchCards(criteria);
-		} catch (CardValidationException e) {
-			// Handle validation exception here
-		}
+        // Validating a Virgil Cards
+        CardValidator cardValidator = new VirgilCardValidator(crypto);
+        client.setCardValidator(cardValidator);
 
-		// Revoking a Virgil Card
-		/** Use your card ID */
-		String cardId = aliceCard.getId();
+        try {
+            cards = client.searchCards(criteria);
+        } catch (CardValidationException e) {
+            // Handle validation exception here
+        }
 
-		RevokeCardRequest revokeRequest = new RevokeCardRequest(cardId, RevocationReason.UNSPECIFIED);
+        // Revoking a Virgil Card
+        /** Use your card ID */
+        String cardId = aliceCard.getId();
 
-		requestSigner.selfSign(revokeRequest, aliceKeys.getPrivateKey());
-		requestSigner.authoritySign(revokeRequest, appID, appKey);
+        RevokeCardRequest revokeRequest = new RevokeCardRequest(cardId, RevocationReason.UNSPECIFIED);
 
-		client.revokeCard(revokeRequest);
-	}
+        requestSigner.selfSign(revokeRequest, aliceKeys.getPrivateKey());
+        requestSigner.authoritySign(revokeRequest, appID, appKey);
+
+        client.revokeCard(revokeRequest);
+    }
 
 }

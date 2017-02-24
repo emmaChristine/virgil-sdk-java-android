@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.virgilsecurity.sdk.client.CardValidator;
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.PublicKey;
@@ -47,79 +47,87 @@ import com.virgilsecurity.sdk.crypto.exceptions.EmptyArgumentException;
  */
 public class VirgilCardValidator implements CardValidator {
 
-	private Crypto crypto;
+    private Crypto crypto;
 
-	private Map<String, PublicKey> verifiers;
+    private Map<String, PublicKey> verifiers;
 
-	private final static String SERVICE_CARD_ID = "3e29d43373348cfb373b7eae189214dc01d7237765e572db685839b64adca853";
-	private final static String SERVICE_PUBLIC_KEY = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQVlSNTAx"
-			+ "a1YxdFVuZTJ1T2RrdzRrRXJSUmJKcmMyU3lhejVWMWZ1RytyVnM9Ci0tLS0tRU5E" + "IFBVQkxJQyBLRVktLS0tLQo=";
+    private final static String SERVICE_CARD_ID = "3e29d43373348cfb373b7eae189214dc01d7237765e572db685839b64adca853";
+    private final static String SERVICE_PUBLIC_KEY = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQVlSNTAx"
+            + "a1YxdFVuZTJ1T2RrdzRrRXJSUmJKcmMyU3lhejVWMWZ1RytyVnM9Ci0tLS0tRU5E" + "IFBVQkxJQyBLRVktLS0tLQo=";
 
-	/**
-	 * Create a new instance of {@code VirgilCardValidator}
-	 *
-	 * @param crypto The crypto instance.
-	 */
-	public VirgilCardValidator(Crypto crypto) {
-		this.crypto = crypto;
+    /**
+     * Create a new instance of {@code VirgilCardValidator}
+     *
+     * @param crypto
+     *            The crypto instance.
+     */
+    public VirgilCardValidator(Crypto crypto) {
+        this.crypto = crypto;
 
-		PublicKey servicePublicKey = crypto.importPublicKey(ConvertionUtils.base64ToBytes(SERVICE_PUBLIC_KEY));
+        PublicKey servicePublicKey = crypto.importPublicKey(ConvertionUtils.base64ToBytes(SERVICE_PUBLIC_KEY));
 
-		this.verifiers = new HashMap<>();
-		this.verifiers.put(SERVICE_CARD_ID, servicePublicKey);
-	}
+        this.verifiers = new HashMap<>();
+        this.verifiers.put(SERVICE_CARD_ID, servicePublicKey);
+    }
 
-	/**
-	 * Adds the signature verifier.
-	 * 
-	 * @param verifierId
-	 *            the verifier identifier.
-	 * @param verifierPublicKey
-	 *            the verifier public key.
-	 */
-	public void addVerifier(String verifierId, byte[] verifierPublicKey) {
-		if (StringUtils.isBlank(verifierId)) {
-			throw new EmptyArgumentException("verifierId");
-		}
+    /**
+     * Adds the signature verifier.
+     * 
+     * @param verifierId
+     *            the verifier identifier.
+     * @param verifierPublicKey
+     *            the verifier public key.
+     */
+    public void addVerifier(String verifierId, byte[] verifierPublicKey) {
+        if (StringUtils.isBlank(verifierId)) {
+            throw new EmptyArgumentException("verifierId");
+        }
 
-		if (verifierPublicKey == null) {
-			throw new EmptyArgumentException("verifierPublicKey");
-		}
+        if (verifierPublicKey == null) {
+            throw new EmptyArgumentException("verifierPublicKey");
+        }
 
-		PublicKey publicKey = this.crypto.importPublicKey(verifierPublicKey);
-		this.verifiers.put(verifierId, publicKey);
-	}
+        PublicKey publicKey = this.crypto.importPublicKey(verifierPublicKey);
+        this.verifiers.put(verifierId, publicKey);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.virgilsecurity.sdk.client.CardValidator#validate(com.virgilsecurity.
-	 * sdk.client.model.Card)
-	 */
-	@Override
-	public boolean validate(Card card) {
-		// Support for legacy Cards.
-		if ("3.0".equals(card.getVersion())) {
-			return true;
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.CardValidator#validate(com.virgilsecurity. sdk.client.model.Card)
+     */
+    @Override
+    public boolean validate(CardModel card) {
+        // Support for legacy Cards.
+        if ("3.0".equals(card.getMeta().getVersion())) {
+            return true;
+        }
 
-		Fingerprint fingerprint = this.crypto.calculateFingerprint(card.getSnapshot());
+        Fingerprint fingerprint = this.crypto.calculateFingerprint(card.getSnapshot());
+        String fingerprintHex = fingerprint.toHex();
 
-		for (Entry<String, PublicKey> verifier : verifiers.entrySet()) {
+        if (!fingerprintHex.equals(card.getId())) {
+            return false;
+        }
 
-			if (!card.getSignatures().containsKey(verifier.getKey())) {
-				return false;
-			}
+        // add self signature verifier
+        Map<String, PublicKey> allVerifiers = new HashMap<>(verifiers);
+        allVerifiers.put(fingerprintHex, this.crypto.importPublicKey(card.getSnapshotModel().getPublicKeyData()));
 
-			boolean isValid = this.crypto.verify(fingerprint.getValue(), card.getSignatures().get(verifier.getKey()),
-					verifier.getValue());
+        for (Entry<String, PublicKey> verifier : allVerifiers.entrySet()) {
 
-			if (!isValid) {
-				return false;
-			}
-		}
+            if (!card.getMeta().getSignatures().containsKey(verifier.getKey())) {
+                return false;
+            }
 
-		return true;
-	}
+            boolean isValid = this.crypto.verify(fingerprint.getValue(),
+                    card.getMeta().getSignatures().get(verifier.getKey()), verifier.getValue());
+
+            if (!isValid) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

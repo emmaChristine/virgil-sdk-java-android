@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.GlobalIdentityType;
+import com.virgilsecurity.sdk.client.model.IdentityType;
 
 /**
  * The criteria user for Virgil Cards searching.
@@ -45,98 +45,98 @@ import com.virgilsecurity.sdk.client.model.GlobalIdentityType;
  */
 public class SearchCriteria {
 
-	private Collection<String> identities;
+    private Collection<String> identities;
 
-	private String identityType;
+    private String identityType;
 
-	private CardScope scope;
+    private CardScope scope;
 
-	public static SearchCriteria byIdentities(Collection<String> identities) {
-		SearchCriteria criteria = new SearchCriteria();
-		criteria.identities = identities;
-		criteria.scope = CardScope.APPLICATION;
+    public static SearchCriteria byIdentities(Collection<String> identities) {
+        SearchCriteria criteria = new SearchCriteria();
+        criteria.identities = identities;
+        criteria.scope = CardScope.APPLICATION;
 
-		return criteria;
-	}
+        return criteria;
+    }
 
-	public static SearchCriteria byIdentity(String identity) {
-		SearchCriteria criteria = new SearchCriteria();
-		criteria.identities = Arrays.asList(identity);
-		criteria.scope = CardScope.APPLICATION;
+    public static SearchCriteria byIdentity(String identity) {
+        SearchCriteria criteria = new SearchCriteria();
+        criteria.identities = Arrays.asList(identity);
+        criteria.scope = CardScope.APPLICATION;
 
-		return criteria;
-	}
+        return criteria;
+    }
 
-	public static SearchCriteria byAppBundle(String bundle) {
-		SearchCriteria criteria = new SearchCriteria();
-		criteria.identities = Arrays.asList(bundle);
-		criteria.identityType = GlobalIdentityType.APPLICATION.getValue();
-		criteria.scope = CardScope.GLOBAL;
+    public static SearchCriteria byAppBundle(String bundle) {
+        SearchCriteria criteria = new SearchCriteria();
+        criteria.identities = Arrays.asList(bundle);
+        criteria.identityType = IdentityType.APPLICATION.getValue();
+        criteria.scope = CardScope.GLOBAL;
 
-		return criteria;
-	}
+        return criteria;
+    }
 
-	/**
-	 * Create a new instance of {@code SearchCardsCriteria}
-	 *
-	 */
-	public SearchCriteria() {
-		this.identities = new HashSet<>();
-	}
+    /**
+     * Create a new instance of {@code SearchCardsCriteria}
+     *
+     */
+    public SearchCriteria() {
+        this.identities = new HashSet<>();
+    }
 
-	/**
-	 * @return the identities
-	 */
-	public Collection<String> getIdentities() {
-		return Collections.unmodifiableCollection(identities);
-	}
+    /**
+     * @return the identities
+     */
+    public Collection<String> getIdentities() {
+        return Collections.unmodifiableCollection(identities);
+    }
 
-	/**
-	 * @param identities
-	 *            the identities to set
-	 */
-	public void addIdentities(Collection<String> identities) {
-		if (identities != null) {
-			this.identities.addAll(identities);
-		}
-	}
+    /**
+     * @param identities
+     *            the identities to set
+     */
+    public void addIdentities(Collection<String> identities) {
+        if (identities != null) {
+            this.identities.addAll(identities);
+        }
+    }
 
-	/**
-	 * @param identity
-	 *            the identities to set
-	 */
-	public void addIdentity(String identity) {
-		this.identities.add(identity);
-	}
+    /**
+     * @param identity
+     *            the identities to set
+     */
+    public void addIdentity(String identity) {
+        this.identities.add(identity);
+    }
 
-	/**
-	 * @return the identity type
-	 */
-	public String getIdentityType() {
-		return identityType;
-	}
+    /**
+     * @return the identity type
+     */
+    public String getIdentityType() {
+        return identityType;
+    }
 
-	/**
-	 * @param identityType
-	 *            the identityType to set
-	 */
-	public void setIdentityType(String identityType) {
-		this.identityType = identityType;
-	}
+    /**
+     * @param identityType
+     *            the identityType to set
+     */
+    public void setIdentityType(String identityType) {
+        this.identityType = identityType;
+    }
 
-	/**
-	 * @return the scope
-	 */
-	public CardScope getScope() {
-		return scope;
-	}
+    /**
+     * @return the scope
+     */
+    public CardScope getScope() {
+        return scope;
+    }
 
-	/**
-	 * @param scope
-	 *            the scope to set
-	 */
-	public void setScope(CardScope scope) {
-		this.scope = scope;
-	}
+    /**
+     * @param scope
+     *            the scope to set
+     */
+    public void setScope(CardScope scope) {
+        this.scope = scope;
+    }
 
 }

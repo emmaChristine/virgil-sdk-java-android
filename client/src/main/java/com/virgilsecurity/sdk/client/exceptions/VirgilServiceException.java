@@ -40,85 +40,85 @@ import java.util.ResourceBundle;
  */
 public abstract class VirgilServiceException extends RuntimeException {
 
-	private static final long serialVersionUID = -1143173438484224903L;
+    private static final long serialVersionUID = -1143173438484224903L;
 
-	protected static final String ERROR_UNKNOWN = "Unknown error";
+    protected static final String ERROR_UNKNOWN = "Unknown error";
 
-	private int errorCode = 0;
+    private int errorCode = 0;
 
-	/**
-	 * Create a new instance of {@code VirgilServiceException}
-	 */
-	public VirgilServiceException() {
-	}
+    /**
+     * Create a new instance of {@code VirgilServiceException}
+     */
+    public VirgilServiceException() {
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilServiceException}
-	 *
-	 * @param code
-	 *            The error code.
-	 */
-	public VirgilServiceException(int code) {
-		this.errorCode = code;
-	}
+    /**
+     * Create a new instance of {@code VirgilServiceException}
+     *
+     * @param code
+     *            The error code.
+     */
+    public VirgilServiceException(int code) {
+        this.errorCode = code;
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilServiceException}
-	 *
-	 * @param code
-	 *            The error code.
-	 * @param cause
-	 *            The cause.
-	 */
-	public VirgilServiceException(int code, Exception cause) {
-		super(cause);
+    /**
+     * Create a new instance of {@code VirgilServiceException}
+     *
+     * @param code
+     *            The error code.
+     * @param cause
+     *            The cause.
+     */
+    public VirgilServiceException(int code, Exception cause) {
+        super(cause);
 
-		this.errorCode = code;
-	}
+        this.errorCode = code;
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilServiceException}
-	 *
-	 * @param cause
-	 *            The cause.
-	 */
-	public VirgilServiceException(Exception cause) {
-		super(cause);
-		this.errorCode = -1;
-	}
+    /**
+     * Create a new instance of {@code VirgilServiceException}
+     *
+     * @param cause
+     *            The cause.
+     */
+    public VirgilServiceException(Exception cause) {
+        super(cause);
+        this.errorCode = -1;
+    }
 
-	/**
-	 * @return the error code.
-	 */
-	public int getErrorCode() {
-		return errorCode;
-	}
+    /**
+     * @return the error code.
+     */
+    public int getErrorCode() {
+        return errorCode;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Throwable#getMessage()
-	 */
-	@Override
-	public String getMessage() {
-		if (errorCode == -1) {
-			return super.getMessage();
-		}
-		ResourceBundle bundle = null;
-		try {
-			bundle = ResourceBundle.getBundle(getMessageBundleName());
-			String key = String.valueOf(this.errorCode);
-			if (bundle.containsKey(key)) {
-				return bundle.getString(key);
-			}
-		} catch (MissingResourceException e) {
-		}
-		return ERROR_UNKNOWN + ": " + errorCode;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Throwable#getMessage()
+     */
+    @Override
+    public String getMessage() {
+        if (errorCode == -1) {
+            return super.getMessage();
+        }
+        ResourceBundle bundle = null;
+        try {
+            bundle = ResourceBundle.getBundle(getMessageBundleName());
+            String key = String.valueOf(this.errorCode);
+            if (bundle.containsKey(key)) {
+                return bundle.getString(key);
+            }
+        } catch (MissingResourceException e) {
+        }
+        return ERROR_UNKNOWN + ": " + errorCode;
+    }
 
-	/**
-	 * @return The message bundle name
-	 */
-	protected abstract String getMessageBundleName();
+    /**
+     * @return The message bundle name
+     */
+    protected abstract String getMessageBundleName();
 
 }

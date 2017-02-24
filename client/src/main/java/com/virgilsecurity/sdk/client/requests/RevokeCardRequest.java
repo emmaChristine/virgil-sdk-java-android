@@ -29,11 +29,8 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import java.util.Map;
-
 import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.dto.RevokeCardModel;
-import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
+import com.virgilsecurity.sdk.client.model.dto.RevokeCardSnapshotModel;
 
 /**
  * Request used for Virgil Card revocation.
@@ -41,86 +38,31 @@ import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
  * @author Andrii Iakovenko
  *
  */
-public class RevokeCardRequest extends SignedRequest {
+public class RevokeCardRequest extends GenericSignableRequest<RevokeCardSnapshotModel> {
 
-	/**
-	 * The card identifier.
-	 */
-	private String cardId;
+    /**
+     * Create new instance of {@link RevokeCardRequest}.
+     * 
+     * @param stringifiedRequest
+     *            The stringified request.
+     */
+    public RevokeCardRequest(String stringifiedRequest) {
+        super(stringifiedRequest);
+    }
 
-	/**
-	 * The revocation reason.
-	 */
-	private RevocationReason reason;
+    /**
+     * Create new instance of {@link RevokeCardRequest}.
+     * 
+     * @param cardId
+     *            The card ID to be revoked.
+     * @param reason
+     *            The revocation reason.
+     */
+    public RevokeCardRequest(String cardId, RevocationReason reason) {
 
-	/**
-	 * Create a new instance of {@code RevokeCardRequest}
-	 *
-	 */
-	public RevokeCardRequest() {
-		// Default constructor
-	}
-
-	/**
-	 * Create a new instance of {@code RevokeCardRequest}
-	 *
-	 * @param cardId
-	 *            the card identifier.
-	 * @param reason
-	 *            the reason of revocation.
-	 */
-	public RevokeCardRequest(String cardId, RevocationReason reason) {
-		this.cardId = cardId;
-		this.reason = reason;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.virgilsecurity.sdk.client.requests.SignedRequest#restoreRequest(byte[
-	 * ], java.util.Map)
-	 */
-	@Override
-	protected void restoreRequest(String snapshot, Map<String, String> signatures) {
-		this.snapshot = snapshot;
-		this.signatures = signatures;
-
-		RevokeCardModel details = ConvertionUtils.getGson().fromJson(ConvertionUtils.base64ToString(this.snapshot),
-				RevokeCardModel.class);
-
-		this.cardId = details.getCardId();
-		this.reason = details.getReason();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.client.requests.SignedRequest#takeSnapshot()
-	 */
-	@Override
-	protected String takeSnapshot() {
-		RevokeCardModel model = new RevokeCardModel();
-		model.setCardId(this.cardId);
-		model.setReason(this.reason);
-
-		String json = ConvertionUtils.getGson().toJson(model);
-
-		return ConvertionUtils.toBase64String(json);
-	}
-
-	/**
-	 * @return the cardId
-	 */
-	public String getCardId() {
-		return cardId;
-	}
-
-	/**
-	 * @return the reason
-	 */
-	public RevocationReason getReason() {
-		return reason;
-	}
-
+        RevokeCardSnapshotModel snapshotModel = new RevokeCardSnapshotModel();
+        snapshotModel.setCardId(cardId);
+        snapshotModel.setReason(reason);
+        init(snapshotModel);
+    }
 }

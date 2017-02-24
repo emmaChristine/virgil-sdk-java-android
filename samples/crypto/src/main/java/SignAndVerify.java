@@ -48,37 +48,37 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
  */
 public class SignAndVerify {
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Enter text to sign: ");
-		String dataToSign = br.readLine();
-		System.out.println();
+    /**
+     * @param args
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Enter text to sign: ");
+        String dataToSign = br.readLine();
+        System.out.println();
 
-		// Initialize Crypto
-		Crypto crypto = new VirgilCrypto();
+        // Initialize Crypto
+        Crypto crypto = new VirgilCrypto();
 
-		// Generate generate public/private key pair for key recipient
-		KeyPair keyPair = crypto.generateKeys();
+        // Generate generate public/private key pair for key recipient
+        KeyPair keyPair = crypto.generateKeys();
 
-		PublicKey publicKey = keyPair.getPublicKey();
-		PrivateKey privateKey = keyPair.getPrivateKey();
+        PublicKey publicKey = keyPair.getPublicKey();
+        PrivateKey privateKey = keyPair.getPrivateKey();
 
-		// Create Signer instance
-		byte[] data = dataToSign.getBytes();
+        // Create Signer instance
+        byte[] data = dataToSign.getBytes();
 
-		// Sign data with private key
-		byte[] sign = crypto.sign(data, privateKey);
+        // Sign data with private key
+        byte[] sign = crypto.sign(data, privateKey);
 
-		System.out.println(String.format("Digital signature in Base64: %1$s", ConvertionUtils.toBase64String(sign)));
+        System.out.println(String.format("Digital signature in Base64: %1$s", ConvertionUtils.toBase64String(sign)));
 
-		// Verify data with sign and public key
-		boolean isValid = crypto.verify(data, sign, publicKey);
+        // Verify data with sign and public key
+        boolean isValid = crypto.verify(data, sign, publicKey);
 
-		System.out.println(String.format("Verification result is: %1$b", isValid));
-	}
+        System.out.println(String.format("Verification result is: %1$b", isValid));
+    }
 
 }

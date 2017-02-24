@@ -29,8 +29,7 @@
  */
 package com.virgilsecurity.sdk.client;
 
-import com.virgilsecurity.sdk.client.requests.SignedRequest;
-import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
+import com.virgilsecurity.sdk.client.requests.SignableRequest;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
@@ -43,50 +42,48 @@ import com.virgilsecurity.sdk.crypto.PrivateKey;
  */
 public class RequestSigner {
 
-	private final Crypto crypto;
+    private final Crypto crypto;
 
-	/**
-	 * Create a new instance of {@code RequestSigner}
-	 *
-	 * @param crypto
-	 *            the crypto.
-	 */
-	public RequestSigner(Crypto crypto) {
-		this.crypto = crypto;
-	}
+    /**
+     * Create a new instance of {@code RequestSigner}
+     *
+     * @param crypto
+     *            the crypto.
+     */
+    public RequestSigner(Crypto crypto) {
+        this.crypto = crypto;
+    }
 
-	/**
-	 * Sign request with a key.
-	 * 
-	 * @param request
-	 *            the request to be signed.
-	 * @param privateKey
-	 *            the private key.
-	 */
-	public void selfSign(SignedRequest request, PrivateKey privateKey) {
-		Fingerprint fingerprint = this.crypto
-				.calculateFingerprint(ConvertionUtils.base64ToBytes(request.getSnapshot()));
-		byte[] signature = this.crypto.sign(fingerprint.getValue(), privateKey);
+    /**
+     * Sign request with a key.
+     * 
+     * @param request
+     *            the request to be signed.
+     * @param privateKey
+     *            the private key.
+     */
+    public void selfSign(SignableRequest request, PrivateKey privateKey) {
+        Fingerprint fingerprint = this.crypto.calculateFingerprint(request.getSnapshot());
+        byte[] signature = this.crypto.sign(fingerprint.getValue(), privateKey);
 
-		request.appendSignature(fingerprint.toHex(), ConvertionUtils.toBase64String(signature));
-	}
+        request.appendSignature(fingerprint.toHex(), signature);
+    }
 
-	/**
-	 * Sign request with authority key.
-	 * 
-	 * @param request
-	 *            the request to be signed.
-	 * @param appdId
-	 *            the application id.
-	 * @param appKey
-	 *            the application key.
-	 */
-	public void authoritySign(SignedRequest request, String appdId, PrivateKey appKey) {
-		Fingerprint fingerprint = this.crypto
-				.calculateFingerprint(ConvertionUtils.base64ToBytes(request.getSnapshot()));
-		byte[] signature = this.crypto.sign(fingerprint.getValue(), appKey);
+    /**
+     * Sign request with authority key.
+     * 
+     * @param request
+     *            the request to be signed.
+     * @param appdId
+     *            the application id.
+     * @param appKey
+     *            the application key.
+     */
+    public void authoritySign(SignableRequest request, String appdId, PrivateKey appKey) {
+        Fingerprint fingerprint = this.crypto.calculateFingerprint(request.getSnapshot());
+        byte[] signature = this.crypto.sign(fingerprint.getValue(), appKey);
 
-		request.appendSignature(appdId, ConvertionUtils.toBase64String(signature));
-	}
+        request.appendSignature(appdId, signature);
+    }
 
 }

@@ -37,14 +37,14 @@ package com.virgilsecurity.sdk.client.exceptions;
  */
 public class VirgilKeyIsNotFoundException extends VirgilException {
 
-	private static final long serialVersionUID = -6143239665038260797L;
+    private static final long serialVersionUID = -6143239665038260797L;
 
-	/**
-	 * Create a new instance of {@code VirgilKeyIsNotFoundException}
-	 *
-	 */
-	public VirgilKeyIsNotFoundException() {
-		super("Virgil Key is not found.");
-	}
+    /**
+     * Create a new instance of {@code VirgilKeyIsNotFoundException}
+     *
+     */
+    public VirgilKeyIsNotFoundException() {
+        super("Virgil Key is not found.");
+    }
 
 }

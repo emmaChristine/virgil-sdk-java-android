@@ -38,13 +38,11 @@ import com.virgilsecurity.sdk.client.model.CardScope;
  * Performs the search of a Virgil Cards by search criteria:
  * <ul>
  * <li>the {@code identities} request parameter is mandatory.</li>
- * <li>the {@code type} optional request parameter is optional and specifies the
- * identity type of a Virgil Card.</li>
- * <li>the {@code scope} optional request parameter specifies the scope to
- * perform search on. Either 'global' or 'application'. The default value is
- * "application".</li>
- * <li>the {@code confirmed} optional request parameter specifies whether apply
- * filtering on 'is_confirmed' parameter or not.</li>
+ * <li>the {@code type} optional request parameter is optional and specifies the identity type of a Virgil Card.</li>
+ * <li>the {@code scope} optional request parameter specifies the scope to perform search on. Either 'global' or
+ * 'application'. The default value is "application".</li>
+ * <li>the {@code confirmed} optional request parameter specifies whether apply filtering on 'is_confirmed' parameter or
+ * not.</li>
  * </ul>
  *
  * @author Andrii Iakovenko
@@ -52,83 +50,83 @@ import com.virgilsecurity.sdk.client.model.CardScope;
  */
 public class SearchRequest {
 
-	@SerializedName("identities")
-	private Collection<String> identities;
+    @SerializedName("identities")
+    private Collection<String> identities;
 
-	@SerializedName("identity_type")
-	private String identityType;
+    @SerializedName("identity_type")
+    private String identityType;
 
-	@SerializedName("is_confirmed")
-	private Boolean confirmed;
+    @SerializedName("is_confirmed")
+    private Boolean confirmed;
 
-	@SerializedName("scope")
-	private CardScope scope;
-	
-	/**
-	 * Create a new instance of {@code SearchRequest}
-	 *
-	 */
-	public SearchRequest() {
-	}
+    @SerializedName("scope")
+    private CardScope scope;
 
-	/**
-	 * @return the identities
-	 */
-	public Collection<String> getIdentities() {
-		return identities;
-	}
+    /**
+     * Create a new instance of {@code SearchRequest}
+     *
+     */
+    public SearchRequest() {
+    }
 
-	/**
-	 * @param identities
-	 *            the identities to set
-	 */
-	public void setIdentities(Collection<String> identities) {
-		this.identities = identities;
-	}
+    /**
+     * @return the identities
+     */
+    public Collection<String> getIdentities() {
+        return identities;
+    }
 
-	/**
-	 * @return the type
-	 */
-	public String getIdentityType() {
-		return identityType;
-	}
+    /**
+     * @param identities
+     *            the identities to set
+     */
+    public void setIdentities(Collection<String> identities) {
+        this.identities = identities;
+    }
 
-	/**
-	 * @param type
-	 *            the type to set
-	 */
-	public void setIdentityType(String type) {
-		this.identityType = type;
-	}
+    /**
+     * @return the type
+     */
+    public String getIdentityType() {
+        return identityType;
+    }
 
-	/**
-	 * @return the confirmed
-	 */
-	public Boolean getConfirmed() {
-		return confirmed;
-	}
+    /**
+     * @param type
+     *            the type to set
+     */
+    public void setIdentityType(String type) {
+        this.identityType = type;
+    }
 
-	/**
-	 * @param confirmed
-	 *            the confirmed to set
-	 */
-	public void setConfirmed(Boolean confirmed) {
-		this.confirmed = confirmed;
-	}
+    /**
+     * @return the confirmed
+     */
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
 
-	/**
-	 * @return the scope
-	 */
-	public CardScope getScope() {
-		return scope;
-	}
+    /**
+     * @param confirmed
+     *            the confirmed to set
+     */
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
+    }
 
-	/**
-	 * @param scope
-	 *            the scope to set
-	 */
-	public void setScope(CardScope scope) {
-		this.scope = scope;
-	}
+    /**
+     * @return the scope
+     */
+    public CardScope getScope() {
+        return scope;
+    }
+
+    /**
+     * @param scope
+     *            the scope to set
+     */
+    public void setScope(CardScope scope) {
+        this.scope = scope;
+    }
 
 }

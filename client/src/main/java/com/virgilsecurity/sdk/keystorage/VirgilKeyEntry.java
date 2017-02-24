@@ -43,84 +43,84 @@ import com.virgilsecurity.sdk.crypto.KeyEntry;
  */
 public class VirgilKeyEntry implements KeyEntry {
 
-	private transient String name;
+    private transient String name;
 
-	@SerializedName("value")
-	private byte[] value;
+    @SerializedName("value")
+    private byte[] value;
 
-	@SerializedName("meta_data")
-	private Map<String, String> metadata;
+    @SerializedName("meta_data")
+    private Map<String, String> metadata;
 
-	/**
-	 * Create a new instance of {@code VirgilKeyEntry}
-	 *
-	 */
-	public VirgilKeyEntry() {
-		metadata = new HashMap<>();
-	}
+    /**
+     * Create a new instance of {@code VirgilKeyEntry}
+     *
+     */
+    public VirgilKeyEntry() {
+        metadata = new HashMap<>();
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilKeyEntry}
-	 *
-	 * @param name
-	 *            The key name.
-	 * @param value
-	 *            The key value.
-	 */
-	public VirgilKeyEntry(String name, byte[] value) {
-		this();
-		this.name = name;
-		this.value = value;
-	}
+    /**
+     * Create a new instance of {@code VirgilKeyEntry}
+     *
+     * @param name
+     *            The key name.
+     * @param value
+     *            The key value.
+     */
+    public VirgilKeyEntry(String name, byte[] value) {
+        this();
+        this.name = name;
+        this.value = value;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyEntry#getName()
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyEntry#getName()
+     */
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyEntry#setName(java.lang.String)
-	 */
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyEntry#setName(java.lang.String)
+     */
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyEntry#getValue()
-	 */
-	@Override
-	public byte[] getValue() {
-		return value;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyEntry#getValue()
+     */
+    @Override
+    public byte[] getValue() {
+        return value;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyEntry#setValue(byte[])
-	 */
-	@Override
-	public void setValue(byte[] value) {
-		this.value = value;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyEntry#setValue(byte[])
+     */
+    @Override
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.KeyEntry#getMetadata()
-	 */
-	@Override
-	public Map<String, String> getMetadata() {
-		return metadata;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.KeyEntry#getMetadata()
+     */
+    @Override
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
 
 }

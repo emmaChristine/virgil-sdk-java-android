@@ -37,123 +37,121 @@
 package com.virgilsecurity.crypto;
 
 /**
- * This class provides high-level interface to encrypt / decrypt data using
- * Virgil Security keys.
+ * This class provides high-level interface to encrypt / decrypt data using Virgil Security keys.
  *
  * @author Andrii Iakovenko
  *
  */
 public class VirgilCipher extends VirgilCipherBase implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
+    private transient long swigCPtr;
 
-	protected VirgilCipher(long cPtr, boolean cMemoryOwn) {
-		super(virgil_crypto_javaJNI.VirgilCipher_SWIGUpcast(cPtr), cMemoryOwn);
-		swigCPtr = cPtr;
-	}
+    protected VirgilCipher(long cPtr, boolean cMemoryOwn) {
+        super(virgil_crypto_javaJNI.VirgilCipher_SWIGUpcast(cPtr), cMemoryOwn);
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilCipher obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilCipher obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilCipher(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-		super.delete();
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilCipher(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+        super.delete();
+    }
 
-	@Override
-	public void close() {
-		delete();
-	}
+    @Override
+    public void close() {
+        delete();
+    }
 
-	/**
-	 * Encrypt given data.
-	 * 
-	 * @param data
-	 *            Data to be encrypted.
-	 * @param embedContentInfo
-	 *            Determines whether to embed content info the the encrypted
-	 *            data, or not.
-	 * @return Encrypted data.
-	 */
-	public byte[] encrypt(byte[] data, boolean embedContentInfo) {
-		return virgil_crypto_javaJNI.VirgilCipher_encrypt__SWIG_0(swigCPtr, this, data, embedContentInfo);
-	}
+    /**
+     * Encrypt given data.
+     * 
+     * @param data
+     *            Data to be encrypted.
+     * @param embedContentInfo
+     *            Determines whether to embed content info the the encrypted data, or not.
+     * @return Encrypted data.
+     */
+    public byte[] encrypt(byte[] data, boolean embedContentInfo) {
+        return virgil_crypto_javaJNI.VirgilCipher_encrypt__SWIG_0(swigCPtr, this, data, embedContentInfo);
+    }
 
-	/**
-	 * Encrypt given data.
-	 * 
-	 * @param data
-	 *            Data to be encrypted.
-	 * @return Encrypted data.
-	 */
-	public byte[] encrypt(byte[] data) {
-		return virgil_crypto_javaJNI.VirgilCipher_encrypt__SWIG_1(swigCPtr, this, data);
-	}
+    /**
+     * Encrypt given data.
+     * 
+     * @param data
+     *            Data to be encrypted.
+     * @return Encrypted data.
+     */
+    public byte[] encrypt(byte[] data) {
+        return virgil_crypto_javaJNI.VirgilCipher_encrypt__SWIG_1(swigCPtr, this, data);
+    }
 
-	/**
-	 * Decrypt given data for recipient defined by id and private key.
-	 * 
-	 * @param encryptedData
-	 *            Data to be decrypted.
-	 * @param recipientId
-	 *            The recipient identifier.
-	 * @param privateKey
-	 *            Recipient's private key protected with password.
-	 * @param privateKeyPassword
-	 *            The private key password.
-	 * @return Decrypted data.
-	 */
-	public byte[] decryptWithKey(byte[] encryptedData, byte[] recipientId, byte[] privateKey,
-			byte[] privateKeyPassword) {
-		return virgil_crypto_javaJNI.VirgilCipher_decryptWithKey__SWIG_0(swigCPtr, this, encryptedData, recipientId,
-				privateKey, privateKeyPassword);
-	}
+    /**
+     * Decrypt given data for recipient defined by id and private key.
+     * 
+     * @param encryptedData
+     *            Data to be decrypted.
+     * @param recipientId
+     *            The recipient identifier.
+     * @param privateKey
+     *            Recipient's private key protected with password.
+     * @param privateKeyPassword
+     *            The private key password.
+     * @return Decrypted data.
+     */
+    public byte[] decryptWithKey(byte[] encryptedData, byte[] recipientId, byte[] privateKey,
+            byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilCipher_decryptWithKey__SWIG_0(swigCPtr, this, encryptedData, recipientId,
+                privateKey, privateKeyPassword);
+    }
 
-	/**
-	 * Decrypt given data for recipient defined by id and private key.
-	 * 
-	 * @param encryptedData
-	 *            Data to be decrypted.
-	 * @param recipientId
-	 *            The recipient identifier.
-	 * @param privateKey
-	 *            Recipient's private key.
-	 * @return Decrypted data.
-	 */
-	public byte[] decryptWithKey(byte[] encryptedData, byte[] recipientId, byte[] privateKey) {
-		return virgil_crypto_javaJNI.VirgilCipher_decryptWithKey__SWIG_1(swigCPtr, this, encryptedData, recipientId,
-				privateKey);
-	}
+    /**
+     * Decrypt given data for recipient defined by id and private key.
+     * 
+     * @param encryptedData
+     *            Data to be decrypted.
+     * @param recipientId
+     *            The recipient identifier.
+     * @param privateKey
+     *            Recipient's private key.
+     * @return Decrypted data.
+     */
+    public byte[] decryptWithKey(byte[] encryptedData, byte[] recipientId, byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilCipher_decryptWithKey__SWIG_1(swigCPtr, this, encryptedData, recipientId,
+                privateKey);
+    }
 
-	/**
-	 * Decrypt given data for recipient defined by password.
-	 * 
-	 * @param encryptedData
-	 *            Data to be decrypted.
-	 * @param pwd
-	 *            The password.
-	 * @return Decrypted data.
-	 */
-	public byte[] decryptWithPassword(byte[] encryptedData, byte[] pwd) {
-		return virgil_crypto_javaJNI.VirgilCipher_decryptWithPassword(swigCPtr, this, encryptedData, pwd);
-	}
+    /**
+     * Decrypt given data for recipient defined by password.
+     * 
+     * @param encryptedData
+     *            Data to be decrypted.
+     * @param pwd
+     *            The password.
+     * @return Decrypted data.
+     */
+    public byte[] decryptWithPassword(byte[] encryptedData, byte[] pwd) {
+        return virgil_crypto_javaJNI.VirgilCipher_decryptWithPassword(swigCPtr, this, encryptedData, pwd);
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilCipher}
-	 *
-	 */
-	public VirgilCipher() {
-		this(virgil_crypto_javaJNI.new_VirgilCipher(), true);
-	}
+    /**
+     * Create a new instance of {@code VirgilCipher}
+     *
+     */
+    public VirgilCipher() {
+        this(virgil_crypto_javaJNI.new_VirgilCipher(), true);
+    }
 
 }

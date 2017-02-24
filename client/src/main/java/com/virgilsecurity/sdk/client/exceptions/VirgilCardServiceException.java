@@ -37,39 +37,43 @@ package com.virgilsecurity.sdk.client.exceptions;
  */
 public class VirgilCardServiceException extends VirgilServiceException {
 
-	private static final long serialVersionUID = -6168211821016742313L;
+    private static final long serialVersionUID = -6168211821016742313L;
 
-	/**
-	 * Create a new instance of {@code VirgilCardServiceException}
-	 *
-	 * @param code the error code.
-	 */
-	public VirgilCardServiceException(int code) {
-		super(code);
-	}
+    /**
+     * Create a new instance of {@code VirgilCardServiceException}
+     *
+     * @param code
+     *            the error code.
+     */
+    public VirgilCardServiceException(int code) {
+        super(code);
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilCardServiceException}
-	 *
-	 */
-	public VirgilCardServiceException() {
-	}
+    /**
+     * Create a new instance of {@code VirgilCardServiceException}
+     *
+     */
+    public VirgilCardServiceException() {
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilCardServiceException}
-	 *
-	 * @param e the exception.
-	 */
-	public VirgilCardServiceException(Exception e) {
-		super(e);
-	}
+    /**
+     * Create a new instance of {@code VirgilCardServiceException}
+     *
+     * @param e
+     *            the exception.
+     */
+    public VirgilCardServiceException(Exception e) {
+        super(e);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.virgilsecurity.sdk.client.exceptions.VirgilServiceException#getMessageBundleName()
-	 */
-	@Override
-	protected String getMessageBundleName() {
-		return "CardsServiceMessages";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.exceptions.VirgilServiceException# getMessageBundleName()
+     */
+    @Override
+    protected String getMessageBundleName() {
+        return "CardsServiceMessages";
+    }
 
 }

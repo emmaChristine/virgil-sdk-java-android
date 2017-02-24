@@ -46,40 +46,40 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
  */
 public class Encryption {
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Enter text to encrypt: ");
-		String dataToSign = br.readLine();
-		System.out.println();
+    /**
+     * @param args
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Enter text to encrypt: ");
+        String dataToSign = br.readLine();
+        System.out.println();
 
-		// Initialize Crypto
-		Crypto crypto = new VirgilCrypto();
+        // Initialize Crypto
+        Crypto crypto = new VirgilCrypto();
 
-		// Generate generate public/private key pair for key recipient
-		KeyPair keyPair = crypto.generateKeys();
+        // Generate generate public/private key pair for key recipient
+        KeyPair keyPair = crypto.generateKeys();
 
-		PublicKey publicKey = keyPair.getPublicKey();
-		PrivateKey privateKey = keyPair.getPrivateKey();
+        PublicKey publicKey = keyPair.getPublicKey();
+        PrivateKey privateKey = keyPair.getPrivateKey();
 
-		System.out.println(
-				String.format("Public Key: \n%1$s", ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey))));
-		System.out.println(String.format("Private Key: \n%1$s",
-				ConvertionUtils.toBase64String(crypto.exportPrivateKey(privateKey))));
+        System.out.println(
+                String.format("Public Key: \n%1$s", ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey))));
+        System.out.println(String.format("Private Key: \n%1$s",
+                ConvertionUtils.toBase64String(crypto.exportPrivateKey(privateKey))));
 
-		// Encrypting data for multiple recipients key/password
-		byte[] data = dataToSign.getBytes();
-		byte[] encryptedData = crypto.encrypt(data, new PublicKey[] { publicKey });
+        // Encrypting data for multiple recipients key/password
+        byte[] data = dataToSign.getBytes();
+        byte[] encryptedData = crypto.encrypt(data, new PublicKey[] { publicKey });
 
-		System.out
-				.println(String.format("Cipher text in Base64:\n %1$s", ConvertionUtils.toBase64String(encryptedData)));
+        System.out
+                .println(String.format("Cipher text in Base64:\n %1$s", ConvertionUtils.toBase64String(encryptedData)));
 
-		// Decrypt data with private key
-		byte[] decryptedData = crypto.decrypt(encryptedData, privateKey);
+        // Decrypt data with private key
+        byte[] decryptedData = crypto.decrypt(encryptedData, privateKey);
 
-		System.out.println(String.format("Decrypted text:\n %1$s", ConvertionUtils.toString(decryptedData)));
-	}
+        System.out.println(String.format("Decrypted text:\n %1$s", ConvertionUtils.toString(decryptedData)));
+    }
 }

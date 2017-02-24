@@ -37,13 +37,13 @@ package com.virgilsecurity.sdk.crypto.exception;
  */
 public class SignatureIsNotValidException extends CryptoException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Create a new instance of {@code SignatureIsNotValidException}
-	 *
-	 */
-	public SignatureIsNotValidException() {
-		super("Digital signature is not valid");
-	}
+    /**
+     * Create a new instance of {@code SignatureIsNotValidException}
+     *
+     */
+    public SignatureIsNotValidException() {
+        super("Digital signature is not valid");
+    }
 }

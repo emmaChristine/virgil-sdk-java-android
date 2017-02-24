@@ -37,18 +37,18 @@ package com.virgilsecurity.sdk.crypto;
  */
 public interface PrivateKey {
 
-	/**
-	 * Get the receiver identifier.
-	 * 
-	 * @return the receiver identifier.
-	 */
-	byte[] getId();
+    /**
+     * Get the receiver identifier.
+     * 
+     * @return the receiver identifier.
+     */
+    byte[] getId();
 
-	/**
-	 * Get the Private key value.
-	 * 
-	 * @return the value
-	 */
-	byte[] getValue();
+    /**
+     * Get the Private key value.
+     * 
+     * @return the value
+     */
+    byte[] getValue();
 
 }

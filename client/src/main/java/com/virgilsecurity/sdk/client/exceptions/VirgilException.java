@@ -37,23 +37,23 @@ package com.virgilsecurity.sdk.client.exceptions;
  */
 public class VirgilException extends RuntimeException {
 
-	private static final long serialVersionUID = -8369792754821656857L;
+    private static final long serialVersionUID = -8369792754821656857L;
 
-	/**
-	 * Create a new instance of {@code VirgilException}
-	 *
-	 */
-	public VirgilException() {
-	}
+    /**
+     * Create a new instance of {@code VirgilException}
+     *
+     */
+    public VirgilException() {
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilException}
-	 *
-	 * @param string
-	 *            the detail message.
-	 */
-	public VirgilException(String string) {
-		super(string);
-	}
+    /**
+     * Create a new instance of {@code VirgilException}
+     *
+     * @param string
+     *            the detail message.
+     */
+    public VirgilException(String string) {
+        super(string);
+    }
 
 }
