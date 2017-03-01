@@ -39,41 +39,43 @@ import com.virgilsecurity.crypto.VirgilByteArrayUtils;
  */
 public class VirgilFingerprint implements Fingerprint {
 
-	private byte[] value;
+    private byte[] value;
 
-	/**
-	 * Create a new instance of {@code VirgilFingerprint}
-	 *
-	 * @param fingerprint the source fingerprint.
-	 */
-	public VirgilFingerprint(byte[] fingerprint) {
-		this.value = fingerprint;
-	}
+    /**
+     * Create a new instance of {@code VirgilFingerprint}
+     *
+     * @param fingerprint
+     *            the source fingerprint.
+     */
+    public VirgilFingerprint(byte[] fingerprint) {
+        this.value = fingerprint;
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilFingerprint}
-	 *
-	 * @param fingerprintHex the source fingerprint as hex string.
-	 */
-	public VirgilFingerprint(String fingerprintHex) {
-		this.value = VirgilByteArrayUtils.hexToBytes(fingerprintHex);
-	}
+    /**
+     * Create a new instance of {@code VirgilFingerprint}
+     *
+     * @param fingerprintHex
+     *            the source fingerprint as hex string.
+     */
+    public VirgilFingerprint(String fingerprintHex) {
+        this.value = VirgilByteArrayUtils.hexToBytes(fingerprintHex);
+    }
 
-	/**
-	 * @return the value
-	 */
-	public byte[] getValue() {
-		return value;
-	}
+    /**
+     * @return the value
+     */
+    public byte[] getValue() {
+        return value;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Fingerprint#toHex()
-	 */
-	@Override
-	public String toHex() {
-		return VirgilByteArrayUtils.bytesToHex(this.value);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Fingerprint#toHex()
+     */
+    @Override
+    public String toHex() {
+        return VirgilByteArrayUtils.bytesToHex(this.value);
+    }
 
 }

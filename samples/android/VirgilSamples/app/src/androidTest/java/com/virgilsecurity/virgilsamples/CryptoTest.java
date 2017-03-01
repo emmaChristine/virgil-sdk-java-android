@@ -12,17 +12,18 @@ import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-import com.virgilsecurity.sdk.crypto.exception.CryptoException;
-import com.virgilsecurity.sdk.crypto.exception.DecryptionException;
-import com.virgilsecurity.sdk.crypto.exception.EncryptionException;
-import com.virgilsecurity.sdk.crypto.exception.VerificationException;
-import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,8 +142,9 @@ public class CryptoTest extends AndroidTestCase {
     public void testEncrypt() {
         List<PublicKey> recipients = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            recipients.add(crypto.generateKeys().getPublicKey());
+//            recipients.add(crypto.generateKeys().getPublicKey());
         }
+        crypto.encrypt(TEXT.getBytes(StandardCharsets.UTF_8), crypto.generateKeys().getPublicKey());
         byte[] encrypted = crypto.encrypt(TEXT.getBytes(), recipients.toArray(new PublicKey[0]));
 
         assertNotNull(encrypted);

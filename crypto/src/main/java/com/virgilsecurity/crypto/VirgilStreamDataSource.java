@@ -37,36 +37,36 @@
 package com.virgilsecurity.crypto;
 
 public class VirgilStreamDataSource extends VirgilDataSource implements java.io.Closeable {
-	private java.io.InputStream stream;
-	private int chunkSize;
-	private static int CHUNK_SIZE_DEFAULT = 1024 * 1024;
+    private java.io.InputStream stream;
+    private int chunkSize;
+    private static int CHUNK_SIZE_DEFAULT = 1024 * 1024;
 
-	public VirgilStreamDataSource(java.io.InputStream stream) {
-		this.stream = stream;
-		this.chunkSize = CHUNK_SIZE_DEFAULT;
-	}
+    public VirgilStreamDataSource(java.io.InputStream stream) {
+        this.stream = stream;
+        this.chunkSize = CHUNK_SIZE_DEFAULT;
+    }
 
-	public VirgilStreamDataSource(java.io.InputStream stream, int chunkSize) {
-		this.stream = stream;
-		this.chunkSize = chunkSize;
-	}
+    public VirgilStreamDataSource(java.io.InputStream stream, int chunkSize) {
+        this.stream = stream;
+        this.chunkSize = chunkSize;
+    }
 
-	@Override
-	public boolean hasData() throws java.io.IOException {
-		return this.stream.available() > 0;
-	}
+    @Override
+    public boolean hasData() throws java.io.IOException {
+        return this.stream.available() > 0;
+    }
 
-	@Override
-	public byte[] read() throws java.io.IOException {
-		final int bytesToReadNum = Math.min(this.stream.available(), this.chunkSize);
-		byte[] result = new byte[bytesToReadNum];
-		this.stream.read(result, 0, bytesToReadNum);
-		return result;
-	}
+    @Override
+    public byte[] read() throws java.io.IOException {
+        final int bytesToReadNum = Math.min(this.stream.available(), this.chunkSize);
+        byte[] result = new byte[bytesToReadNum];
+        this.stream.read(result, 0, bytesToReadNum);
+        return result;
+    }
 
-	@Override
-	public void close() throws java.io.IOException {
-		this.stream.close();
-		this.delete();
-	}
+    @Override
+    public void close() throws java.io.IOException {
+        this.stream.close();
+        this.delete();
+    }
 }

@@ -46,13 +46,13 @@ import com.virgilsecurity.crypto.VirgilStreamCipher;
 import com.virgilsecurity.crypto.VirgilStreamDataSink;
 import com.virgilsecurity.crypto.VirgilStreamDataSource;
 import com.virgilsecurity.crypto.VirgilStreamSigner;
-import com.virgilsecurity.sdk.crypto.exception.CryptoException;
-import com.virgilsecurity.sdk.crypto.exception.DecryptionException;
-import com.virgilsecurity.sdk.crypto.exception.EncryptionException;
-import com.virgilsecurity.sdk.crypto.exception.SignatureIsNotValidException;
-import com.virgilsecurity.sdk.crypto.exception.SigningException;
-import com.virgilsecurity.sdk.crypto.exception.VerificationException;
-import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.SignatureIsNotValidException;
+import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
  * The Virgil's implementation of Crypto.
@@ -66,519 +66,518 @@ import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
  */
 public class VirgilCrypto implements Crypto {
 
-	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-	private static final byte[] CUSTOM_PARAM_SIGNATURE = "VIRGIL-DATA-SIGNATURE".getBytes(UTF8_CHARSET);
+    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+    private static final byte[] CUSTOM_PARAM_SIGNATURE = "VIRGIL-DATA-SIGNATURE".getBytes(UTF8_CHARSET);
+    private KeysType defaultKeyPairType;
 
-	public static VirgilHash createVirgilHash(HashAlgorithm algorithm) {
-		switch (algorithm) {
-		case MD5:
-			return new VirgilHash(VirgilHash.Algorithm.MD5);
-		case SHA1:
-			return new VirgilHash(VirgilHash.Algorithm.SHA1);
-		case SHA224:
-			return new VirgilHash(VirgilHash.Algorithm.SHA224);
-		case SHA256:
-			return new VirgilHash(VirgilHash.Algorithm.SHA256);
-		case SHA384:
-			return new VirgilHash(VirgilHash.Algorithm.SHA384);
-		case SHA512:
-			return new VirgilHash(VirgilHash.Algorithm.SHA512);
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
+    /**
+     * Create new instance of {@link VirgilCrypto}.
+     */
+    public VirgilCrypto() {
+        this.defaultKeyPairType = KeysType.Default;
+    }
 
-	public static VirgilKeyPair.Type toVirgilKeyPairType(KeysType keysType) {
-		switch (keysType) {
-		case Default:
-			return VirgilKeyPair.Type.FAST_EC_ED25519;
-		case RSA_2048:
-			return VirgilKeyPair.Type.RSA_2048;
-		case RSA_3072:
-			return VirgilKeyPair.Type.RSA_3072;
-		case RSA_4096:
-			return VirgilKeyPair.Type.RSA_4096;
-		case RSA_8192:
-			return VirgilKeyPair.Type.RSA_8192;
-		case EC_SECP256R1:
-			return VirgilKeyPair.Type.EC_SECP256R1;
-		case EC_SECP384R1:
-			return VirgilKeyPair.Type.EC_SECP384R1;
-		case EC_SECP521R1:
-			return VirgilKeyPair.Type.EC_SECP521R1;
-		case EC_BP256R1:
-			return VirgilKeyPair.Type.EC_BP256R1;
-		case EC_BP384R1:
-			return VirgilKeyPair.Type.EC_BP384R1;
-		case EC_BP512R1:
-			return VirgilKeyPair.Type.EC_BP512R1;
-		case EC_SECP256K1:
-			return VirgilKeyPair.Type.EC_SECP256K1;
-		case EC_CURVE25519:
-			return VirgilKeyPair.Type.EC_CURVE25519;
-		case FAST_EC_X25519:
-			return VirgilKeyPair.Type.FAST_EC_X25519;
-		case FAST_EC_ED25519:
-			return VirgilKeyPair.Type.FAST_EC_ED25519;
-		}
-		assert false; // This should never happen! Some key type missed.
-		return VirgilKeyPair.Type.FAST_EC_ED25519;
-	}
+    /**
+     * Create new instance of {@link VirgilCrypto}.
+     * 
+     * @param keysType
+     */
+    public VirgilCrypto(KeysType keysType) {
+        this.defaultKeyPairType = keysType;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#calculateFingerprint(byte[])
-	 */
-	@Override
-	public Fingerprint calculateFingerprint(byte[] content) {
-		if (content == null) {
-			throw new NullArgumentException("content");
-		}
+    public static VirgilHash createVirgilHash(HashAlgorithm algorithm) {
+        switch (algorithm) {
+        case MD5:
+            return new VirgilHash(VirgilHash.Algorithm.MD5);
+        case SHA1:
+            return new VirgilHash(VirgilHash.Algorithm.SHA1);
+        case SHA224:
+            return new VirgilHash(VirgilHash.Algorithm.SHA224);
+        case SHA256:
+            return new VirgilHash(VirgilHash.Algorithm.SHA256);
+        case SHA384:
+            return new VirgilHash(VirgilHash.Algorithm.SHA384);
+        case SHA512:
+            return new VirgilHash(VirgilHash.Algorithm.SHA512);
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
 
-		try (VirgilHash sha256 = new VirgilHash(Algorithm.SHA256)) {
-			byte[] hash = sha256.hash(content);
-			return new VirgilFingerprint(hash);
-		}
-	}
+    public static VirgilKeyPair.Type toVirgilKeyPairType(KeysType keysType) {
+        switch (keysType) {
+        case Default:
+            return VirgilKeyPair.Type.FAST_EC_ED25519;
+        case RSA_2048:
+            return VirgilKeyPair.Type.RSA_2048;
+        case RSA_3072:
+            return VirgilKeyPair.Type.RSA_3072;
+        case RSA_4096:
+            return VirgilKeyPair.Type.RSA_4096;
+        case RSA_8192:
+            return VirgilKeyPair.Type.RSA_8192;
+        case EC_SECP256R1:
+            return VirgilKeyPair.Type.EC_SECP256R1;
+        case EC_SECP384R1:
+            return VirgilKeyPair.Type.EC_SECP384R1;
+        case EC_SECP521R1:
+            return VirgilKeyPair.Type.EC_SECP521R1;
+        case EC_BP256R1:
+            return VirgilKeyPair.Type.EC_BP256R1;
+        case EC_BP384R1:
+            return VirgilKeyPair.Type.EC_BP384R1;
+        case EC_BP512R1:
+            return VirgilKeyPair.Type.EC_BP512R1;
+        case EC_SECP256K1:
+            return VirgilKeyPair.Type.EC_SECP256K1;
+        case EC_CURVE25519:
+            return VirgilKeyPair.Type.EC_CURVE25519;
+        case FAST_EC_X25519:
+            return VirgilKeyPair.Type.FAST_EC_X25519;
+        case FAST_EC_ED25519:
+            return VirgilKeyPair.Type.FAST_EC_ED25519;
+        }
+        assert false; // This should never happen! Some key type missed.
+        return VirgilKeyPair.Type.FAST_EC_ED25519;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#computeHash(byte[],
-	 * com.virgilsecurity.sdk.crypto.HashAlgorithm)
-	 */
-	@Override
-	public byte[] computeHash(byte[] data, HashAlgorithm algorithm) {
-		if (data == null) {
-			throw new NullArgumentException("data");
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#calculateFingerprint(byte[])
+     */
+    @Override
+    public Fingerprint calculateFingerprint(byte[] content) {
+        if (content == null) {
+            throw new NullArgumentException("content");
+        }
 
-		try (VirgilHash hasher = createVirgilHash(algorithm)) {
-			return hasher.hash(data);
-		}
-	}
+        try (VirgilHash sha256 = new VirgilHash(Algorithm.SHA256)) {
+            byte[] hash = sha256.hash(content);
+            return new VirgilFingerprint(hash);
+        }
+    }
 
-	/**
-	 * @param publicKey
-	 * @return
-	 */
-	private byte[] computePublicKeyHash(byte[] publicKey) {
-		byte[] publicKeyDER = VirgilKeyPair.publicKeyToDER(publicKey);
-		return this.computeHash(publicKeyDER, HashAlgorithm.SHA256);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#computeHash(byte[], com.virgilsecurity.sdk.crypto.HashAlgorithm)
+     */
+    @Override
+    public byte[] computeHash(byte[] data, HashAlgorithm algorithm) {
+        if (data == null) {
+            throw new NullArgumentException("data");
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#decrypt(byte[],
-	 * com.virgilsecurity.sdk.crypto.PrivateKey)
-	 */
-	@Override
-	public byte[] decrypt(byte[] cipherData, PrivateKey privateKey) {
-		try (VirgilCipher cipher = new VirgilCipher()) {
-			byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
-			return decryptedData;
-		}
-	}
+        try (VirgilHash hasher = createVirgilHash(algorithm)) {
+            return hasher.hash(data);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#decrypt(java.io.InputStream,
-	 * java.io.OutputStream, com.virgilsecurity.sdk.crypto.PrivateKey)
-	 */
-	@Override
-	public void decrypt(InputStream inputStream, OutputStream outputStream, PrivateKey privateKey)
-			throws DecryptionException {
-		try (VirgilStreamCipher cipher = new VirgilStreamCipher();
-				VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
-				VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
+    /**
+     * @param publicKey
+     * @return
+     */
+    private byte[] computePublicKeyHash(byte[] publicKey) {
+        byte[] publicKeyDER = VirgilKeyPair.publicKeyToDER(publicKey);
+        return this.computeHash(publicKeyDER, HashAlgorithm.SHA256);
+    }
 
-			cipher.decryptWithKey(dataSource, dataSink, privateKey.getId(), privateKey.getValue());
-		} catch (IOException e) {
-			throw new DecryptionException(e);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#decrypt(byte[], com.virgilsecurity.sdk.crypto.PrivateKey)
+     */
+    @Override
+    public byte[] decrypt(byte[] cipherData, PrivateKey privateKey) {
+        try (VirgilCipher cipher = new VirgilCipher()) {
+            byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
+            return decryptedData;
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#decryptThenVerify(byte[],
-	 * com.virgilsecurity.sdk.crypto.PrivateKey,
-	 * com.virgilsecurity.sdk.crypto.PublicKey)
-	 */
-	@Override
-	public byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey) {
-		try (VirgilSigner signer = new VirgilSigner(); VirgilCipher cipher = new VirgilCipher()) {
-			byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
-			byte[] signature = cipher.customParams().getData(CUSTOM_PARAM_SIGNATURE);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#decrypt(java.io.InputStream, java.io.OutputStream,
+     * com.virgilsecurity.sdk.crypto.PrivateKey)
+     */
+    @Override
+    public void decrypt(InputStream inputStream, OutputStream outputStream, PrivateKey privateKey)
+            throws DecryptionException {
+        try (VirgilStreamCipher cipher = new VirgilStreamCipher();
+                VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
+                VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
 
-			boolean isValid = signer.verify(decryptedData, signature, publicKey.getValue());
-			if (!isValid) {
-				throw new SignatureIsNotValidException();
-			}
+            cipher.decryptWithKey(dataSource, dataSink, privateKey.getId(), privateKey.getValue());
+        } catch (IOException e) {
+            throw new DecryptionException(e);
+        }
+    }
 
-			return decryptedData;
-		} catch (Exception e) {
-			throw new CryptoException(e.getMessage());
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#decryptThenVerify(byte[], com.virgilsecurity.sdk.crypto.PrivateKey,
+     * com.virgilsecurity.sdk.crypto.PublicKey)
+     */
+    @Override
+    public byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey) {
+        try (VirgilSigner signer = new VirgilSigner(); VirgilCipher cipher = new VirgilCipher()) {
+            byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
+            byte[] signature = cipher.customParams().getData(CUSTOM_PARAM_SIGNATURE);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(byte[],
-	 * com.virgilsecurity.sdk.crypto.PublicKey)
-	 */
-	@Override
-	public byte[] encrypt(byte[] data, PublicKey recipient) {
-		try (VirgilCipher cipher = new VirgilCipher()) {
-			cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+            boolean isValid = signer.verify(decryptedData, signature, publicKey.getValue());
+            if (!isValid) {
+                throw new SignatureIsNotValidException();
+            }
 
-			byte[] encryptedData = cipher.encrypt(data, true);
-			return encryptedData;
-		}
-	}
+            return decryptedData;
+        } catch (Exception e) {
+            throw new CryptoException(e.getMessage());
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(byte[],
-	 * com.virgilsecurity.sdk.crypto.PublicKey[])
-	 */
-	@Override
-	public byte[] encrypt(byte[] data, PublicKey[] recipients) {
-		try (VirgilCipher cipher = new VirgilCipher()) {
-			for (PublicKey recipient : recipients) {
-				cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
-			}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(byte[], com.virgilsecurity.sdk.crypto.PublicKey)
+     */
+    @Override
+    public byte[] encrypt(byte[] data, PublicKey recipient) {
+        try (VirgilCipher cipher = new VirgilCipher()) {
+            cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
 
-			byte[] encryptedData = cipher.encrypt(data, true);
-			return encryptedData;
-		}
-	}
+            byte[] encryptedData = cipher.encrypt(data, true);
+            return encryptedData;
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(java.io.InputStream,
-	 * java.io.OutputStream, com.virgilsecurity.sdk.crypto.PublicKey)
-	 */
-	@Override
-	public void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey recipient)
-			throws EncryptionException {
-		try (VirgilStreamCipher cipher = new VirgilStreamCipher();
-				VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
-				VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(byte[], com.virgilsecurity.sdk.crypto.PublicKey[])
+     */
+    @Override
+    public byte[] encrypt(byte[] data, PublicKey[] recipients) {
+        try (VirgilCipher cipher = new VirgilCipher()) {
+            for (PublicKey recipient : recipients) {
+                cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+            }
 
-			cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+            byte[] encryptedData = cipher.encrypt(data, true);
+            return encryptedData;
+        }
+    }
 
-			cipher.encrypt(dataSource, dataSink, true);
-		} catch (IOException e) {
-			throw new EncryptionException(e);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(java.io.InputStream, java.io.OutputStream,
+     * com.virgilsecurity.sdk.crypto.PublicKey)
+     */
+    @Override
+    public void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey recipient)
+            throws EncryptionException {
+        try (VirgilStreamCipher cipher = new VirgilStreamCipher();
+                VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
+                VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(java.io.InputStream,
-	 * java.io.OutputStream, com.virgilsecurity.sdk.crypto.PublicKey[])
-	 */
-	@Override
-	public void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey[] recipients)
-			throws EncryptionException {
-		try (VirgilStreamCipher cipher = new VirgilStreamCipher();
-				VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
-				VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
-			for (PublicKey recipient : recipients) {
-				cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
-			}
+            cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
 
-			cipher.encrypt(dataSource, dataSink, true);
-		} catch (IOException e) {
-			throw new EncryptionException(e);
-		}
-	}
+            cipher.encrypt(dataSource, dataSink, true);
+        } catch (IOException e) {
+            throw new EncryptionException(e);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.virgilsecurity.sdk.crypto.Crypto#exportPrivateKey(com.virgilsecurity.
-	 * sdk.crypto.PrivateKey)
-	 */
-	@Override
-	public byte[] exportPrivateKey(PrivateKey privateKey) {
-		return exportPrivateKey(privateKey, null);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(java.io.InputStream, java.io.OutputStream,
+     * com.virgilsecurity.sdk.crypto.PublicKey[])
+     */
+    @Override
+    public void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey[] recipients)
+            throws EncryptionException {
+        try (VirgilStreamCipher cipher = new VirgilStreamCipher();
+                VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
+                VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
+            for (PublicKey recipient : recipients) {
+                cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+            }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.virgilsecurity.sdk.crypto.Crypto#exportPrivateKey(com.virgilsecurity.
-	 * sdk.crypto.PrivateKey, java.lang.String)
-	 */
-	@Override
-	public byte[] exportPrivateKey(PrivateKey privateKey, String password) {
-		if (password == null) {
-			return VirgilKeyPair.privateKeyToDER(privateKey.getValue());
-		}
-		byte[] passwordBytes = password.getBytes(UTF8_CHARSET);
-		byte[] encryptedKey = VirgilKeyPair.encryptPrivateKey(privateKey.getValue(), passwordBytes);
+            cipher.encrypt(dataSource, dataSink, true);
+        } catch (IOException e) {
+            throw new EncryptionException(e);
+        }
+    }
 
-		return VirgilKeyPair.privateKeyToDER(encryptedKey, passwordBytes);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#exportPrivateKey(com.virgilsecurity. sdk.crypto.PrivateKey)
+     */
+    @Override
+    public byte[] exportPrivateKey(PrivateKey privateKey) {
+        return exportPrivateKey(privateKey, null);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.virgilsecurity.sdk.crypto.Crypto#exportPublicKey(com.virgilsecurity.
-	 * sdk.crypto.PublicKey)
-	 */
-	@Override
-	public byte[] exportPublicKey(PublicKey publicKey) {
-		return VirgilKeyPair.publicKeyToDER(publicKey.getValue());
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#exportPrivateKey(com.virgilsecurity. sdk.crypto.PrivateKey,
+     * java.lang.String)
+     */
+    @Override
+    public byte[] exportPrivateKey(PrivateKey privateKey, String password) {
+        if (password == null) {
+            return VirgilKeyPair.privateKeyToDER(privateKey.getValue());
+        }
+        byte[] passwordBytes = password.getBytes(UTF8_CHARSET);
+        byte[] encryptedKey = VirgilKeyPair.encryptPrivateKey(privateKey.getValue(), passwordBytes);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.virgilsecurity.sdk.crypto.Crypto#extractPublicKey(com.virgilsecurity.
-	 * sdk.crypto.PrivateKey)
-	 */
-	@Override
-	public PublicKey extractPublicKey(PrivateKey privateKey) {
-		byte[] publicKeyData = VirgilKeyPair.extractPublicKey(privateKey.getValue(), new byte[0]);
+        return VirgilKeyPair.privateKeyToDER(encryptedKey, passwordBytes);
+    }
 
-		byte[] receiverId = privateKey.getId();
-		byte[] value = VirgilKeyPair.publicKeyToDER(publicKeyData);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#exportPublicKey(com.virgilsecurity. sdk.crypto.PublicKey)
+     */
+    @Override
+    public byte[] exportPublicKey(PublicKey publicKey) {
+        return VirgilKeyPair.publicKeyToDER(publicKey.getValue());
+    }
 
-		return new VirgilPublicKey(receiverId, value);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#extractPublicKey(com.virgilsecurity. sdk.crypto.PrivateKey)
+     */
+    @Override
+    public PublicKey extractPublicKey(PrivateKey privateKey) {
+        byte[] publicKeyData = VirgilKeyPair.extractPublicKey(privateKey.getValue(), new byte[0]);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#generateKeys()
-	 */
-	@Override
-	public KeyPair generateKeys() {
-		return generateKeys(KeysType.Default);
-	}
+        byte[] receiverId = privateKey.getId();
+        byte[] value = VirgilKeyPair.publicKeyToDER(publicKeyData);
 
-	/**
-	 * Generate key pair by type.
-	 * 
-	 * @param keysType
-	 *            the key type.
-	 * @return generated key pair.
-	 */
-	public KeyPair generateKeys(KeysType keysType) {
-		VirgilKeyPair keyPair = VirgilKeyPair.generate(toVirgilKeyPairType(keysType));
+        return new VirgilPublicKey(receiverId, value);
+    }
 
-		byte[] keyPairId = this.computePublicKeyHash(keyPair.publicKey());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#generateKeys()
+     */
+    @Override
+    public KeyPair generateKeys() {
+        return generateKeys(this.defaultKeyPairType);
+    }
 
-		PublicKey publicKey = new VirgilPublicKey(keyPairId, VirgilKeyPair.publicKeyToDER(keyPair.publicKey()));
-		PrivateKey privateKey = new VirgilPrivateKey(keyPairId, VirgilKeyPair.privateKeyToDER(keyPair.privateKey()));
+    /**
+     * Generate key pair by type.
+     * 
+     * @param keysType
+     *            the key type.
+     * @return generated key pair.
+     */
+    public KeyPair generateKeys(KeysType keysType) {
+        VirgilKeyPair keyPair = VirgilKeyPair.generate(toVirgilKeyPairType(keysType));
 
-		return new KeyPair(publicKey, privateKey);
-	}
+        byte[] keyPairId = this.computePublicKeyHash(keyPair.publicKey());
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#importPrivateKey(byte[])
-	 */
-	@Override
-	public PrivateKey importPrivateKey(byte[] privateKey) throws CryptoException {
-		return importPrivateKey(privateKey, null);
-	}
+        PublicKey publicKey = new VirgilPublicKey(keyPairId, VirgilKeyPair.publicKeyToDER(keyPair.publicKey()));
+        PrivateKey privateKey = new VirgilPrivateKey(keyPairId, VirgilKeyPair.privateKeyToDER(keyPair.privateKey()));
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#importPrivateKey(byte[],
-	 * java.lang.String)
-	 */
-	@Override
-	public PrivateKey importPrivateKey(byte[] keyData, String password) throws CryptoException {
-		if (keyData == null) {
-			throw new NullArgumentException("keyData");
-		}
+        return new KeyPair(publicKey, privateKey);
+    }
 
-		try {
-			byte[] privateKeyBytes;
-			if (password == null) {
-				privateKeyBytes = VirgilKeyPair.privateKeyToDER(keyData);
-			} else {
-				privateKeyBytes = VirgilKeyPair.decryptPrivateKey(keyData, password.getBytes(UTF8_CHARSET));
-			}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#importPrivateKey(byte[])
+     */
+    @Override
+    public PrivateKey importPrivateKey(byte[] privateKey) throws CryptoException {
+        return importPrivateKey(privateKey, null);
+    }
 
-			byte[] publicKey = VirgilKeyPair.extractPublicKey(privateKeyBytes, new byte[] {});
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#importPrivateKey(byte[], java.lang.String)
+     */
+    @Override
+    public PrivateKey importPrivateKey(byte[] keyData, String password) throws CryptoException {
+        if (keyData == null) {
+            throw new NullArgumentException("keyData");
+        }
 
-			byte[] receiverId = computePublicKeyHash(publicKey);
-			byte[] value = VirgilKeyPair.privateKeyToDER(privateKeyBytes);
-			PrivateKey privateKey = new VirgilPrivateKey(receiverId, value);
+        try {
+            byte[] privateKeyBytes;
+            if (password == null) {
+                privateKeyBytes = VirgilKeyPair.privateKeyToDER(keyData);
+            } else {
+                privateKeyBytes = VirgilKeyPair.decryptPrivateKey(keyData, password.getBytes(UTF8_CHARSET));
+            }
 
-			return privateKey;
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
-	}
+            byte[] publicKey = VirgilKeyPair.extractPublicKey(privateKeyBytes, new byte[] {});
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#importPublicKey(byte[])
-	 */
-	@Override
-	public PublicKey importPublicKey(byte[] publicKey) {
-		byte[] receiverId = computePublicKeyHash(publicKey);
-		byte[] value = VirgilKeyPair.publicKeyToDER(publicKey);
+            byte[] receiverId = computePublicKeyHash(publicKey);
+            byte[] value = VirgilKeyPair.privateKeyToDER(privateKeyBytes);
+            PrivateKey privateKey = new VirgilPrivateKey(receiverId, value);
 
-		return new VirgilPublicKey(receiverId, value);
-	}
+            return privateKey;
+        } catch (Exception e) {
+            throw new CryptoException(e);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#sign(byte[],
-	 * com.virgilsecurity.sdk.crypto.PrivateKey)
-	 */
-	@Override
-	public byte[] sign(byte[] data, PrivateKey privateKey) {
-		if (data == null) {
-			throw new NullArgumentException("data");
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#importPublicKey(byte[])
+     */
+    @Override
+    public PublicKey importPublicKey(byte[] publicKey) {
+        byte[] receiverId = computePublicKeyHash(publicKey);
+        byte[] value = VirgilKeyPair.publicKeyToDER(publicKey);
 
-		if (privateKey == null) {
-			throw new NullArgumentException("privateKey");
-		}
+        return new VirgilPublicKey(receiverId, value);
+    }
 
-		try (VirgilSigner signer = new VirgilSigner()) {
-			byte[] signature = signer.sign(data, privateKey.getValue());
-			return signature;
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#sign(byte[], com.virgilsecurity.sdk.crypto.PrivateKey)
+     */
+    @Override
+    public byte[] sign(byte[] data, PrivateKey privateKey) {
+        if (data == null) {
+            throw new NullArgumentException("data");
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#sign(java.io.InputStream,
-	 * com.virgilsecurity.sdk.crypto.PrivateKey)
-	 */
-	@Override
-	public byte[] sign(InputStream inputStream, PrivateKey privateKey) {
-		if (inputStream == null) {
-			throw new NullArgumentException("inputStream");
-		}
+        if (privateKey == null) {
+            throw new NullArgumentException("privateKey");
+        }
 
-		if (privateKey == null) {
-			throw new NullArgumentException("privateKey");
-		}
+        try (VirgilSigner signer = new VirgilSigner()) {
+            byte[] signature = signer.sign(data, privateKey.getValue());
+            return signature;
+        }
+    }
 
-		try (VirgilStreamSigner signer = new VirgilStreamSigner();
-				VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream)) {
-			byte[] signature = signer.sign(dataSource, privateKey.getValue());
-			return signature;
-		} catch (IOException e) {
-			throw new SigningException(e);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#sign(java.io.InputStream, com.virgilsecurity.sdk.crypto.PrivateKey)
+     */
+    @Override
+    public byte[] sign(InputStream inputStream, PrivateKey privateKey) {
+        if (inputStream == null) {
+            throw new NullArgumentException("inputStream");
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#signThenEncrypt(byte[],
-	 * com.virgilsecurity.sdk.crypto.PrivateKey,
-	 * com.virgilsecurity.sdk.crypto.PublicKey)
-	 */
-	@Override
-	public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient) {
-		return signThenEncrypt(data, privateKey, new PublicKey[] { recipient });
-	}
+        if (privateKey == null) {
+            throw new NullArgumentException("privateKey");
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#signThenEncrypt(byte[],
-	 * com.virgilsecurity.sdk.crypto.PrivateKey,
-	 * com.virgilsecurity.sdk.crypto.PublicKey[])
-	 */
-	@Override
-	public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients) {
-		try (VirgilSigner signer = new VirgilSigner(); VirgilCipher cipher = new VirgilCipher()) {
+        try (VirgilStreamSigner signer = new VirgilStreamSigner();
+                VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream)) {
+            byte[] signature = signer.sign(dataSource, privateKey.getValue());
+            return signature;
+        } catch (IOException e) {
+            throw new SigningException(e);
+        }
+    }
 
-			byte[] signature = signer.sign(data, privateKey.getValue());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#signThenEncrypt(byte[], com.virgilsecurity.sdk.crypto.PrivateKey,
+     * com.virgilsecurity.sdk.crypto.PublicKey)
+     */
+    @Override
+    public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient) {
+        return signThenEncrypt(data, privateKey, new PublicKey[] { recipient });
+    }
 
-			VirgilCustomParams customData = cipher.customParams();
-			customData.setData(CUSTOM_PARAM_SIGNATURE, signature);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#signThenEncrypt(byte[], com.virgilsecurity.sdk.crypto.PrivateKey,
+     * com.virgilsecurity.sdk.crypto.PublicKey[])
+     */
+    @Override
+    public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients) {
+        try (VirgilSigner signer = new VirgilSigner(); VirgilCipher cipher = new VirgilCipher()) {
 
-			for (PublicKey publicKey : recipients) {
-				cipher.addKeyRecipient(publicKey.getId(), publicKey.getValue());
-			}
-			return cipher.encrypt(data, true);
+            byte[] signature = signer.sign(data, privateKey.getValue());
 
-		} catch (Exception e) {
-			throw new CryptoException(e.getMessage());
-		}
-	}
+            VirgilCustomParams customData = cipher.customParams();
+            customData.setData(CUSTOM_PARAM_SIGNATURE, signature);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#verify(byte[], byte[],
-	 * com.virgilsecurity.sdk.crypto.PublicKey)
-	 */
-	@Override
-	public boolean verify(byte[] data, byte[] signature, PublicKey signer) {
-		if (data == null) {
-			throw new NullArgumentException("data");
-		}
-		if (signature == null) {
-			throw new NullArgumentException("signature");
-		}
-		if (signer == null) {
-			throw new NullArgumentException("signer");
-		}
+            for (PublicKey publicKey : recipients) {
+                cipher.addKeyRecipient(publicKey.getId(), publicKey.getValue());
+            }
+            return cipher.encrypt(data, true);
 
-		try (VirgilSigner virgilSigner = new VirgilSigner()) {
-			boolean valid = virgilSigner.verify(data, signature, signer.getValue());
-			return valid;
-		} catch (Exception e) {
-			throw new VerificationException(e);
-		}
-	}
+        } catch (Exception e) {
+            throw new CryptoException(e.getMessage());
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.Crypto#verify(java.io.InputStream,
-	 * byte[], com.virgilsecurity.sdk.crypto.PublicKey)
-	 */
-	@Override
-	public boolean verify(InputStream inputStream, byte[] signature, PublicKey signer) {
-		if (inputStream == null) {
-			throw new NullArgumentException("inputStream");
-		}
-		if (signature == null) {
-			throw new NullArgumentException("signature");
-		}
-		if (signer == null) {
-			throw new NullArgumentException("signer");
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#verify(byte[], byte[], com.virgilsecurity.sdk.crypto.PublicKey)
+     */
+    @Override
+    public boolean verify(byte[] data, byte[] signature, PublicKey signer) {
+        if (data == null) {
+            throw new NullArgumentException("data");
+        }
+        if (signature == null) {
+            throw new NullArgumentException("signature");
+        }
+        if (signer == null) {
+            throw new NullArgumentException("signer");
+        }
 
-		try (VirgilStreamSigner virgilSigner = new VirgilStreamSigner();
-				VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream)) {
-			boolean valid = virgilSigner.verify(dataSource, signature, signer.getValue());
-			return valid;
-		} catch (Exception e) {
-			throw new VerificationException(e);
-		}
-	}
+        try (VirgilSigner virgilSigner = new VirgilSigner()) {
+            boolean valid = virgilSigner.verify(data, signature, signer.getValue());
+            return valid;
+        } catch (Exception e) {
+            throw new VerificationException(e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#verify(java.io.InputStream, byte[],
+     * com.virgilsecurity.sdk.crypto.PublicKey)
+     */
+    @Override
+    public boolean verify(InputStream inputStream, byte[] signature, PublicKey signer) {
+        if (inputStream == null) {
+            throw new NullArgumentException("inputStream");
+        }
+        if (signature == null) {
+            throw new NullArgumentException("signature");
+        }
+        if (signer == null) {
+            throw new NullArgumentException("signer");
+        }
+
+        try (VirgilStreamSigner virgilSigner = new VirgilStreamSigner();
+                VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream)) {
+            boolean valid = virgilSigner.verify(dataSource, signature, signer.getValue());
+            return valid;
+        } catch (Exception e) {
+            throw new VerificationException(e);
+        }
+    }
 }

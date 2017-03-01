@@ -43,89 +43,88 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilVersion implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
-	protected transient boolean swigCMemOwn;
+    private transient long swigCPtr;
+    protected transient boolean swigCMemOwn;
 
-	protected VirgilVersion(long cPtr, boolean cMemoryOwn) {
-		swigCMemOwn = cMemoryOwn;
-		swigCPtr = cPtr;
-	}
+    protected VirgilVersion(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilVersion obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilVersion obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilVersion(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilVersion(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+    }
 
-	@Override
-	public void close() {
-		delete();
-	}
+    @Override
+    public void close() {
+        delete();
+    }
 
-	/**
-	 * @return version number in the format MMNNPP (Major, Minor, Patch).
-	 */
-	public static long asNumber() {
-		return virgil_crypto_javaJNI.VirgilVersion_asNumber();
-	}
+    /**
+     * @return version number in the format MMNNPP (Major, Minor, Patch).
+     */
+    public static long asNumber() {
+        return virgil_crypto_javaJNI.VirgilVersion_asNumber();
+    }
 
-	/**
-	 * @return the version number as string.
-	 */
-	public static String asString() {
-		return virgil_crypto_javaJNI.VirgilVersion_asString();
-	}
+    /**
+     * @return the version number as string.
+     */
+    public static String asString() {
+        return virgil_crypto_javaJNI.VirgilVersion_asString();
+    }
 
-	/**
-	 * @return the major version number.
-	 */
-	public static long majorVersion() {
-		return virgil_crypto_javaJNI.VirgilVersion_majorVersion();
-	}
+    /**
+     * @return the major version number.
+     */
+    public static long majorVersion() {
+        return virgil_crypto_javaJNI.VirgilVersion_majorVersion();
+    }
 
-	/**
-	 * @return the minor version number.
-	 */
-	public static long minorVersion() {
-		return virgil_crypto_javaJNI.VirgilVersion_minorVersion();
-	}
+    /**
+     * @return the minor version number.
+     */
+    public static long minorVersion() {
+        return virgil_crypto_javaJNI.VirgilVersion_minorVersion();
+    }
 
-	/**
-	 * @return the patch version number.
-	 */
-	public static long patchVersion() {
-		return virgil_crypto_javaJNI.VirgilVersion_patchVersion();
-	}
+    /**
+     * @return the patch version number.
+     */
+    public static long patchVersion() {
+        return virgil_crypto_javaJNI.VirgilVersion_patchVersion();
+    }
 
-	/**
-	 * If current release contains some additional tag, like rc1, then version
-	 * full name will be different from the string returned by method
-	 * asString(), i.e. 1.3.4-rc1, or 1.3.4-coolfeature, etc.
-	 * 
-	 * @return version full name.
-	 */
-	public static String fullName() {
-		return virgil_crypto_javaJNI.VirgilVersion_fullName();
-	}
+    /**
+     * If current release contains some additional tag, like rc1, then version full name will be different from the
+     * string returned by method asString(), i.e. 1.3.4-rc1, or 1.3.4-coolfeature, etc.
+     * 
+     * @return version full name.
+     */
+    public static String fullName() {
+        return virgil_crypto_javaJNI.VirgilVersion_fullName();
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilVersion}
-	 *
-	 */
-	public VirgilVersion() {
-		this(virgil_crypto_javaJNI.new_VirgilVersion(), true);
-	}
+    /**
+     * Create a new instance of {@code VirgilVersion}
+     *
+     */
+    public VirgilVersion() {
+        this(virgil_crypto_javaJNI.new_VirgilVersion(), true);
+    }
 
 }

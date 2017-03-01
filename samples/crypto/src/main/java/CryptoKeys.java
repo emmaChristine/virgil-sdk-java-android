@@ -42,20 +42,20 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
  */
 public class CryptoKeys {
 
-	public static void main(String[] args) {
-		// Initialize Crypto
-		Crypto crypto = new VirgilCrypto();
+    public static void main(String[] args) {
+        // Initialize Crypto
+        Crypto crypto = new VirgilCrypto();
 
-		// Generate key pair
-		KeyPair aliceKeys = crypto.generateKeys();
+        // Generate key pair
+        KeyPair aliceKeys = crypto.generateKeys();
 
-		// Export keys
-		byte[] exportedPrivateKey = crypto.exportPrivateKey(aliceKeys.getPrivateKey());
-		byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
+        // Export keys
+        byte[] exportedPrivateKey = crypto.exportPrivateKey(aliceKeys.getPrivateKey());
+        byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
 
-		// Import keys
-		PrivateKey privateKey = crypto.importPrivateKey(exportedPrivateKey);
-		PublicKey publicKey = crypto.importPublicKey(exportedPublicKey);
-	}
+        // Import keys
+        PrivateKey privateKey = crypto.importPrivateKey(exportedPrivateKey);
+        PublicKey publicKey = crypto.importPublicKey(exportedPublicKey);
+    }
 
 }

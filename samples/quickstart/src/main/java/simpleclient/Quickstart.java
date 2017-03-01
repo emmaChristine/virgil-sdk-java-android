@@ -35,16 +35,16 @@ import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.client.RequestSigner;
 import com.virgilsecurity.sdk.client.VirgilClient;
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.RevocationReason;
 import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
-import com.virgilsecurity.sdk.client.requests.CreateCardRequest;
+import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
-import com.virgilsecurity.sdk.client.utils.VirgilCardValidator;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.utils.VirgilCardValidator;
 
 /**
  * Virgil Client quickstart.
@@ -90,7 +90,7 @@ public class Quickstart {
 
 		/** Prepare request */
 		byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
-		CreateCardRequest createCardRequest = new CreateCardRequest("alice", "username", exportedPublicKey);
+		PublishCardRequest publishCardRequest = new PublishCardRequest("alice", "username", exportedPublicKey);
 
 		/**
 		 * then, use RequestSigner class to sign request with owner and app
@@ -98,20 +98,20 @@ public class Quickstart {
 		 */
 		RequestSigner requestSigner = new RequestSigner(crypto);
 
-		requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
-		requestSigner.authoritySign(createCardRequest, appID, appKey);
+		requestSigner.selfSign(publishCardRequest, aliceKeys.getPrivateKey());
+		requestSigner.authoritySign(publishCardRequest, appID, appKey);
 
 		/** Publish a Virgil Card */
-		Card aliceCard = client.createCard(createCardRequest);
+		CardModel aliceCard = client.publishCard(publishCardRequest);
 		System.out.println("Alice card: " + aliceCard.getId());
 
 		// Get Virgil Card
-		Card foundCard = client.getCard(aliceCard.getId());
+		CardModel foundCard = client.getCard(aliceCard.getId());
 		System.out.println("Found card: " + foundCard.getId());
 
 		// Search for Virgil Cards
 		SearchCriteria criteria = SearchCriteria.byIdentity("alice");
-		List<Card> cards = client.searchCards(criteria);
+		List<CardModel> cards = client.searchCards(criteria);
 
 		System.out.println(String.format("%1$d card(s) found", cards.size()));
 

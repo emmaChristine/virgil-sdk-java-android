@@ -37,51 +37,51 @@
 package com.virgilsecurity.crypto;
 
 public class VirgilRandom implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
-	protected transient boolean swigCMemOwn;
+    private transient long swigCPtr;
+    protected transient boolean swigCMemOwn;
 
-	protected VirgilRandom(long cPtr, boolean cMemoryOwn) {
-		swigCMemOwn = cMemoryOwn;
-		swigCPtr = cPtr;
-	}
+    protected VirgilRandom(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilRandom obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilRandom obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilRandom(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilRandom(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+    }
 
-	@Override
-	public void close() {
-		delete();
-	}
+    @Override
+    public void close() {
+        delete();
+    }
 
-	public VirgilRandom(String personalInfo) {
-		this(virgil_crypto_javaJNI.new_VirgilRandom(personalInfo), true);
-	}
+    public VirgilRandom(String personalInfo) {
+        this(virgil_crypto_javaJNI.new_VirgilRandom(personalInfo), true);
+    }
 
-	public byte[] randomize(long bytesNum) {
-		return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_0(swigCPtr, this, bytesNum);
-	}
+    public byte[] randomize(long bytesNum) {
+        return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_0(swigCPtr, this, bytesNum);
+    }
 
-	public long randomize() {
-		return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_1(swigCPtr, this);
-	}
+    public long randomize() {
+        return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_1(swigCPtr, this);
+    }
 
-	public long randomize(long min, long max) {
-		return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_2(swigCPtr, this, min, max);
-	}
+    public long randomize(long min, long max) {
+        return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_2(swigCPtr, this, min, max);
+    }
 
 }

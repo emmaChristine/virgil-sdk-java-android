@@ -29,11 +29,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
-import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
+import com.virgilsecurity.crypto.VirgilBase64;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
@@ -46,40 +45,30 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
  */
 public class Encryption {
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Enter text to encrypt: ");
-		String dataToSign = br.readLine();
-		System.out.println();
+    /**
+     * @param args
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException {
+        String text = "Encrypt me, Please!!!";
 
-		// Initialize Crypto
-		Crypto crypto = new VirgilCrypto();
+        // Initialize Crypto
+        Crypto crypto = new VirgilCrypto();
 
-		// Generate generate public/private key pair for key recipient
-		KeyPair keyPair = crypto.generateKeys();
+        // Generate generate public/private key pair for key recipient
+        KeyPair keyPair = crypto.generateKeys();
 
-		PublicKey publicKey = keyPair.getPublicKey();
-		PrivateKey privateKey = keyPair.getPrivateKey();
+        PublicKey publicKey = keyPair.getPublicKey();
+        PrivateKey privateKey = keyPair.getPrivateKey();
 
-		System.out.println(
-				String.format("Public Key: \n%1$s", ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey))));
-		System.out.println(String.format("Private Key: \n%1$s",
-				ConvertionUtils.toBase64String(crypto.exportPrivateKey(privateKey))));
+        // Encrypting data for multiple recipients key/password
+        byte[] encryptedData = crypto.encrypt(text.getBytes(), new PublicKey[] { publicKey });
 
-		// Encrypting data for multiple recipients key/password
-		byte[] data = dataToSign.getBytes();
-		byte[] encryptedData = crypto.encrypt(data, new PublicKey[] { publicKey });
+        System.out.println(String.format("Cipher text in Base64:\n %1$s", VirgilBase64.encode(encryptedData)));
 
-		System.out
-				.println(String.format("Cipher text in Base64:\n %1$s", ConvertionUtils.toBase64String(encryptedData)));
+        // Decrypt data with private key
+        byte[] decryptedData = crypto.decrypt(encryptedData, privateKey);
 
-		// Decrypt data with private key
-		byte[] decryptedData = crypto.decrypt(encryptedData, privateKey);
-
-		System.out.println(String.format("Decrypted text:\n %1$s", ConvertionUtils.toString(decryptedData)));
-	}
+        System.out.println(String.format("Decrypted text:\n %1$s", new String(decryptedData, StandardCharsets.UTF_8)));
+    }
 }

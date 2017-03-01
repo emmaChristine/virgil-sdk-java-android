@@ -41,65 +41,65 @@ import java.io.Serializable;
  */
 public class VirgilPrivateKey implements PrivateKey, Serializable {
 
-	private static final long serialVersionUID = -3437950195416086773L;
+    private static final long serialVersionUID = -3437950195416086773L;
 
-	private byte[] id;
+    private byte[] id;
 
-	/** The Private key value */
-	private byte[] value;
+    /** The Private key value */
+    private byte[] value;
 
-	/**
-	 * Create a new instance of {@code VirgilPrivateKey}
-	 *
-	 */
-	public VirgilPrivateKey() {
-	}
+    /**
+     * Create a new instance of {@code VirgilPrivateKey}
+     *
+     */
+    public VirgilPrivateKey() {
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilPrivateKey}
-	 *
-	 * @param id
-	 *            the key identifier.
-	 * @param value
-	 *            the key value.
-	 */
-	public VirgilPrivateKey(byte[] id, byte[] value) {
-		this.id = id;
-		this.value = value;
-	}
+    /**
+     * Create a new instance of {@code VirgilPrivateKey}
+     *
+     * @param id
+     *            the key identifier.
+     * @param value
+     *            the key value.
+     */
+    public VirgilPrivateKey(byte[] id, byte[] value) {
+        this.id = id;
+        this.value = value;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.PrivateKey#getId()
-	 */
-	public byte[] getId() {
-		return id;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.PrivateKey#getId()
+     */
+    public byte[] getId() {
+        return id;
+    }
 
-	/**
-	 * @param id
-	 *            the id to set.
-	 */
-	public void setId(byte[] id) {
-		this.id = id;
-	}
+    /**
+     * @param id
+     *            the id to set.
+     */
+    public void setId(byte[] id) {
+        this.id = id;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.virgilsecurity.sdk.crypto.PrivateKey#getValue()
-	 */
-	public byte[] getValue() {
-		return value;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.PrivateKey#getValue()
+     */
+    public byte[] getValue() {
+        return value;
+    }
 
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public void setValue(byte[] value) {
-		this.value = value;
-	}
+    /**
+     * @param value
+     *            the value to set
+     */
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
 
 }

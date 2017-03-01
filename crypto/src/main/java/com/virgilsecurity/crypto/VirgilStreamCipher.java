@@ -37,165 +37,155 @@
 package com.virgilsecurity.crypto;
 
 /**
- * This class provides high-level interface to encrypt / decrypt streaming data
- * using Virgil Security keys.
+ * This class provides high-level interface to encrypt / decrypt streaming data using Virgil Security keys.
  *
  * @author Andrii Iakovenko
  *
  */
 public class VirgilStreamCipher extends VirgilCipherBase implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
+    private transient long swigCPtr;
 
-	protected VirgilStreamCipher(long cPtr, boolean cMemoryOwn) {
-		super(virgil_crypto_javaJNI.VirgilStreamCipher_SWIGUpcast(cPtr), cMemoryOwn);
-		swigCPtr = cPtr;
-	}
+    protected VirgilStreamCipher(long cPtr, boolean cMemoryOwn) {
+        super(virgil_crypto_javaJNI.VirgilStreamCipher_SWIGUpcast(cPtr), cMemoryOwn);
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilStreamCipher obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilStreamCipher obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilStreamCipher(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-		super.delete();
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilStreamCipher(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+        super.delete();
+    }
 
-	@Override
-	public void close() {
-		delete();
-	}
+    @Override
+    public void close() {
+        delete();
+    }
 
-	/**
-	 * <p>
-	 * Encrypt data read from given source and write it the sink.
-	 * </p>
-	 * <p>
-	 * Store content info to use it for decription process, if embedContentInfo
-	 * parameter is false.
-	 * </p>
-	 * 
-	 * @param source
-	 *            source of the data to be encrypted.
-	 * @param sink
-	 *            target sink for encrypted data.
-	 * @param embedContentInfo
-	 *            determines whether to embed content info the the encrypted
-	 *            data, or not.
-	 */
-	public void encrypt(VirgilDataSource source, VirgilDataSink sink, boolean embedContentInfo) {
-		virgil_crypto_javaJNI.VirgilStreamCipher_encrypt__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink, embedContentInfo);
-	}
+    /**
+     * <p>
+     * Encrypt data read from given source and write it the sink.
+     * </p>
+     * <p>
+     * Store content info to use it for decription process, if embedContentInfo parameter is false.
+     * </p>
+     * 
+     * @param source
+     *            source of the data to be encrypted.
+     * @param sink
+     *            target sink for encrypted data.
+     * @param embedContentInfo
+     *            determines whether to embed content info the the encrypted data, or not.
+     */
+    public void encrypt(VirgilDataSource source, VirgilDataSink sink, boolean embedContentInfo) {
+        virgil_crypto_javaJNI.VirgilStreamCipher_encrypt__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink, embedContentInfo);
+    }
 
-	/**
-	 * <p>
-	 * Encrypt data read from given source and write it the sink.
-	 * </p>
-	 * <p>
-	 * Store content info to use it for decription process, if embedContentInfo
-	 * parameter is false.
-	 * </p>
-	 * 
-	 * @param source
-	 *            source of the data to be encrypted.
-	 * @param sink
-	 *            target sink for encrypted data.
-	 */
-	public void encrypt(VirgilDataSource source, VirgilDataSink sink) {
-		virgil_crypto_javaJNI.VirgilStreamCipher_encrypt__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink);
-	}
+    /**
+     * <p>
+     * Encrypt data read from given source and write it the sink.
+     * </p>
+     * <p>
+     * Store content info to use it for decription process, if embedContentInfo parameter is false.
+     * </p>
+     * 
+     * @param source
+     *            source of the data to be encrypted.
+     * @param sink
+     *            target sink for encrypted data.
+     */
+    public void encrypt(VirgilDataSource source, VirgilDataSink sink) {
+        virgil_crypto_javaJNI.VirgilStreamCipher_encrypt__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink);
+    }
 
-	/**
-	 * <p>
-	 * Decrypt data read from given source for recipient defined by id and
-	 * private key, and write it to the sink.
-	 * </p>
-	 * <p>
-	 * Content info MUST be defined, if it was not embedded to the encrypted
-	 * data.
-	 * </p>
-	 * 
-	 * @param source
-	 *            source of the data to be decrypted.
-	 * @param sink
-	 *            target sink for decrypted data.
-	 * @param recipientId
-	 *            the recipient identifier.
-	 * @param privateKey
-	 *            the private key protected with password.
-	 * @param privateKeyPassword
-	 *            the private key password.
-	 */
-	public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey,
-			byte[] privateKeyPassword) {
-		virgil_crypto_javaJNI.VirgilStreamCipher_decryptWithKey__SWIG_0(swigCPtr, this,
-				VirgilDataSource.getCPtr(source), source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey,
-				privateKeyPassword);
-	}
+    /**
+     * <p>
+     * Decrypt data read from given source for recipient defined by id and private key, and write it to the sink.
+     * </p>
+     * <p>
+     * Content info MUST be defined, if it was not embedded to the encrypted data.
+     * </p>
+     * 
+     * @param source
+     *            source of the data to be decrypted.
+     * @param sink
+     *            target sink for decrypted data.
+     * @param recipientId
+     *            the recipient identifier.
+     * @param privateKey
+     *            the private key protected with password.
+     * @param privateKeyPassword
+     *            the private key password.
+     */
+    public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey,
+            byte[] privateKeyPassword) {
+        virgil_crypto_javaJNI.VirgilStreamCipher_decryptWithKey__SWIG_0(swigCPtr, this,
+                VirgilDataSource.getCPtr(source), source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey,
+                privateKeyPassword);
+    }
 
-	/**
-	 * <p>
-	 * Decrypt data read from given source for recipient defined by id and
-	 * private key, and write it to the sink.
-	 * </p>
-	 * <p>
-	 * Content info MUST be defined, if it was not embedded to the encrypted
-	 * data.
-	 * </p>
-	 * 
-	 * @param source
-	 *            source of the data to be decrypted.
-	 * @param sink
-	 *            target sink for decrypted data.
-	 * @param recipientId
-	 *            the recipient identifier.
-	 * @param privateKey
-	 *            the private key.
-	 */
-	public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey) {
-		virgil_crypto_javaJNI.VirgilStreamCipher_decryptWithKey__SWIG_1(swigCPtr, this,
-				VirgilDataSource.getCPtr(source), source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey);
-	}
+    /**
+     * <p>
+     * Decrypt data read from given source for recipient defined by id and private key, and write it to the sink.
+     * </p>
+     * <p>
+     * Content info MUST be defined, if it was not embedded to the encrypted data.
+     * </p>
+     * 
+     * @param source
+     *            source of the data to be decrypted.
+     * @param sink
+     *            target sink for decrypted data.
+     * @param recipientId
+     *            the recipient identifier.
+     * @param privateKey
+     *            the private key.
+     */
+    public void decryptWithKey(VirgilDataSource source, VirgilDataSink sink, byte[] recipientId, byte[] privateKey) {
+        virgil_crypto_javaJNI.VirgilStreamCipher_decryptWithKey__SWIG_1(swigCPtr, this,
+                VirgilDataSource.getCPtr(source), source, VirgilDataSink.getCPtr(sink), sink, recipientId, privateKey);
+    }
 
-	/**
-	 * <p>
-	 * Decrypt data read from given source for recipient defined by password,
-	 * and write it to the sink.
-	 * </p>
-	 * <p>
-	 * Content info MUST be defined, if it was not embedded to the encrypted
-	 * data.
-	 * </p>
-	 * 
-	 * @param source
-	 *            source of the data to be decrypted.
-	 * @param sink
-	 *            target sink for decrypted data.
-	 * @param pwd
-	 *            the password.
-	 */
-	public void decryptWithPassword(VirgilDataSource source, VirgilDataSink sink, byte[] pwd) {
-		virgil_crypto_javaJNI.VirgilStreamCipher_decryptWithPassword(swigCPtr, this, VirgilDataSource.getCPtr(source),
-				source, VirgilDataSink.getCPtr(sink), sink, pwd);
-	}
+    /**
+     * <p>
+     * Decrypt data read from given source for recipient defined by password, and write it to the sink.
+     * </p>
+     * <p>
+     * Content info MUST be defined, if it was not embedded to the encrypted data.
+     * </p>
+     * 
+     * @param source
+     *            source of the data to be decrypted.
+     * @param sink
+     *            target sink for decrypted data.
+     * @param pwd
+     *            the password.
+     */
+    public void decryptWithPassword(VirgilDataSource source, VirgilDataSink sink, byte[] pwd) {
+        virgil_crypto_javaJNI.VirgilStreamCipher_decryptWithPassword(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, VirgilDataSink.getCPtr(sink), sink, pwd);
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilStreamCipher}
-	 *
-	 */
-	public VirgilStreamCipher() {
-		this(virgil_crypto_javaJNI.new_VirgilStreamCipher(), true);
-	}
+    /**
+     * Create a new instance of {@code VirgilStreamCipher}
+     *
+     */
+    public VirgilStreamCipher() {
+        this(virgil_crypto_javaJNI.new_VirgilStreamCipher(), true);
+    }
 
 }

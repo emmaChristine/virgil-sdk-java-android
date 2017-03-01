@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.virgilsecurity.sdk</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.2.0</version>
+		<version>4.3.0</version>
 	</parent>
 	<artifactId>crypto</artifactId>
 	<packaging>jar</packaging>
@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>crypto-api</artifactId>
+			<artifactId>api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -49,7 +49,7 @@
 			</plugin>
 		</plugins>
 	</build>
-
+<!--  
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -69,5 +69,5 @@
 			</build>
 		</profile>
 	</profiles>
-
+-->
 </project>

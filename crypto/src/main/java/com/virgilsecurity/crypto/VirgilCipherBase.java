@@ -43,253 +43,249 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilCipherBase implements java.lang.AutoCloseable {
-	private transient long swigCPtr;
-	protected transient boolean swigCMemOwn;
+    private transient long swigCPtr;
+    protected transient boolean swigCMemOwn;
 
-	protected VirgilCipherBase(long cPtr, boolean cMemoryOwn) {
-		swigCMemOwn = cMemoryOwn;
-		swigCPtr = cPtr;
-	}
+    protected VirgilCipherBase(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
+    }
 
-	protected static long getCPtr(VirgilCipherBase obj) {
-		return (obj == null) ? 0 : obj.swigCPtr;
-	}
+    protected static long getCPtr(VirgilCipherBase obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
 
-	protected void finalize() {
-		delete();
-	}
+    protected void finalize() {
+        delete();
+    }
 
-	public synchronized void delete() {
-		if (swigCPtr != 0) {
-			if (swigCMemOwn) {
-				swigCMemOwn = false;
-				virgil_crypto_javaJNI.delete_VirgilCipherBase(swigCPtr);
-			}
-			swigCPtr = 0;
-		}
-	}
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilCipherBase(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+    }
 
-	@Override
-	public void close() {
-		delete();
-	}
+    @Override
+    public void close() {
+        delete();
+    }
 
-	/**
-	 * Create a new instance of {@code VirgilCipherBase}
-	 *
-	 */
-	public VirgilCipherBase() {
-		this(virgil_crypto_javaJNI.new_VirgilCipherBase(), true);
-	}
+    /**
+     * Create a new instance of {@code VirgilCipherBase}
+     *
+     */
+    public VirgilCipherBase() {
+        this(virgil_crypto_javaJNI.new_VirgilCipherBase(), true);
+    }
 
-	/**
-	 * Add recipient defined with id and public key.
-	 * 
-	 * 
-	 * @param recipientId
-	 *            Recipient's unique identifier, MUST not be empty.
-	 * @param publicKey
-	 *            Recipient's public key, MUST not be empty.
-	 */
-	public void addKeyRecipient(byte[] recipientId, byte[] publicKey) {
-		virgil_crypto_javaJNI.VirgilCipherBase_addKeyRecipient(swigCPtr, this, recipientId, publicKey);
-	}
+    /**
+     * Add recipient defined with id and public key.
+     * 
+     * 
+     * @param recipientId
+     *            Recipient's unique identifier, MUST not be empty.
+     * @param publicKey
+     *            Recipient's public key, MUST not be empty.
+     */
+    public void addKeyRecipient(byte[] recipientId, byte[] publicKey) {
+        virgil_crypto_javaJNI.VirgilCipherBase_addKeyRecipient(swigCPtr, this, recipientId, publicKey);
+    }
 
-	/**
-	 * <p>
-	 * Remove recipient with given identifier.
-	 * </p>
-	 * <p>
-	 * If recipient with given identifier is absent - do nothing.
-	 * </p>
-	 * 
-	 * 
-	 * @param recipientId
-	 *            Recipient's unique identifier.
-	 */
-	public void removeKeyRecipient(byte[] recipientId) {
-		virgil_crypto_javaJNI.VirgilCipherBase_removeKeyRecipient(swigCPtr, this, recipientId);
-	}
+    /**
+     * <p>
+     * Remove recipient with given identifier.
+     * </p>
+     * <p>
+     * If recipient with given identifier is absent - do nothing.
+     * </p>
+     * 
+     * 
+     * @param recipientId
+     *            Recipient's unique identifier.
+     */
+    public void removeKeyRecipient(byte[] recipientId) {
+        virgil_crypto_javaJNI.VirgilCipherBase_removeKeyRecipient(swigCPtr, this, recipientId);
+    }
 
-	/**
-	 * <p>
-	 * Check whether recipient with given identifier exists.
-	 * </p>
-	 * <p>
-	 * Search order:
-	 * </p>
-	 * <ul>
-	 * <li>Local structures - useful when cipher is used for encryption.
-	 * <li>ContentInfo structure - useful when cipher is used for decryption.
-	 * </ul>
-	 * 
-	 * @param recipientId
-	 *            the recipient's unique identifier.
-	 * 
-	 * @return {@code true} if recipient with given identifier exists,
-	 *         {@code false} - otherwise.
-	 */
-	public boolean keyRecipientExists(byte[] recipientId) {
-		return virgil_crypto_javaJNI.VirgilCipherBase_keyRecipientExists(swigCPtr, this, recipientId);
-	}
+    /**
+     * <p>
+     * Check whether recipient with given identifier exists.
+     * </p>
+     * <p>
+     * Search order:
+     * </p>
+     * <ul>
+     * <li>Local structures - useful when cipher is used for encryption.
+     * <li>ContentInfo structure - useful when cipher is used for decryption.
+     * </ul>
+     * 
+     * @param recipientId
+     *            the recipient's unique identifier.
+     * 
+     * @return {@code true} if recipient with given identifier exists, {@code false} - otherwise.
+     */
+    public boolean keyRecipientExists(byte[] recipientId) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_keyRecipientExists(swigCPtr, this, recipientId);
+    }
 
-	/**
-	 * <p>
-	 * Add recipient defined with password.
-	 * </p>
-	 * <p>
-	 * Use it for password based encryption.
-	 * </p>
-	 * 
-	 * 
-	 * @param pwd
-	 *            Recipient's password, MUST not be empty.
-	 * 
-	 */
-	public void addPasswordRecipient(byte[] pwd) {
-		virgil_crypto_javaJNI.VirgilCipherBase_addPasswordRecipient(swigCPtr, this, pwd);
-	}
+    /**
+     * <p>
+     * Add recipient defined with password.
+     * </p>
+     * <p>
+     * Use it for password based encryption.
+     * </p>
+     * 
+     * 
+     * @param pwd
+     *            Recipient's password, MUST not be empty.
+     * 
+     */
+    public void addPasswordRecipient(byte[] pwd) {
+        virgil_crypto_javaJNI.VirgilCipherBase_addPasswordRecipient(swigCPtr, this, pwd);
+    }
 
-	/**
-	 * <p>
-	 * Remove recipient with given password.
-	 * </p>
-	 * <p>
-	 * If recipient with given password is absent - do nothing.
-	 * </p>
-	 * 
-	 * 
-	 * @param pwd
-	 *            Recipient's password.
-	 */
-	public void removePasswordRecipient(byte[] pwd) {
-		virgil_crypto_javaJNI.VirgilCipherBase_removePasswordRecipient(swigCPtr, this, pwd);
-	}
+    /**
+     * <p>
+     * Remove recipient with given password.
+     * </p>
+     * <p>
+     * If recipient with given password is absent - do nothing.
+     * </p>
+     * 
+     * 
+     * @param pwd
+     *            Recipient's password.
+     */
+    public void removePasswordRecipient(byte[] pwd) {
+        virgil_crypto_javaJNI.VirgilCipherBase_removePasswordRecipient(swigCPtr, this, pwd);
+    }
 
-	/**
-	 * <p>
-	 * Check whether recipient with given password exists.
-	 * </p>
-	 * <p>
-	 * Search order:
-	 * </p>
-	 * <ul>
-	 * <li>Local structures - useful when cipher is used for encryption.
-	 * </ul>
-	 * 
-	 * @param password
-	 *            Recipient's unique identifier.
-	 * 
-	 * @return {@code true} if recipient with given password exists,
-	 *         {@code false} - otherwise.
-	 */
-	public boolean passwordRecipientExists(byte[] password) {
-		return virgil_crypto_javaJNI.VirgilCipherBase_passwordRecipientExists(swigCPtr, this, password);
-	}
+    /**
+     * <p>
+     * Check whether recipient with given password exists.
+     * </p>
+     * <p>
+     * Search order:
+     * </p>
+     * <ul>
+     * <li>Local structures - useful when cipher is used for encryption.
+     * </ul>
+     * 
+     * @param password
+     *            Recipient's unique identifier.
+     * 
+     * @return {@code true} if recipient with given password exists, {@code false} - otherwise.
+     */
+    public boolean passwordRecipientExists(byte[] password) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_passwordRecipientExists(swigCPtr, this, password);
+    }
 
-	/**
-	 * Remove all recipients.
-	 */
-	public void removeAllRecipients() {
-		virgil_crypto_javaJNI.VirgilCipherBase_removeAllRecipients(swigCPtr, this);
-	}
+    /**
+     * Remove all recipients.
+     */
+    public void removeAllRecipients() {
+        virgil_crypto_javaJNI.VirgilCipherBase_removeAllRecipients(swigCPtr, this);
+    }
 
-	/**
-	 * <p>
-	 * Get Virgil Security Cryptogram, that contains public algorithm parameters
-	 * that was used for encryption.
-	 * </p>
-	 * <p>
-	 * Call this method after encryption process.
-	 * </p>
-	 * 
-	 * @return Encrypted data info.
-	 */
-	public byte[] getContentInfo() {
-		return virgil_crypto_javaJNI.VirgilCipherBase_getContentInfo(swigCPtr, this);
-	}
+    /**
+     * <p>
+     * Get Virgil Security Cryptogram, that contains public algorithm parameters that was used for encryption.
+     * </p>
+     * <p>
+     * Call this method after encryption process.
+     * </p>
+     * 
+     * @return Encrypted data info.
+     */
+    public byte[] getContentInfo() {
+        return virgil_crypto_javaJNI.VirgilCipherBase_getContentInfo(swigCPtr, this);
+    }
 
-	/**
-	 * <p>
-	 * Create content info object from ASN.1 structure.
-	 * </p>
-	 * <p>
-	 * Call this method before decryption process.
-	 * </p>
-	 * 
-	 * @param contentInfo
-	 *            Virgil Security Cryptogram.
-	 */
-	public void setContentInfo(byte[] contentInfo) {
-		virgil_crypto_javaJNI.VirgilCipherBase_setContentInfo(swigCPtr, this, contentInfo);
-	}
+    /**
+     * <p>
+     * Create content info object from ASN.1 structure.
+     * </p>
+     * <p>
+     * Call this method before decryption process.
+     * </p>
+     * 
+     * @param contentInfo
+     *            Virgil Security Cryptogram.
+     */
+    public void setContentInfo(byte[] contentInfo) {
+        virgil_crypto_javaJNI.VirgilCipherBase_setContentInfo(swigCPtr, this, contentInfo);
+    }
 
-	/**
-	 * Read content info size as part of the data.
-	 * 
-	 * @param data
-	 *            the data.
-	 * @return Size of the content info if it is exist as part of the data,
-	 *         {@code 0} - otherwise.
-	 */
-	public static long defineContentInfoSize(byte[] data) {
-		return virgil_crypto_javaJNI.VirgilCipherBase_defineContentInfoSize(data);
-	}
+    /**
+     * Read content info size as part of the data.
+     * 
+     * @param data
+     *            the data.
+     * @return Size of the content info if it is exist as part of the data, {@code 0} - otherwise.
+     */
+    public static long defineContentInfoSize(byte[] data) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_defineContentInfoSize(data);
+    }
 
-	/**
-	 * <p>
-	 * Provide access to the object that handles custom parameters.
-	 * </p>
-	 * <p>
-	 * Use this method to add custom parameters to the content info object.
-	 * </p>
-	 * <p>
-	 * Use this method before encryption process.
-	 * </p>
-	 * 
-	 * @return custom params.
-	 */
-	public VirgilCustomParams customParams() {
-		return new VirgilCustomParams(virgil_crypto_javaJNI.VirgilCipherBase_customParams__SWIG_0(swigCPtr, this),
-				false);
-	}
+    /**
+     * <p>
+     * Provide access to the object that handles custom parameters.
+     * </p>
+     * <p>
+     * Use this method to add custom parameters to the content info object.
+     * </p>
+     * <p>
+     * Use this method before encryption process.
+     * </p>
+     * 
+     * @return custom params.
+     */
+    public VirgilCustomParams customParams() {
+        return new VirgilCustomParams(virgil_crypto_javaJNI.VirgilCipherBase_customParams__SWIG_0(swigCPtr, this),
+                false);
+    }
 
-	/**
-	 * <p>
-	 * Compute shared secret key on a given keys.
-	 * </p>
-	 * <p>
-	 * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
-	 * </p>
-	 * 
-	 * @param publicKey
-	 *            the public key.
-	 * @param privateKey
-	 *            the private key.
-	 * @param privateKeyPassword
-	 *            the private key password.
-	 * @return the shared secret key.
-	 */
-	public static byte[] computeShared(byte[] publicKey, byte[] privateKey, byte[] privateKeyPassword) {
-		return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_0(publicKey, privateKey, privateKeyPassword);
-	}
+    /**
+     * <p>
+     * Compute shared secret key on a given keys.
+     * </p>
+     * <p>
+     * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
+     * </p>
+     * 
+     * @param publicKey
+     *            the public key.
+     * @param privateKey
+     *            the private key.
+     * @param privateKeyPassword
+     *            the private key password.
+     * @return the shared secret key.
+     */
+    public static byte[] computeShared(byte[] publicKey, byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_0(publicKey, privateKey, privateKeyPassword);
+    }
 
-	/**
-	 * <p>
-	 * Compute shared secret key on a given keys.
-	 * </p>
-	 * <p>
-	 * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
-	 * </p>
-	 * 
-	 * @param publicKey
-	 *            the public key.
-	 * @param privateKey
-	 *            the private key.
-	 * @return the shared secret key.
-	 */
-	public static byte[] computeShared(byte[] publicKey, byte[] privateKey) {
-		return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_1(publicKey, privateKey);
-	}
+    /**
+     * <p>
+     * Compute shared secret key on a given keys.
+     * </p>
+     * <p>
+     * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
+     * </p>
+     * 
+     * @param publicKey
+     *            the public key.
+     * @param privateKey
+     *            the private key.
+     * @return the shared secret key.
+     */
+    public static byte[] computeShared(byte[] publicKey, byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_1(publicKey, privateKey);
+    }
 
 }
