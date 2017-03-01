@@ -45,7 +45,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<version.httpclient>4.5.2</version.httpclient>
+		<version.android>4.1.1.4</version.android>
 		<version.gson>2.7</version.gson>
 		<version.commons-lang>2.6</version.commons-lang>
 		<version.commons-io>2.4</version.commons-io>
@@ -54,11 +54,14 @@
 	</properties>
 
 	<modules>
-		<module>crypto-api</module>
+		<module>api</module>
+		<module>crypto-android</module>
 		<module>crypto</module>
-		<module>android</module>
-		<module>client</module>
-    <module>samples</module>
+
+
+		<module>sdk</module>
+		<module>sdk-android</module>
+		<module>samples</module>
 	</modules>
 
 	<dependencyManagement>
@@ -67,6 +70,12 @@
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
 				<version>${version.gson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.android</groupId>
+				<artifactId>android</artifactId>
+				<version>${version.android}</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- Tests -->
 			<dependency>
@@ -85,12 +94,6 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${version.junit}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.testng</groupId>
-				<artifactId>testng</artifactId>
-				<version>${version.testng}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

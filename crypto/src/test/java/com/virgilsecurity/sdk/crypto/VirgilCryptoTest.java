@@ -48,11 +48,11 @@ import org.junit.Test;
 
 import com.virgilsecurity.crypto.VirgilHash;
 import com.virgilsecurity.crypto.VirgilKeyPair;
-import com.virgilsecurity.sdk.crypto.exception.CryptoException;
-import com.virgilsecurity.sdk.crypto.exception.DecryptionException;
-import com.virgilsecurity.sdk.crypto.exception.EncryptionException;
-import com.virgilsecurity.sdk.crypto.exception.VerificationException;
-import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
  * Unit tests for {@link VirgilCrypto}

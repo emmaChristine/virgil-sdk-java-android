@@ -29,11 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
+import com.virgilsecurity.crypto.VirgilBase64;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
@@ -53,10 +51,7 @@ public class SignAndVerify {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Enter text to sign: ");
-        String dataToSign = br.readLine();
-        System.out.println();
+        String text = "Sign me, Please!!!";
 
         // Initialize Crypto
         Crypto crypto = new VirgilCrypto();
@@ -67,16 +62,13 @@ public class SignAndVerify {
         PublicKey publicKey = keyPair.getPublicKey();
         PrivateKey privateKey = keyPair.getPrivateKey();
 
-        // Create Signer instance
-        byte[] data = dataToSign.getBytes();
-
         // Sign data with private key
-        byte[] sign = crypto.sign(data, privateKey);
+        byte[] sign = crypto.sign(text.getBytes(), privateKey);
 
-        System.out.println(String.format("Digital signature in Base64: %1$s", ConvertionUtils.toBase64String(sign)));
+        System.out.println(String.format("Digital signature in Base64: %1$s", VirgilBase64.encode(sign)));
 
         // Verify data with sign and public key
-        boolean isValid = crypto.verify(data, sign, publicKey);
+        boolean isValid = crypto.verify(text.getBytes(), sign, publicKey);
 
         System.out.println(String.format("Verification result is: %1$b", isValid));
     }

@@ -32,8 +32,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
-import com.virgilsecurity.sdk.client.utils.ConvertionUtils;
+import com.virgilsecurity.crypto.VirgilBase64;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -63,11 +64,11 @@ public class AuthenticatedEncryption {
         // Sign then Encrypt
         byte[] cipherData = crypto.signThenEncrypt(data, alice.getPrivateKey(), bob.getPublicKey());
 
-        System.out.println(String.format("Cipher text in Base64:\n %1$s", ConvertionUtils.toBase64String(cipherData)));
+        System.out.println(String.format("Cipher text in Base64:\n %1$s", VirgilBase64.encode(cipherData)));
 
         // Decrypt then Verify
         byte[] decryptedData = crypto.decryptThenVerify(cipherData, bob.getPrivateKey(), alice.getPublicKey());
 
-        System.out.println(String.format("Decrypted text:\n %1$s", ConvertionUtils.toString(decryptedData)));
+        System.out.println(String.format("Decrypted text:\n %1$s", new String(decryptedData, StandardCharsets.UTF_8)));
     }
 }

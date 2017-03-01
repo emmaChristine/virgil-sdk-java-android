@@ -6,10 +6,10 @@ import com.virgilsecurity.sdk.client.RequestSigner;
 import com.virgilsecurity.sdk.client.VirgilClient;
 import com.virgilsecurity.sdk.client.VirgilClientContext;
 import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
-import com.virgilsecurity.sdk.client.model.Card;
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.RevocationReason;
 import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
-import com.virgilsecurity.sdk.client.requests.CreateCardRequest;
+import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
@@ -18,6 +18,8 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -43,21 +45,21 @@ public class ClientTest extends AndroidTestCase {
     private String APP_PRIVATE_KEY_PASSWORD = "{APP_PRIVATE_KEY_PASSWORD}";
     private String APP_PRIVATE_KEY = "{APP_PRIVATE_KEY}";
 
-    public void testFlow() {
+    public void testFlow() throws MalformedURLException {
         crypto = new VirgilCrypto();
 
         VirgilClientContext ctx = new VirgilClientContext(APP_TOKEN);
 
         if (StringUtils.isNotBlank(CARDS_SERVICE)) {
-            ctx.setCardsServiceAddress(CARDS_SERVICE);
+            ctx.setCardsServiceURL(new URL(CARDS_SERVICE));
         }
 
         if (StringUtils.isNotBlank(RO_CARDS_SERVICE)) {
-            ctx.setReadOnlyCardsServiceAddress(RO_CARDS_SERVICE);
+            ctx.setReadOnlyCardsServiceURL(new URL(RO_CARDS_SERVICE));
         }
 
         if (StringUtils.isNotBlank(IDENTITY_SERVICE)) {
-            ctx.setIdentityServiceAddress(IDENTITY_SERVICE);
+            ctx.setIdentityServiceURL(new URL(IDENTITY_SERVICE));
         }
 
         client = new VirgilClient(ctx);
@@ -68,20 +70,20 @@ public class ClientTest extends AndroidTestCase {
 
         // Create card
         byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
-        CreateCardRequest createCardRequest = new CreateCardRequest("alice", "username", exportedPublicKey);
+        PublishCardRequest createCardRequest = new PublishCardRequest("alice", "username", exportedPublicKey);
 
         try {
             requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
             requestSigner.authoritySign(createCardRequest, APP_ID, appKey);
 
-            Card aliceCard = client.createCard(createCardRequest);
+            CardModel aliceCard = client.publishCard(createCardRequest);
 
             assertNotNull(aliceCard);
             assertNotNull(aliceCard.getId());
-            assertNotNull(aliceCard.getIdentity());
-            assertNotNull(aliceCard.getIdentityType());
-            assertNotNull(aliceCard.getScope());
-            assertNotNull(aliceCard.getVersion());
+            assertNotNull(aliceCard.getSnapshotModel().getIdentity());
+            assertNotNull(aliceCard.getSnapshotModel().getIdentityType());
+            assertNotNull(aliceCard.getSnapshotModel().getScope());
+            assertNotNull(aliceCard.getMeta().getVersion());
 
             cardId = aliceCard.getId();
         } catch (VirgilServiceException e) {
@@ -90,13 +92,13 @@ public class ClientTest extends AndroidTestCase {
 
         // Get card
         try {
-            Card card = client.getCard(cardId);
+            CardModel card = client.getCard(cardId);
             assertNotNull(card);
             assertNotNull(card.getId());
-            assertNotNull(card.getIdentity());
-            assertNotNull(card.getIdentityType());
-            assertNotNull(card.getScope());
-            assertNotNull(card.getVersion());
+            assertNotNull(card.getSnapshotModel().getIdentity());
+            assertNotNull(card.getSnapshotModel().getIdentityType());
+            assertNotNull(card.getSnapshotModel().getScope());
+            assertNotNull(card.getMeta().getVersion());
         } catch (VirgilServiceException e) {
             fail(e.getMessage());
         }
@@ -105,12 +107,12 @@ public class ClientTest extends AndroidTestCase {
         SearchCriteria criteria = SearchCriteria.byAppBundle(APP_BUNDLE);
 
         try {
-            List<Card> cards = client.searchCards(criteria);
+            List<CardModel> cards = client.searchCards(criteria);
             assertNotNull(cards);
             assertFalse(cards.isEmpty());
 
             boolean found = false;
-            for (Card card : cards) {
+            for (CardModel card : cards) {
                 if (APP_ID.equals(card.getId())) {
                     found = true;
                     break;

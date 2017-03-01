@@ -14,7 +14,7 @@
   
   <modules>
     <module>crypto</module>
-    <module>client</module>
+    <module>sdk</module>
   </modules>
 
 	<dependencies>

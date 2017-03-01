@@ -46,13 +46,13 @@ import com.virgilsecurity.crypto.VirgilStreamCipher;
 import com.virgilsecurity.crypto.VirgilStreamDataSink;
 import com.virgilsecurity.crypto.VirgilStreamDataSource;
 import com.virgilsecurity.crypto.VirgilStreamSigner;
-import com.virgilsecurity.sdk.crypto.exception.CryptoException;
-import com.virgilsecurity.sdk.crypto.exception.DecryptionException;
-import com.virgilsecurity.sdk.crypto.exception.EncryptionException;
-import com.virgilsecurity.sdk.crypto.exception.SignatureIsNotValidException;
-import com.virgilsecurity.sdk.crypto.exception.SigningException;
-import com.virgilsecurity.sdk.crypto.exception.VerificationException;
-import com.virgilsecurity.sdk.crypto.exceptions.NullArgumentException;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.SignatureIsNotValidException;
+import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
  * The Virgil's implementation of Crypto.
@@ -68,6 +68,23 @@ public class VirgilCrypto implements Crypto {
 
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private static final byte[] CUSTOM_PARAM_SIGNATURE = "VIRGIL-DATA-SIGNATURE".getBytes(UTF8_CHARSET);
+    private KeysType defaultKeyPairType;
+
+    /**
+     * Create new instance of {@link VirgilCrypto}.
+     */
+    public VirgilCrypto() {
+        this.defaultKeyPairType = KeysType.Default;
+    }
+
+    /**
+     * Create new instance of {@link VirgilCrypto}.
+     * 
+     * @param keysType
+     */
+    public VirgilCrypto(KeysType keysType) {
+        this.defaultKeyPairType = keysType;
+    }
 
     public static VirgilHash createVirgilHash(HashAlgorithm algorithm) {
         switch (algorithm) {
@@ -356,7 +373,7 @@ public class VirgilCrypto implements Crypto {
      */
     @Override
     public KeyPair generateKeys() {
-        return generateKeys(KeysType.Default);
+        return generateKeys(this.defaultKeyPairType);
     }
 
     /**
