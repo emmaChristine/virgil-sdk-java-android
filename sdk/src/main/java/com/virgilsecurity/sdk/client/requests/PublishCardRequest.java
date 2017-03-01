@@ -107,6 +107,10 @@ public class PublishCardRequest extends GenericSignableRequest<PublishCardSnapsh
      * @param publicKeyData
      *            The public key DER.
      * @param info
+     *            The card information.
+     * @param customFields
+     *            The card custom fields.
+     * @param info
      *            The card info.
      */
     public PublishCardRequest(String identity, String identityType, byte[] publicKeyData, CardInfoModel info,

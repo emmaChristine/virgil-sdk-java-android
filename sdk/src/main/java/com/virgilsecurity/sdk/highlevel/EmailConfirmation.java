@@ -43,7 +43,7 @@ public class EmailConfirmation extends IdentityConfirmation {
     /**
      * Create new instance of {@link EmailConfirmation}.
      * 
-     * @param confirmationCode
+     * @param confirmationCode The confirmation code from email.
      */
     public EmailConfirmation(String confirmationCode) {
         super();

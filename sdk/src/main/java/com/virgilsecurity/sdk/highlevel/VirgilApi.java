@@ -43,14 +43,14 @@ public interface VirgilApi {
     /**
      * Gets an instances of the class that provides a work with {@link VirgilKey} entities.
      * 
-     * @return
+     * @return The key manager.
      */
     KeyManager getKeys();
 
     /**
      * Gets an instances of the class that provides a work with {@link VirgilCard} entities.
      * 
-     * @return
+     * @return The card manager.
      */
     CardManager getCards();
 

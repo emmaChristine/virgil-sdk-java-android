@@ -53,8 +53,8 @@ public class VirgilKey {
     /**
      * Create new instance of {@link VirgilKey}.
      * 
-     * @param context
-     * @param privateKey
+     * @param context The context.
+     * @param privateKey The private key.
      */
     public VirgilKey(VirgilApiContext context, PrivateKey privateKey) {
         super();
@@ -280,7 +280,7 @@ public class VirgilKey {
      * 
      * @param keyName
      *            The name of the key.
-     * @return
+     * @return This key.
      */
     public VirgilKey save(String keyName) {
         return save(keyName, null);
@@ -293,7 +293,7 @@ public class VirgilKey {
      *            The name of the key.
      * @param password
      *            The password.
-     * @return
+     * @return This key.
      */
     public VirgilKey save(String keyName, String password) {
         byte[] exportedPrivateKey = this.context.getCrypto().exportPrivateKey(this.privateKey, password);

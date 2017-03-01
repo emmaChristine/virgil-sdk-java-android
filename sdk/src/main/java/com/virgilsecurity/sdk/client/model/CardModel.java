@@ -61,7 +61,7 @@ public class CardModel {
     /**
      * Create new instance of {@link CardModel}.
      * 
-     * @param snapshotModel
+     * @param snapshotModel The snapshot model.
      */
     public CardModel(PublishCardSnapshotModel snapshotModel) {
         this.snapshotModel = snapshotModel;

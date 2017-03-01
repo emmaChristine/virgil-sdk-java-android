@@ -46,7 +46,7 @@ public class NotSupportedException extends VirgilException {
     /**
      * Create new instance of {@link NotSupportedException}.
      * 
-     * @param message
+     * @param message The message.
      */
     public NotSupportedException(String message) {
         super(message);

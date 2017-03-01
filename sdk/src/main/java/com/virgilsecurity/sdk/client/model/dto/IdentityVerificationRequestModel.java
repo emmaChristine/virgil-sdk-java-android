@@ -58,6 +58,9 @@ public class IdentityVerificationRequestModel {
 
     /**
      * Create new instance of {@link IdentityVerificationRequestModel}.
+     * @param idenity The identity.
+     * @param identityType The identity type.
+     * @param extraFields The extra fields.
      */
     public IdentityVerificationRequestModel(String idenity, String identityType, Map<String, String> extraFields) {
         this.identity = idenity;
@@ -66,7 +69,7 @@ public class IdentityVerificationRequestModel {
     }
 
     /**
-     * @return the identityType
+     * @return the identity type.
      */
     public String getIdentityType() {
         return identityType;
@@ -74,7 +77,7 @@ public class IdentityVerificationRequestModel {
 
     /**
      * @param identityType
-     *            the identityType to set
+     *            the identity type to set.
      */
     public void setIdentityType(String identityType) {
         this.identityType = identityType;
@@ -96,7 +99,7 @@ public class IdentityVerificationRequestModel {
     }
 
     /**
-     * @return the extraFields
+     * @return the extra fields.
      */
     public Map<String, String> getExtraFields() {
         return extraFields;
@@ -104,7 +107,7 @@ public class IdentityVerificationRequestModel {
 
     /**
      * @param extraFields
-     *            the extraFields to set
+     *            the extra fields to set.
      */
     public void setExtraFields(Map<String, String> extraFields) {
         this.extraFields = extraFields;

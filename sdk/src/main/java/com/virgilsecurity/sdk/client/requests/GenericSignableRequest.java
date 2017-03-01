@@ -69,7 +69,7 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
     /**
      * Create new instance of {@link GenericSignableRequest}.
      * 
-     * @param stringifiedRequest
+     * @param stringifiedRequest The request as a string.
      */
     GenericSignableRequest(String stringifiedRequest) {
         this();
@@ -79,7 +79,7 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
     /**
      * Initialize request with snapshot.
      * 
-     * @param snapshotModel
+     * @param snapshotModel The model of snapshot.
      */
     protected void init(T snapshotModel) {
         this.snapshotModel = snapshotModel;
@@ -127,7 +127,7 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
     /**
      * Gets the request model.
      * 
-     * @return
+     * @return The request model.
      */
     public SignableRequestModel getRequestModel() {
         SignableRequestModel requestModel = new SignableRequestModel();
@@ -147,7 +147,7 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
     /**
      * Extracts the request snapshot model from actual snapshotModel.
      * 
-     * @return
+     * @return The extracted snapshot model.
      */
     public T extractSnapshotModel() {
         String jsonSnapshot = ConvertionUtils.toString(this.getSnapshot());
@@ -170,10 +170,7 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
      * Import request.
      * 
      * @param exportedRequest
-     *            the request as Base64 encoded string.
-     * @param clazz
-     *            the request class.
-     * @return the request.
+     *            The request as Base64 encoded string.
      */
     protected void importRequest(String exportedRequest) {
         String jsonModel = ConvertionUtils.base64ToString(exportedRequest);

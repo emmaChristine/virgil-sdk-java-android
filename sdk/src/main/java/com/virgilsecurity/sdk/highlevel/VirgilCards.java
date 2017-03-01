@@ -49,7 +49,7 @@ public class VirgilCards extends ArrayList<VirgilCard> {
     /**
      * Create new instance of {@link VirgilCards}.
      * 
-     * @param context
+     * @param context The context.
      */
     public VirgilCards(VirgilApiContext context) {
         super();

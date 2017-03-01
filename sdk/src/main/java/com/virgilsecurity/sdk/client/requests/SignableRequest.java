@@ -42,14 +42,14 @@ public interface SignableRequest {
     /**
      * Gets the list of request signatures.
      * 
-     * @return
+     * @return The signatures.
      */
     Map<String, byte[]> getSignatures();
 
     /**
      * Gets the snapshot value, that has been taken from request model.
      * 
-     * @return
+     * @return The request snapshot.
      */
     byte[] getSnapshot();
 
@@ -57,7 +57,9 @@ public interface SignableRequest {
      * Appends the signature of request fingerprint.
      * 
      * @param cardId
+     *            The card identifier.
      * @param signature
+     *            The signature.
      */
     void appendSignature(String cardId, byte[] signature);
 

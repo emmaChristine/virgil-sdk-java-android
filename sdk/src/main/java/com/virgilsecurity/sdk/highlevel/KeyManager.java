@@ -43,7 +43,7 @@ public interface KeyManager {
     /**
      * Generates a new {@link VirgilKey} with default parameters.
      * 
-     * @return
+     * @return The generated key.
      */
     VirgilKey generate();
 
@@ -53,7 +53,7 @@ public interface KeyManager {
      * @param keyName
      *            The name of the Key.
      * @return An instance of {@link VirgilKey} class.
-     * @throws VirgilKeyIsNotFoundException
+     * @throws VirgilKeyIsNotFoundException If key not exists.
      */
     VirgilKey load(String keyName);
 
@@ -65,7 +65,7 @@ public interface KeyManager {
      * @param keyPassword
      *            The Key password.
      * @return An instance of {@link VirgilKey} class.
-     * @throws VirgilKeyIsNotFoundException
+     * @throws VirgilKeyIsNotFoundException If key not exists.
      */
     VirgilKey load(String keyName, String keyPassword) throws VirgilKeyIsNotFoundException;
 
@@ -74,6 +74,7 @@ public interface KeyManager {
      * 
      * @param keyName
      *            The name of the Key.
+     * @return This key manager.
      */
     KeyManager destroy(String keyName);
 

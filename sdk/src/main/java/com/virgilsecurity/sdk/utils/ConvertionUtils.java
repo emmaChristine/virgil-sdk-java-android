@@ -206,8 +206,8 @@ public class ConvertionUtils {
     /**
      * Take an accurate snapshot of the object, and convert it into the binary data.
      * 
-     * @param snapshotModel
-     * @return
+     * @param snapshotModel The snapshot model.
+     * @return The taken snapshot.
      */
     public static byte[] captureSnapshot(Object snapshotModel) {
         String snapshotModelJson = ConvertionUtils.getGson().toJson(snapshotModel);

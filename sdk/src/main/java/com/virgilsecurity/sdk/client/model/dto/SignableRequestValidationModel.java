@@ -49,7 +49,7 @@ public class SignableRequestValidationModel {
     /**
      * Create new instance of {@link SignableRequestValidationModel}.
      * 
-     * @param token
+     * @param token The validation token.
      */
     public SignableRequestValidationModel(String token) {
         super();

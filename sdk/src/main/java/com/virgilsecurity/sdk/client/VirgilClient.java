@@ -145,8 +145,7 @@ public class VirgilClient {
     }
 
     /**
-     * Confirms the identity from the {@linkplain #verify(String, String) verify} step to obtain an identity
-     * confirmation token.
+     * Confirms the identity from the verify step to obtain an identity confirmation token.
      * 
      * @param actionId
      *            the action identifier.
@@ -159,8 +158,7 @@ public class VirgilClient {
     }
 
     /**
-     * Confirms the identity from the {@linkplain #verify(String, String) verify} step to obtain an identity
-     * confirmation token.
+     * Confirms the identity from the verify step to obtain an identity confirmation token.
      * 
      * @param actionId
      *            the action identifier.
@@ -360,8 +358,6 @@ public class VirgilClient {
      * 
      * @param request
      *            The revoke card request.
-     * @param validationToken
-     *            The validation token.
      */
     public void revokeGlobalCard(RevokeGlobalCardRequest request) {
         try {

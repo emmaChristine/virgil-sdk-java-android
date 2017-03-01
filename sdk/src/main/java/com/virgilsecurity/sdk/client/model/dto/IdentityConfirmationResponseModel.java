@@ -56,9 +56,9 @@ public class IdentityConfirmationResponseModel {
      * 
      * Create new instance of {@link IdentityConfirmationResponseModel}.
      * 
-     * @param identity
-     * @param identityType
-     * @param validationToken
+     * @param identity The identity.
+     * @param identityType The identity type.
+     * @param validationToken The validation token.
      */
     public IdentityConfirmationResponseModel(String identity, String identityType, String validationToken) {
         this.identity = identity;
@@ -82,7 +82,7 @@ public class IdentityConfirmationResponseModel {
     }
 
     /**
-     * @return the identityType
+     * @return the identity type.
      */
     public String getIdentityType() {
         return identityType;
@@ -90,7 +90,7 @@ public class IdentityConfirmationResponseModel {
 
     /**
      * @param identityType
-     *            the identityType to set
+     *            the identity type to set.
      */
     public void setIdentityType(String identityType) {
         this.identityType = identityType;
@@ -105,7 +105,7 @@ public class IdentityConfirmationResponseModel {
 
     /**
      * @param validationToken
-     *            the validationToken to set
+     *            the validation token to set.
      */
     public void setValidationToken(String validationToken) {
         this.validationToken = validationToken;

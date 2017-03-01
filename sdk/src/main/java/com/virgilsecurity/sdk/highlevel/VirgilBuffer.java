@@ -45,6 +45,7 @@ public class VirgilBuffer {
 
     /**
      * @param bytes
+     *            The byte array to be wrapped with buffer.
      */
     public VirgilBuffer(byte[] bytes) {
         if (bytes == null) {
@@ -58,7 +59,7 @@ public class VirgilBuffer {
     /**
      * Gets an array of bytes.
      * 
-     * @return A byte array
+     * @return A byte array.
      */
     public byte[] getBytes() {
         return this.bytes;

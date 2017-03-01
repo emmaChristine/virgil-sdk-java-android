@@ -49,7 +49,7 @@ public class IdentityValidationToken {
     /**
      * Create new instance of {@link IdentityValidationToken}.
      * 
-     * @param value
+     * @param value The token.
      */
     public IdentityValidationToken(String value) {
         this.value = value;
@@ -58,7 +58,7 @@ public class IdentityValidationToken {
     /**
      * Gets the validation token value.
      * 
-     * @return the value
+     * @return the value.
      */
     public String getValue() {
         return value;
@@ -68,7 +68,7 @@ public class IdentityValidationToken {
      * Sets the validation token value.
      * 
      * @param value
-     *            the value to set
+     *            the value to set.
      */
     void setValue(String value) {
         this.value = value;

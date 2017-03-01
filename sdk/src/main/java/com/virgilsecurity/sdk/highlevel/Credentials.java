@@ -45,14 +45,14 @@ public interface Credentials {
      * 
      * @param crypto
      *            The Crypto.
-     * @return
+     * @return The application key.
      */
     PrivateKey getAppKey(Crypto crypto);
 
     /**
      * Gets the application identifier.
      * 
-     * @return
+     * @return The application identifier.
      */
     String getAppId();
 }

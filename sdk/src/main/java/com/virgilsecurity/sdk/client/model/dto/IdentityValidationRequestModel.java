@@ -45,8 +45,11 @@ public class IdentityValidationRequestModel extends IdentityConfirmationResponse
      * Create new instance of {@link IdentityValidationRequestModel}.
      * 
      * @param identity
+     *            The identity.
      * @param identityType
+     *            The identity type.
      * @param validationToken
+     *            The validation token.
      */
     public IdentityValidationRequestModel(String identity, String identityType, String validationToken) {
         super(identity, identityType, validationToken);

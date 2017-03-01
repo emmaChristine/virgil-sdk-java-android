@@ -62,7 +62,9 @@ public class VirgilCard {
      * Create new instance of {@link VirgilCard}.
      * 
      * @param context
+     *            The context.
      * @param card
+     *            The card model.
      */
     public VirgilCard(VirgilApiContext context, CardModel card) {
         this.context = context;
@@ -74,7 +76,7 @@ public class VirgilCard {
     /**
      * Gets the unique identifier for the Virgil Card.
      * 
-     * @return
+     * @return The card identifier.
      */
     public String getId() {
         return this.card.getId();
@@ -83,7 +85,7 @@ public class VirgilCard {
     /**
      * Gets the value of current Virgil Card identity.
      * 
-     * @return
+     * @return The identity.
      */
     public String getIdentity() {
         return this.card.getSnapshotModel().getIdentity();
@@ -92,7 +94,7 @@ public class VirgilCard {
     /**
      * Gets the identityType of current Virgil Card identity.
      * 
-     * @return
+     * @return The identity type.
      */
     public String getIdentityType() {
         return this.card.getSnapshotModel().getIdentityType();
@@ -101,7 +103,7 @@ public class VirgilCard {
     /**
      * Gets the custom Virgil Card parameters.
      * 
-     * @return
+     * @return Custom fields.
      */
     public Map<String, String> getCustomFields() {
         return this.card.getSnapshotModel().getData();
@@ -110,7 +112,7 @@ public class VirgilCard {
     /**
      * Gets a Public key that is assigned to current Virgil Card.
      * 
-     * @return
+     * @return The public key.
      */
     PublicKey getPublicKey() {
         return this.publicKey;
@@ -121,7 +123,7 @@ public class VirgilCard {
      * 
      * @param buffer
      *            The data to be encrypted.
-     * @return
+     * @return The encrypted data.
      */
     public VirgilBuffer encrypt(VirgilBuffer buffer) {
         if (buffer == null) {
@@ -135,7 +137,7 @@ public class VirgilCard {
      * 
      * @param plaintext
      *            The plain text to be encrypted.
-     * @return
+     * @return The encrypted data.
      */
     public VirgilBuffer encrypt(String plaintext) {
         if (plaintext == null) {
@@ -149,7 +151,7 @@ public class VirgilCard {
      * 
      * @param data
      *            The data to be encrypted.
-     * @return
+     * @return The encrypted data.
      */
     public VirgilBuffer encrypt(byte[] data) {
         if (data == null) {
@@ -166,7 +168,7 @@ public class VirgilCard {
      *            The data to be verified.
      * @param signature
      *            The signature used to verify the data integrity.
-     * @return
+     * @return {@code true} if verification success.
      */
     public boolean verify(VirgilBuffer buffer, VirgilBuffer signature) {
         if (buffer == null) {
@@ -187,7 +189,7 @@ public class VirgilCard {
      *            The plain text to be verified.
      * @param signature
      *            The signature used to verify the data integrity.
-     * @return
+     * @return {@code true} if verification success.
      */
     public boolean verify(String plaintext, VirgilBuffer signature) {
         if (plaintext == null) {
@@ -203,7 +205,7 @@ public class VirgilCard {
      *            The plain text to be verified.
      * @param signature
      *            The signature as Base64 string used to verify the data integrity.
-     * @return
+     * @return {@code true} if verification success.
      */
     public boolean verify(String plaintext, String signature) {
         return verify(plaintext, VirgilBuffer.from(signature, StringEncoding.Base64));
@@ -216,7 +218,7 @@ public class VirgilCard {
      *            The plain text to be verified.
      * @param signature
      *            The signature used to verify the data integrity.
-     * @return
+     * @return {@code true} if verification success.
      */
     public boolean verify(String plaintext, byte[] signature) {
         return verify(plaintext, VirgilBuffer.from(signature));
@@ -247,6 +249,7 @@ public class VirgilCard {
      * types like Email.
      * 
      * @param options
+     *            The verification options.
      * @return An instance of {@link IdentityVerificationAttempt} that contains information about operation etc...
      */
     public IdentityVerificationAttempt checkIdentity(IdentityVerificationOptions options) {
@@ -271,6 +274,8 @@ public class VirgilCard {
 
     /**
      * Publishes a current {@linkplain VirgilCard} to the Virgil Security services.
+     * 
+     * @return This card.
      */
     public VirgilCard publish() {
         PublishCardRequest publishCardRequest = new PublishCardRequest(this.card.getSnapshot(),
@@ -293,6 +298,8 @@ public class VirgilCard {
      * Publishes a current {@linkplain VirgilCard} to the Virgil Security services into global scope.
      * 
      * @param identityToken
+     *            The identity validation token.
+     * @return This card.
      */
     public VirgilCard publishAsGlobal(IdentityValidationToken identityToken) {
         if (identityToken == null) {
@@ -316,11 +323,11 @@ public class VirgilCard {
     /**
      * Encrypts data for list of recipients Cards.
      * 
-     * @param data
-     * @param recipients
+     * @param buffer The data to be encrypted.
+     * @param recipients The recipients.
      * @return A new {@link VirgilBuffer} with encrypted data.
      */
-    VirgilBuffer encrypt(VirgilBuffer data, Collection<VirgilCard> recipients) {
+    VirgilBuffer encrypt(VirgilBuffer buffer, Collection<VirgilCard> recipients) {
         List<PublicKey> publicKeyRecipients = new ArrayList<>();
         if (recipients != null && !recipients.isEmpty()) {
             for (VirgilCard card : recipients) {
@@ -328,7 +335,7 @@ public class VirgilCard {
             }
         }
 
-        byte[] cipherdata = this.context.getCrypto().encrypt(data.getBytes(),
+        byte[] cipherdata = this.context.getCrypto().encrypt(buffer.getBytes(),
                 publicKeyRecipients.toArray(new PublicKey[0]));
         return VirgilBuffer.from(cipherdata);
     }

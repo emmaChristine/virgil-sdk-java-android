@@ -55,7 +55,7 @@ public class IdentityVerificationAttempt {
     /**
      * Create new instance of {@link IdentityVerificationAttempt}.
      * 
-     * @param context
+     * @param context The context.
      */
     public IdentityVerificationAttempt(VirgilApiContext context) {
         this.context = context;
@@ -67,7 +67,7 @@ public class IdentityVerificationAttempt {
     /**
      * Gets the operation action ID.
      * 
-     * @return the actionId
+     * @return the actionId The action identifier.
      */
     public String getActionId() {
         return actionId;
@@ -77,7 +77,7 @@ public class IdentityVerificationAttempt {
      * Sets the operation action ID.
      * 
      * @param actionId
-     *            the actionId to set
+     *            the action identifier to set.
      */
     void setActionId(String actionId) {
         this.actionId = actionId;
@@ -86,7 +86,7 @@ public class IdentityVerificationAttempt {
     /**
      * Gets the identity value.
      * 
-     * @return the identity
+     * @return the identity.
      */
     public String getIdentity() {
         return identity;
@@ -96,7 +96,7 @@ public class IdentityVerificationAttempt {
      * Sets the identity value.
      * 
      * @param identity
-     *            the identity to set
+     *            the identity to set.
      */
     void setIdentity(String identity) {
         this.identity = identity;
@@ -105,7 +105,7 @@ public class IdentityVerificationAttempt {
     /**
      * Gets the type of the identity.
      * 
-     * @return the identityType
+     * @return the identity type.
      */
     public String getIdentityType() {
         return identityType;
@@ -115,7 +115,7 @@ public class IdentityVerificationAttempt {
      * Sets the type of the identity.
      * 
      * @param identityType
-     *            the identityType to set
+     *            the identity type to set.
      */
     void setIdentityType(String identityType) {
         this.identityType = identityType;
@@ -124,7 +124,7 @@ public class IdentityVerificationAttempt {
     /**
      * Gets the time to live.
      * 
-     * @return the timeToLive
+     * @return the timeToLive.
      */
     public long getTimeToLive() {
         return timeToLive;
@@ -134,7 +134,7 @@ public class IdentityVerificationAttempt {
      * Sets the time to live.
      * 
      * @param timeToLive
-     *            the timeToLive to set
+     *            the timeToLive to set.
      */
     void setTimeToLive(long timeToLive) {
         this.timeToLive = timeToLive;
@@ -143,7 +143,7 @@ public class IdentityVerificationAttempt {
     /**
      * Gets the count to live.
      * 
-     * @return the countToLive
+     * @return the countToLive.
      */
     public long getCountToLive() {
         return countToLive;
@@ -153,7 +153,7 @@ public class IdentityVerificationAttempt {
      * Sets the count to live.
      * 
      * @param countToLive
-     *            the countToLive to set
+     *            the countToLive to set.
      */
     void setCountToLive(long countToLive) {
         this.countToLive = countToLive;

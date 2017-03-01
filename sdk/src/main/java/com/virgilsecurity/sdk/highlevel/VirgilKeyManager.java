@@ -45,7 +45,7 @@ public class VirgilKeyManager implements KeyManager {
     /**
      * Create new instance of {@link VirgilKeyManager}.
      * 
-     * @param context
+     * @param context The context.
      */
     public VirgilKeyManager(VirgilApiContext context) {
         this.context = context;

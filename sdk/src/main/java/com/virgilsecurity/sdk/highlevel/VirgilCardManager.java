@@ -63,7 +63,7 @@ public class VirgilCardManager implements CardManager {
     /**
      * Create new instance of {@link VirgilCardManager}.
      * 
-     * @param context
+     * @param context The context.
      */
     public VirgilCardManager(VirgilApiContext context) {
         super();
