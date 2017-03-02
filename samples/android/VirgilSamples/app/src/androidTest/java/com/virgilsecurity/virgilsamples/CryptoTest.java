@@ -42,6 +42,7 @@ public class CryptoTest extends AndroidTestCase {
             88, 77, 48, 9, -100, 81, 39, -51, -125, -102, -107, -108, 14, -88, 7, 2, 32, 13, -71, -99, 8, -69, -77, 30,
             98, 20, -25, 60, 125, -19, 67, 12, -30, 65, 93, -29, -92, -58, -91, 91, 50, -111, -79, 50, -123, -39, 36,
             48, -20};
+    private static final int MAX_RECIPIENTS = 100;
 
     private Crypto crypto;
 
@@ -106,7 +107,7 @@ public class CryptoTest extends AndroidTestCase {
     public void testDecrypt() {
         List<PrivateKey> privateKeys = new ArrayList<>();
         List<PublicKey> recipients = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < MAX_RECIPIENTS; i++) {
             KeyPair keyPair = crypto.generateKeys();
             privateKeys.add(keyPair.getPrivateKey());
             recipients.add(keyPair.getPublicKey());
@@ -121,15 +122,15 @@ public class CryptoTest extends AndroidTestCase {
     public void testDecrypt_stream() throws IOException, DecryptionException {
         List<PrivateKey> privateKeys = new ArrayList<>();
         List<PublicKey> recipients = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < MAX_RECIPIENTS; i++) {
             KeyPair keyPair = crypto.generateKeys();
             privateKeys.add(keyPair.getPrivateKey());
             recipients.add(keyPair.getPublicKey());
         }
         byte[] encrypted = crypto.encrypt(TEXT.getBytes(), recipients.toArray(new PublicKey[0]));
-        try (InputStream is = new ByteArrayInputStream(encrypted);
-             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            for (PrivateKey privateKey : privateKeys) {
+        for (PrivateKey privateKey : privateKeys) {
+            try (InputStream is = new ByteArrayInputStream(encrypted);
+                     ByteArrayOutputStream os = new ByteArrayOutputStream()) {
                 crypto.decrypt(is, os, privateKey);
 
                 byte[] decrypted = os.toByteArray();
@@ -141,8 +142,8 @@ public class CryptoTest extends AndroidTestCase {
 
     public void testEncrypt() {
         List<PublicKey> recipients = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-//            recipients.add(crypto.generateKeys().getPublicKey());
+        for (int i = 0; i < MAX_RECIPIENTS; i++) {
+            recipients.add(crypto.generateKeys().getPublicKey());
         }
         crypto.encrypt(TEXT.getBytes(StandardCharsets.UTF_8), crypto.generateKeys().getPublicKey());
         byte[] encrypted = crypto.encrypt(TEXT.getBytes(), recipients.toArray(new PublicKey[0]));
@@ -158,7 +159,7 @@ public class CryptoTest extends AndroidTestCase {
 
     public void testEncrypt_stream() throws IOException, EncryptionException {
         List<PublicKey> recipients = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < MAX_RECIPIENTS; i++) {
             recipients.add(crypto.generateKeys().getPublicKey());
         }
         try (OutputStream os = new ByteArrayOutputStream()) {
