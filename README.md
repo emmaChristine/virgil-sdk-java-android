@@ -32,12 +32,12 @@ Use this packages for Java projects.
 <dependency>
     <groupId>com.virgilsecurity.sdk</groupId>
     <artifactId>crypto</artifactId>
-    <version>4.3.0</version>
+    <version>4.3.3</version>
 </dependency>
 <dependency>
     <groupId>com.virgilsecurity.sdk</groupId>
     <artifactId>sdk</artifactId>
-    <version>4.3.0</version>
+    <version>4.3.3</version>
 </dependency>
 ```
 
@@ -46,8 +46,8 @@ Use this packages for Java projects.
 Use this packages for Android projects.
 
 ```
-compile 'com.virgilsecurity.sdk:crypto-android:4.3.0@aar'
-compile 'com.virgilsecurity.sdk:sdk-android:4.3.0@aar'
+compile 'com.virgilsecurity.sdk:crypto-android:4.3.3@aar'
+compile 'com.virgilsecurity.sdk:sdk-android:4.3.3@aar'
 compile 'com.google.code.gson:gson:2.7'
 ```
 
