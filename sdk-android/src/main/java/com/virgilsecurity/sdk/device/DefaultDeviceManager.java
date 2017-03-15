@@ -27,76 +27,76 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.highlevel;
+package com.virgilsecurity.sdk.device;
+
+import android.os.Build;
+
+import com.virgilsecurity.sdk.device.DeviceManager;
 
 /**
- * The {@linkplain CardVerifierInfo} class represents an information about Virgil Card verifier such as Public key and
- * Card Id.
+ * The {@linkplain DefaultDeviceManager} provides an information about the device such as assigned name, device model, and
+ * operating-system name and version.
  * 
  * @author Andrii Iakovenko
  *
  */
-public class CardVerifierInfo {
+public class DefaultDeviceManager implements DeviceManager {
 
-    private String cardId;
-
-    private VirgilBuffer publicKeyData;
-
-    /**
-     * Create new instance of {@link CardVerifierInfo}.
-     */
-    public CardVerifierInfo() {
-    }
-
-    /**
-     * Create new instance of {@link CardVerifierInfo}.
+    /*
+     * (non-Javadoc)
      * 
-     * @param cardId
-     *            The card identifier.
-     * @param publicKeyData
-     *            The public key data.
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getDeviceName()
      */
-    public CardVerifierInfo(String cardId, VirgilBuffer publicKeyData) {
-        this.cardId = cardId;
-        this.publicKeyData = publicKeyData;
+    @Override
+    public String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return capitalize(model);
+        } else {
+            return capitalize(manufacturer) + " " + model;
+        }
     }
 
-    /**
-     * Gets the Virgil Card identifier.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the cardId
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getSystemName()
      */
-    public String getCardId() {
-        return cardId;
+    @Override
+    public String getSystemName() {
+        return "Android";
     }
 
-    /**
-     * Sets the Virgil Card identifier.
+    /*
+     * (non-Javadoc)
      * 
-     * @param cardId
-     *            the cardId to set
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getSystemVersion()
      */
-    public void setCardId(String cardId) {
-        this.cardId = cardId;
+    @Override
+    public String getSystemVersion() {
+        return Build.VERSION.RELEASE;
     }
 
-    /**
-     * Gets the Public key value.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the publicKeyData
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getDeviceModel()
      */
-    public VirgilBuffer getPublicKeyData() {
-        return publicKeyData;
+    @Override
+    public String getDeviceModel() {
+        return Build.MODEL;
     }
 
-    /**
-     * Sets the Public key value.
-     * 
-     * @param publicKeyData
-     *            the publicKeyData to set
-     */
-    public void setPublicKeyData(VirgilBuffer publicKeyData) {
-        this.publicKeyData = publicKeyData;
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
     }
-
 }

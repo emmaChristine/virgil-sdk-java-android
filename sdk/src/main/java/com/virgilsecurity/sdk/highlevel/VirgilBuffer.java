@@ -29,6 +29,8 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
+import java.io.InputStream;
+
 import com.virgilsecurity.sdk.exception.EmptyArgumentException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
@@ -88,8 +90,8 @@ public class VirgilBuffer {
     }
 
     /**
-     * Creates a new {@linkplain VirgilBuffer} containing the given string. If provided, the encoding parameter
-     * identifies the character encoding of string.
+     * Creates a new {@linkplain VirgilBuffer} containing the given string. The encoding parameter identifies the
+     * character encoding of string.
      * 
      * @param str
      *            String to encode.
@@ -108,6 +110,31 @@ public class VirgilBuffer {
         default:
             throw new IllegalArgumentException("String encoding type is not supported");
         }
+    }
+
+    /**
+     * Creates a new {@linkplain VirgilBuffer} containing data read from the given stream.
+     * 
+     * @param inputStream
+     *            The input data stream.
+     * @return A new instance of {@linkplain VirgilBuffer}.
+     */
+    public static VirgilBuffer from(InputStream inputStream) {
+        return from(ConvertionUtils.toString(inputStream), StringEncoding.UTF8);
+    }
+
+    /**
+     * Creates a new {@linkplain VirgilBuffer} containing data read from the given stream. The encoding parameter
+     * identifies the character encoding of stream data.
+     * 
+     * @param inputStream
+     *            The input data stream.
+     * @param encoding
+     *            The encoding of string.
+     * @return A new instance of {@linkplain VirgilBuffer}.
+     */
+    public static VirgilBuffer from(InputStream inputStream, StringEncoding encoding) {
+        return from(ConvertionUtils.toString(inputStream), encoding);
     }
 
     /*

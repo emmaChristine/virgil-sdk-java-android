@@ -63,7 +63,8 @@ public class VirgilCardManager implements CardManager {
     /**
      * Create new instance of {@link VirgilCardManager}.
      * 
-     * @param context The context.
+     * @param context
+     *            The context.
      */
     public VirgilCardManager(VirgilApiContext context) {
         super();
@@ -209,6 +210,17 @@ public class VirgilCardManager implements CardManager {
 
         VirgilCards cards = this.searchByCriteria(criteria);
         return cards;
+    }
+
+    /**
+     * Finds {@link VirgilCard}s by specified identities and type in global scope.
+     * 
+     * @param identities
+     *            The sought identities.
+     * @return A new collection with found {@link VirgilCard}s.
+     */
+    public VirgilCards findGlobal(String identities) {
+        return this.findGlobal(Arrays.asList(identities));
     }
 
     /**
