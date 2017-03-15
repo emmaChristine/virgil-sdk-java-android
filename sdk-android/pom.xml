@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.virgilsecurity.sdk</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.3.0</version>
+		<version>4.3.3</version>
 	</parent>
 	<artifactId>sdk-android</artifactId>
 	<packaging>aar</packaging>
@@ -48,7 +48,7 @@
 							<includeArtifactIds>api,sdk</includeArtifactIds>
 							<excludeTransitive>false</excludeTransitive>
 							<includes>**/*.java,**/*.properties</includes>
-							<excludes>**/VirgilCardServiceException.java,**/VirgilIdentityServiceException.java</excludes>
+							<excludes>**/VirgilCardServiceException.java,**/VirgilIdentityServiceException.java,**/DefaultDeviceManager.java</excludes>
 						</configuration>
 					</execution>
 				</executions>

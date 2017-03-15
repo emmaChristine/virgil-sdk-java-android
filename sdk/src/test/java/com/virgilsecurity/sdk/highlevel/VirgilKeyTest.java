@@ -171,7 +171,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void decryptThenVerify() {
+    public void decryptThenVerify_buffer() {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
         VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
@@ -180,6 +180,35 @@ public class VirgilKeyTest {
                 publicKey);
 
         VirgilBuffer decrypted = virgilKey.decryptThenVerify(VirgilBuffer.from(encrypted), aliceCard);
+
+        assertEquals(PLAINTEXT, decrypted.toString());
+    }
+
+    @Test
+    public void decryptThenVerify_base64String() {
+        VirgilKey aliceKey = virgil.getKeys().generate();
+        PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+
+        byte[] encrypted = context.getCrypto().signThenEncrypt(ConvertionUtils.toBytes(PLAINTEXT), alicePivateKey,
+                publicKey);
+
+        VirgilBuffer decrypted = virgilKey
+                .decryptThenVerify(VirgilBuffer.from(encrypted).toString(StringEncoding.Base64), aliceCard);
+
+        assertEquals(PLAINTEXT, decrypted.toString());
+    }
+
+    @Test
+    public void decryptThenVerify_bytes() {
+        VirgilKey aliceKey = virgil.getKeys().generate();
+        PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+
+        byte[] encrypted = context.getCrypto().signThenEncrypt(ConvertionUtils.toBytes(PLAINTEXT), alicePivateKey,
+                publicKey);
+
+        VirgilBuffer decrypted = virgilKey.decryptThenVerify(encrypted, aliceCard);
 
         assertEquals(PLAINTEXT, decrypted.toString());
     }

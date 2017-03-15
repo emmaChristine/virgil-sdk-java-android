@@ -43,6 +43,25 @@ public class CardVerifierInfo {
     private VirgilBuffer publicKeyData;
 
     /**
+     * Create new instance of {@link CardVerifierInfo}.
+     */
+    public CardVerifierInfo() {
+    }
+
+    /**
+     * Create new instance of {@link CardVerifierInfo}.
+     * 
+     * @param cardId
+     *            The card identifier.
+     * @param publicKeyData
+     *            The public key data.
+     */
+    public CardVerifierInfo(String cardId, VirgilBuffer publicKeyData) {
+        this.cardId = cardId;
+        this.publicKeyData = publicKeyData;
+    }
+
+    /**
      * Gets the Virgil Card identifier.
      * 
      * @return the cardId

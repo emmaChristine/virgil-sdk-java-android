@@ -121,7 +121,7 @@ public interface CardManager {
      * @return A list of found {@link VirgilCard}s.
      */
     VirgilCards find(String... identities);
-    
+
     /**
      * Finds a {@link VirgilCard}s by specified identities in application scope.
      * 
@@ -141,6 +141,15 @@ public interface CardManager {
      * @return A list of found {@link VirgilCard}s.
      */
     VirgilCards find(String identityType, Collection<String> identities);
+
+    /**
+     * Finds a {@link VirgilCard}s by by specified identities and type in global scope.
+     * 
+     * @param identities
+     *            The sought identities.
+     * @return A list of found {@link VirgilCard}s.
+     */
+    VirgilCards findGlobal(String identities);
 
     /**
      * Finds a {@link VirgilCard}s by by specified identities and type in global scope.

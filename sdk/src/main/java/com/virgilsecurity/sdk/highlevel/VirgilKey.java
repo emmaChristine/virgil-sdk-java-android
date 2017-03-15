@@ -53,8 +53,10 @@ public class VirgilKey {
     /**
      * Create new instance of {@link VirgilKey}.
      * 
-     * @param context The context.
-     * @param privateKey The private key.
+     * @param context
+     *            The context.
+     * @param privateKey
+     *            The private key.
      */
     public VirgilKey(VirgilApiContext context, PrivateKey privateKey) {
         super();
@@ -273,6 +275,39 @@ public class VirgilKey {
                 card.getPublicKey());
 
         return new VirgilBuffer(plaitext);
+    }
+
+    /**
+     * Decrypts and verifies the data.
+     * 
+     * @param base64String
+     *            The encrypted Base64-encoded string.
+     * @param card
+     *            The signer's {@link VirgilCard}.
+     * @return The decrypted data, which is the original plain text before encryption.
+     */
+    public VirgilBuffer decryptThenVerify(String base64String, VirgilCard card) {
+        if (base64String == null) {
+            throw new NullArgumentException("base64String");
+        }
+        return decryptThenVerify(ConvertionUtils.base64ToBytes(base64String), card);
+    }
+
+    /**
+     * Decrypts and verifies the data.
+     * 
+     * @param data
+     *            The encrypted data.
+     * @param card
+     *            The signer's {@link VirgilCard}.
+     * @return The decrypted data, which is the original plain text before encryption.
+     */
+    public VirgilBuffer decryptThenVerify(byte[] data, VirgilCard card) {
+        if (data == null) {
+            throw new NullArgumentException("data");
+        }
+        byte[] decryptedData = this.context.getCrypto().decryptThenVerify(data, this.privateKey, card.getPublicKey());
+        return VirgilBuffer.from(decryptedData);
     }
 
     /**
