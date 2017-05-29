@@ -72,7 +72,7 @@ public class VirgilPublicKey implements PublicKey, Serializable {
      * 
      * @see com.virgilsecurity.sdk.crypto.PublicKey#getId()
      */
-    public byte[] getId() {
+    public byte[] getRecipientId() {
         return id;
     }
 

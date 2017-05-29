@@ -27,21 +27,43 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.crypto;
+package com.virgilsecurity.secureenclave.model;
+
+import com.virgilsecurity.sdk.crypto.PrivateKey;
 
 /**
- * A private key.
- *
+ * This class adapts {@link java.security.PrivateKey} to Crypto library.
+ * 
  * @author Andrii Iakovenko
  *
  */
-public interface PrivateKey extends Key {
+public class PrivateKeyAdaptor extends KeyAdaptor implements PrivateKey {
+
+    private String id;
 
     /**
-     * Get the private key identifier.
+     * Create new instance of {@link PrivateKeyAdaptor}.
      * 
-     * @return The private key identifier.
+     * @param id
+     *            The private key identifier.
+     * @param recipientId
+     *            The recipient identifier.
+     * @param key
+     *            The private key.
      */
-    String getId();
+    public PrivateKeyAdaptor(String id, byte[] recipientId, java.security.PrivateKey key) {
+        super(recipientId, key);
+        this.id = id;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.PrivateKey#getId()
+     */
+    @Override
+    public String getId() {
+        return id;
+    }
 
 }

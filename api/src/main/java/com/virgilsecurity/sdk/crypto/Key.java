@@ -30,18 +30,23 @@
 package com.virgilsecurity.sdk.crypto;
 
 /**
- * A private key.
- *
  * @author Andrii Iakovenko
  *
  */
-public interface PrivateKey extends Key {
+public interface Key {
 
     /**
-     * Get the private key identifier.
+     * Get the receiver identifier.
      * 
-     * @return The private key identifier.
+     * @return the receiver identifier.
      */
-    String getId();
+    byte[] getRecipientId();
+
+    /**
+     * Get the key value.
+     * 
+     * @return the value
+     */
+    byte[] getValue();
 
 }

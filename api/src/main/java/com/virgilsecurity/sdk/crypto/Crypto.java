@@ -202,6 +202,13 @@ public interface Crypto {
      * @see PublicKey
      */
     KeyPair generateKeys();
+    
+    /**
+     * Get private key by key identifier.
+     * @param privateKeyId The private key identifier.
+     * @return The private key.
+     */
+    PrivateKey getPrivateKey(String privateKeyId);
 
     /**
      * Import private key from byte array.

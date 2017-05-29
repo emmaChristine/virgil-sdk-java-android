@@ -27,21 +27,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.crypto;
+package com.virgilsecurity.sdk.exception;
 
 /**
- * A private key.
- *
  * @author Andrii Iakovenko
  *
  */
-public interface PrivateKey extends Key {
+public class MethodNotImplementedException extends RuntimeException {
 
-    /**
-     * Get the private key identifier.
-     * 
-     * @return The private key identifier.
-     */
-    String getId();
+    private static final long serialVersionUID = 5477418507031007376L;    
+    
 
 }

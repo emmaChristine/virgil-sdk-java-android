@@ -31,7 +31,7 @@ import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 
 /**
- * Created by Andrii Iakovenko on 07.10.16.
+ * Created by Andrii Iakovenko.
  */
 public class CryptoTest extends AndroidTestCase {
 
@@ -197,7 +197,7 @@ public class CryptoTest extends AndroidTestCase {
 
         PublicKey publicKey = crypto.extractPublicKey(keyPair.getPrivateKey());
         assertNotNull(publicKey);
-        assertArrayEquals(keyPair.getPublicKey().getId(), publicKey.getId());
+        assertArrayEquals(keyPair.getPublicKey().getRecipientId(), publicKey.getRecipientId());
         assertArrayEquals(keyPair.getPublicKey().getValue(), publicKey.getValue());
     }
 
@@ -208,12 +208,13 @@ public class CryptoTest extends AndroidTestCase {
 
         PublicKey publicKey = keyPair.getPublicKey();
         assertNotNull(publicKey);
-        assertNotNull(publicKey.getId());
+        assertNotNull(publicKey.getRecipientId());
         assertNotNull(publicKey.getValue());
 
         PrivateKey privateKey = keyPair.getPrivateKey();
         assertNotNull(privateKey);
         assertNotNull(privateKey.getId());
+        assertNotNull(privateKey.getRecipientId());
         assertNotNull(privateKey.getValue());
     }
 
@@ -227,7 +228,7 @@ public class CryptoTest extends AndroidTestCase {
         assertNotNull(importedKey);
         assertNotNull(importedKey.getId());
         assertNotNull(importedKey.getValue());
-        assertArrayEquals(keyPair.getPrivateKey().getId(), importedKey.getId());
+        assertArrayEquals(keyPair.getPrivateKey().getRecipientId(), importedKey.getRecipientId());
         assertArrayEquals(keyPair.getPrivateKey().getValue(), importedKey.getValue());
     }
 
@@ -240,7 +241,7 @@ public class CryptoTest extends AndroidTestCase {
         assertNotNull(importedKey);
         assertNotNull(importedKey.getId());
         assertNotNull(importedKey.getValue());
-        assertArrayEquals(keyPair.getPrivateKey().getId(), importedKey.getId());
+        assertArrayEquals(keyPair.getPrivateKey().getRecipientId(), importedKey.getRecipientId());
         assertArrayEquals(keyPair.getPrivateKey().getValue(), importedKey.getValue());
     }
 
@@ -263,9 +264,9 @@ public class CryptoTest extends AndroidTestCase {
         PublicKey publicKey = crypto.importPublicKey(keyData);
 
         assertNotNull(publicKey);
-        assertNotNull(publicKey.getId());
+        assertNotNull(publicKey.getRecipientId());
         assertNotNull(publicKey.getValue());
-        assertArrayEquals(keyPair.getPublicKey().getId(), publicKey.getId());
+        assertArrayEquals(keyPair.getPublicKey().getRecipientId(), publicKey.getRecipientId());
         assertArrayEquals(keyPair.getPublicKey().getValue(), publicKey.getValue());
     }
 

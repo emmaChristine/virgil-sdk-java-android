@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,9 @@ public class VirgilPrivateKey implements PrivateKey, Serializable {
 
     private static final long serialVersionUID = -3437950195416086773L;
 
-    private byte[] id;
+    private String id;
+
+    private byte[] recipientId;
 
     /** The Private key value */
     private byte[] value;
@@ -64,7 +66,7 @@ public class VirgilPrivateKey implements PrivateKey, Serializable {
      *            the key value.
      */
     public VirgilPrivateKey(byte[] id, byte[] value) {
-        this.id = id;
+        this.recipientId = id;
         this.value = value;
     }
 
@@ -73,16 +75,16 @@ public class VirgilPrivateKey implements PrivateKey, Serializable {
      * 
      * @see com.virgilsecurity.sdk.crypto.PrivateKey#getId()
      */
-    public byte[] getId() {
-        return id;
+    public byte[] getRecipientId() {
+        return recipientId;
     }
 
     /**
-     * @param id
+     * @param recipientId
      *            the id to set.
      */
-    public void setId(byte[] id) {
-        this.id = id;
+    public void setId(byte[] recipientId) {
+        this.recipientId = recipientId;
     }
 
     /*
@@ -100,6 +102,25 @@ public class VirgilPrivateKey implements PrivateKey, Serializable {
      */
     public void setValue(byte[] value) {
         this.value = value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.PrivateKey#getId()
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * The private key identifier.
+     * 
+     * @param id
+     *            the prvate key identifier.
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

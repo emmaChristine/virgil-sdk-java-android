@@ -222,7 +222,7 @@ public class VirgilCryptoTest {
 
         PublicKey publicKey = crypto.extractPublicKey(keyPair.getPrivateKey());
         assertNotNull(publicKey);
-        assertArrayEquals(keyPair.getPublicKey().getId(), publicKey.getId());
+        assertArrayEquals(keyPair.getPublicKey().getRecipientId(), publicKey.getRecipientId());
         assertArrayEquals(keyPair.getPublicKey().getValue(), publicKey.getValue());
     }
 
@@ -234,12 +234,12 @@ public class VirgilCryptoTest {
 
         PublicKey publicKey = keyPair.getPublicKey();
         assertNotNull(publicKey);
-        assertNotNull(publicKey.getId());
+        assertNotNull(publicKey.getRecipientId());
         assertNotNull(publicKey.getValue());
 
         PrivateKey privateKey = keyPair.getPrivateKey();
         assertNotNull(privateKey);
-        assertNotNull(privateKey.getId());
+        assertNotNull(privateKey.getRecipientId());
         assertNotNull(privateKey.getValue());
     }
 
@@ -252,9 +252,9 @@ public class VirgilCryptoTest {
         PrivateKey importedKey = crypto.importPrivateKey(keyData);
 
         assertNotNull(importedKey);
-        assertNotNull(importedKey.getId());
+        assertNotNull(importedKey.getRecipientId());
         assertNotNull(importedKey.getValue());
-        assertArrayEquals(keyPair.getPrivateKey().getId(), importedKey.getId());
+        assertArrayEquals(keyPair.getPrivateKey().getRecipientId(), importedKey.getRecipientId());
         assertArrayEquals(keyPair.getPrivateKey().getValue(), importedKey.getValue());
     }
 
@@ -266,9 +266,9 @@ public class VirgilCryptoTest {
         PrivateKey importedKey = crypto.importPrivateKey(keyData, PASSWORD);
 
         assertNotNull(importedKey);
-        assertNotNull(importedKey.getId());
+        assertNotNull(importedKey.getRecipientId());
         assertNotNull(importedKey.getValue());
-        assertArrayEquals(keyPair.getPrivateKey().getId(), importedKey.getId());
+        assertArrayEquals(keyPair.getPrivateKey().getRecipientId(), importedKey.getRecipientId());
         assertArrayEquals(keyPair.getPrivateKey().getValue(), importedKey.getValue());
     }
 
@@ -288,9 +288,9 @@ public class VirgilCryptoTest {
         PublicKey publicKey = crypto.importPublicKey(keyData);
 
         assertNotNull(publicKey);
-        assertNotNull(publicKey.getId());
+        assertNotNull(publicKey.getRecipientId());
         assertNotNull(publicKey.getValue());
-        assertArrayEquals(keyPair.getPublicKey().getId(), publicKey.getId());
+        assertArrayEquals(keyPair.getPublicKey().getRecipientId(), publicKey.getRecipientId());
         assertArrayEquals(keyPair.getPublicKey().getValue(), publicKey.getValue());
     }
 

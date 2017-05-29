@@ -32,7 +32,7 @@ package com.virgilsecurity.sdk.crypto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import com.virgilsecurity.crypto.VirgilCipher;
 import com.virgilsecurity.crypto.VirgilCustomParams;
@@ -52,6 +52,7 @@ import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
 import com.virgilsecurity.sdk.crypto.exceptions.SignatureIsNotValidException;
 import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+import com.virgilsecurity.sdk.exception.MethodNotImplementedException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
@@ -66,8 +67,7 @@ import com.virgilsecurity.sdk.exception.NullArgumentException;
  */
 public class VirgilCrypto implements Crypto {
 
-    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-    private static final byte[] CUSTOM_PARAM_SIGNATURE = "VIRGIL-DATA-SIGNATURE".getBytes(UTF8_CHARSET);
+    private static final byte[] CUSTOM_PARAM_SIGNATURE = "VIRGIL-DATA-SIGNATURE".getBytes(StandardCharsets.UTF_8);
     private KeysType defaultKeyPairType;
 
     /**
@@ -192,7 +192,8 @@ public class VirgilCrypto implements Crypto {
     @Override
     public byte[] decrypt(byte[] cipherData, PrivateKey privateKey) {
         try (VirgilCipher cipher = new VirgilCipher()) {
-            byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
+            byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getRecipientId(),
+                    privateKey.getValue());
             return decryptedData;
         }
     }
@@ -210,7 +211,7 @@ public class VirgilCrypto implements Crypto {
                 VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
                 VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
 
-            cipher.decryptWithKey(dataSource, dataSink, privateKey.getId(), privateKey.getValue());
+            cipher.decryptWithKey(dataSource, dataSink, privateKey.getRecipientId(), privateKey.getValue());
         } catch (IOException e) {
             throw new DecryptionException(e);
         }
@@ -225,7 +226,8 @@ public class VirgilCrypto implements Crypto {
     @Override
     public byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey) {
         try (VirgilSigner signer = new VirgilSigner(); VirgilCipher cipher = new VirgilCipher()) {
-            byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
+            byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getRecipientId(),
+                    privateKey.getValue());
             byte[] signature = cipher.customParams().getData(CUSTOM_PARAM_SIGNATURE);
 
             boolean isValid = signer.verify(decryptedData, signature, publicKey.getValue());
@@ -247,7 +249,7 @@ public class VirgilCrypto implements Crypto {
     @Override
     public byte[] encrypt(byte[] data, PublicKey recipient) {
         try (VirgilCipher cipher = new VirgilCipher()) {
-            cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+            cipher.addKeyRecipient(recipient.getRecipientId(), recipient.getValue());
 
             byte[] encryptedData = cipher.encrypt(data, true);
             return encryptedData;
@@ -263,7 +265,7 @@ public class VirgilCrypto implements Crypto {
     public byte[] encrypt(byte[] data, PublicKey[] recipients) {
         try (VirgilCipher cipher = new VirgilCipher()) {
             for (PublicKey recipient : recipients) {
-                cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+                cipher.addKeyRecipient(recipient.getRecipientId(), recipient.getValue());
             }
 
             byte[] encryptedData = cipher.encrypt(data, true);
@@ -284,7 +286,7 @@ public class VirgilCrypto implements Crypto {
                 VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
                 VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
 
-            cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+            cipher.addKeyRecipient(recipient.getRecipientId(), recipient.getValue());
 
             cipher.encrypt(dataSource, dataSink, true);
         } catch (IOException e) {
@@ -305,7 +307,7 @@ public class VirgilCrypto implements Crypto {
                 VirgilDataSource dataSource = new VirgilStreamDataSource(inputStream);
                 VirgilDataSink dataSink = new VirgilStreamDataSink(outputStream)) {
             for (PublicKey recipient : recipients) {
-                cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
+                cipher.addKeyRecipient(recipient.getRecipientId(), recipient.getValue());
             }
 
             cipher.encrypt(dataSource, dataSink, true);
@@ -335,7 +337,7 @@ public class VirgilCrypto implements Crypto {
         if (password == null) {
             return VirgilKeyPair.privateKeyToDER(privateKey.getValue());
         }
-        byte[] passwordBytes = password.getBytes(UTF8_CHARSET);
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
         byte[] encryptedKey = VirgilKeyPair.encryptPrivateKey(privateKey.getValue(), passwordBytes);
 
         return VirgilKeyPair.privateKeyToDER(encryptedKey, passwordBytes);
@@ -360,7 +362,7 @@ public class VirgilCrypto implements Crypto {
     public PublicKey extractPublicKey(PrivateKey privateKey) {
         byte[] publicKeyData = VirgilKeyPair.extractPublicKey(privateKey.getValue(), new byte[0]);
 
-        byte[] receiverId = privateKey.getId();
+        byte[] receiverId = privateKey.getRecipientId();
         byte[] value = VirgilKeyPair.publicKeyToDER(publicKeyData);
 
         return new VirgilPublicKey(receiverId, value);
@@ -420,7 +422,7 @@ public class VirgilCrypto implements Crypto {
             if (password == null) {
                 privateKeyBytes = VirgilKeyPair.privateKeyToDER(keyData);
             } else {
-                privateKeyBytes = VirgilKeyPair.decryptPrivateKey(keyData, password.getBytes(UTF8_CHARSET));
+                privateKeyBytes = VirgilKeyPair.decryptPrivateKey(keyData, password.getBytes(StandardCharsets.UTF_8));
             }
 
             byte[] publicKey = VirgilKeyPair.extractPublicKey(privateKeyBytes, new byte[] {});
@@ -520,7 +522,7 @@ public class VirgilCrypto implements Crypto {
             customData.setData(CUSTOM_PARAM_SIGNATURE, signature);
 
             for (PublicKey publicKey : recipients) {
-                cipher.addKeyRecipient(publicKey.getId(), publicKey.getValue());
+                cipher.addKeyRecipient(publicKey.getRecipientId(), publicKey.getValue());
             }
             return cipher.encrypt(data, true);
 
@@ -579,5 +581,15 @@ public class VirgilCrypto implements Crypto {
         } catch (Exception e) {
             throw new VerificationException(e);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Crypto#getPrivateKey(java.lang.String)
+     */
+    @Override
+    public PrivateKey getPrivateKey(String privateKeyId) {
+        throw new MethodNotImplementedException();
     }
 }

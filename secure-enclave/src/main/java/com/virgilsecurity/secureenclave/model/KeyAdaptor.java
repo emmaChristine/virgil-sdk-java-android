@@ -27,21 +27,59 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.crypto;
+package com.virgilsecurity.secureenclave.model;
+
+import com.virgilsecurity.sdk.crypto.Key;
 
 /**
- * A private key.
- *
+ * This is common adaptor for {@link java.security.Key}.
+ * 
  * @author Andrii Iakovenko
  *
  */
-public interface PrivateKey extends Key {
+public class KeyAdaptor implements Key {
+
+    private byte[] recipientId;
+    private java.security.Key wrapped;
 
     /**
-     * Get the private key identifier.
+     * Create new instance of {@link KeyAdaptor}.
      * 
-     * @return The private key identifier.
+     * @param recipientId
+     *            The recipient identifier.
+     * @param key
+     *            The recipient key.
      */
-    String getId();
+    public KeyAdaptor(byte[] recipientId, java.security.Key key) {
+        this.recipientId = recipientId;
+        this.wrapped = key;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.Key#getRecipientId()
+     */
+    @Override
+    public byte[] getRecipientId() {
+        return recipientId;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.crypto.PrivateKey#getValue()
+     */
+    @Override
+    public byte[] getValue() {
+        return wrapped.getEncoded();
+    }
+
+    /**
+     * @return the wrapped key.
+     */
+    public java.security.Key getWrapped() {
+        return this.wrapped;
+    }
 
 }
