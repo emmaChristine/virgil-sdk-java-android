@@ -29,11 +29,7 @@
  */
 package com.virgilsecurity.sdk.client;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +42,6 @@ import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
 import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.dto.ErrorResponse;
 import com.virgilsecurity.sdk.client.model.dto.IdentityConfirmationRequestModel;
 import com.virgilsecurity.sdk.client.model.dto.IdentityConfirmationResponseModel;
 import com.virgilsecurity.sdk.client.model.dto.IdentityValidationRequestModel;
@@ -64,16 +59,13 @@ import com.virgilsecurity.sdk.client.requests.RevokeGlobalCardRequest;
 import com.virgilsecurity.sdk.exception.EmptyArgumentException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
-import com.virgilsecurity.sdk.utils.StreamUtils;
 import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class VirgilClient {
-
-    private VirgilClientContext context;
+public class VirgilClient extends ClientBase {
 
     private CardValidator cardValidator;
 
@@ -84,7 +76,7 @@ public class VirgilClient {
      *            the access token.
      */
     public VirgilClient(String accessToken) {
-        this.context = new VirgilClientContext(accessToken);
+        super(new VirgilClientContext(accessToken));
     }
 
     /**
@@ -94,7 +86,7 @@ public class VirgilClient {
      *            the virgil client context.
      */
     public VirgilClient(VirgilClientContext context) {
-        this.context = context;
+        super(context);
     }
 
     /**
@@ -299,40 +291,6 @@ public class VirgilClient {
     }
 
     /**
-     * Create and configure http connection.
-     * 
-     * @param url
-     *            The URL.
-     * @param methodName
-     *            The HTTP method.
-     * @return The connection.
-     * @throws IOException
-     */
-    private HttpURLConnection createConnection(URL url, String method) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestMethod(method);
-        urlConnection.setUseCaches(false);
-
-        switch (method) {
-        case "DELETE":
-        case "POST":
-        case "PUT":
-        case "PATCH":
-            urlConnection.setDoOutput(true);
-            urlConnection.setChunkedStreamingMode(0);
-            break;
-        default:
-        }
-        String accessToken = context.getAccessToken();
-        if (!StringUtils.isBlank(accessToken)) {
-            urlConnection.setRequestProperty("Authorization", "VIRGIL " + context.getAccessToken());
-        }
-        urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-
-        return urlConnection;
-    }
-
-    /**
      * Revoke existing card.
      * 
      * @param request
@@ -418,48 +376,6 @@ public class VirgilClient {
         } catch (VirgilServiceException e) {
             throw e;
         } catch (Exception e) {
-            throw new VirgilCardServiceException(e);
-        }
-    }
-
-    /**
-     * @param url
-     * @param methodName
-     * @param class1
-     * @return
-     */
-    private <T> T execute(URL url, String method, InputStream inputStream, Class<T> clazz) {
-        try {
-            HttpURLConnection urlConnection = createConnection(url, method);
-            if (inputStream != null) {
-                StreamUtils.copyStream(inputStream, urlConnection.getOutputStream());
-            }
-            try {
-                if (urlConnection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
-                    // Get error code from request
-                    try (InputStream in = new BufferedInputStream(urlConnection.getErrorStream())) {
-                        String body = ConvertionUtils.toString(in);
-                        if (!StringUtils.isBlank(body)) {
-                            ErrorResponse error = ConvertionUtils.getGson().fromJson(body, ErrorResponse.class);
-                            throw new VirgilCardServiceException(error.getCode());
-                        }
-                    }
-                    if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        return null;
-                    }
-                    throw new VirgilCardServiceException();
-                } else if (clazz.isAssignableFrom(Void.class)) {
-                    return null;
-                } else {
-                    try (InputStream instream = new BufferedInputStream(urlConnection.getInputStream())) {
-                        String body = ConvertionUtils.toString(instream);
-                        return ConvertionUtils.getGson().fromJson(body, clazz);
-                    }
-                }
-            } finally {
-                urlConnection.disconnect();
-            }
-        } catch (IOException e) {
             throw new VirgilCardServiceException(e);
         }
     }

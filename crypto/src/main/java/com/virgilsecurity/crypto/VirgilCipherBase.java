@@ -43,36 +43,61 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilCipherBase implements java.lang.AutoCloseable {
-    private transient long swigCPtr;
-    protected transient boolean swigCMemOwn;
+    /**
+     * <p>
+     * Compute shared secret key on a given keys.
+     * </p>
+     * <p>
+     * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
+     * </p>
+     * 
+     * @param publicKey
+     *            the public key.
+     * @param privateKey
+     *            the private key.
+     * @return the shared secret key.
+     */
+    public static byte[] computeShared(byte[] publicKey, byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_1(publicKey, privateKey);
+    }
+    /**
+     * <p>
+     * Compute shared secret key on a given keys.
+     * </p>
+     * <p>
+     * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
+     * </p>
+     * 
+     * @param publicKey
+     *            the public key.
+     * @param privateKey
+     *            the private key.
+     * @param privateKeyPassword
+     *            the private key password.
+     * @return the shared secret key.
+     */
+    public static byte[] computeShared(byte[] publicKey, byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_0(publicKey, privateKey, privateKeyPassword);
+    }
 
-    protected VirgilCipherBase(long cPtr, boolean cMemoryOwn) {
-        swigCMemOwn = cMemoryOwn;
-        swigCPtr = cPtr;
+    /**
+     * Read content info size as part of the data.
+     * 
+     * @param data
+     *            the data.
+     * @return Size of the content info if it is exist as part of the data, {@code 0} - otherwise.
+     */
+    public static long defineContentInfoSize(byte[] data) {
+        return virgil_crypto_javaJNI.VirgilCipherBase_defineContentInfoSize(data);
     }
 
     protected static long getCPtr(VirgilCipherBase obj) {
         return (obj == null) ? 0 : obj.swigCPtr;
     }
 
-    protected void finalize() {
-        delete();
-    }
+    private transient long swigCPtr;
 
-    public synchronized void delete() {
-        if (swigCPtr != 0) {
-            if (swigCMemOwn) {
-                swigCMemOwn = false;
-                virgil_crypto_javaJNI.delete_VirgilCipherBase(swigCPtr);
-            }
-            swigCPtr = 0;
-        }
-    }
-
-    @Override
-    public void close() {
-        delete();
-    }
+    protected transient boolean swigCMemOwn;
 
     /**
      * Create a new instance of {@code VirgilCipherBase}
@@ -80,6 +105,11 @@ public class VirgilCipherBase implements java.lang.AutoCloseable {
      */
     public VirgilCipherBase() {
         this(virgil_crypto_javaJNI.new_VirgilCipherBase(), true);
+    }
+
+    protected VirgilCipherBase(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
     }
 
     /**
@@ -97,18 +127,70 @@ public class VirgilCipherBase implements java.lang.AutoCloseable {
 
     /**
      * <p>
-     * Remove recipient with given identifier.
+     * Add recipient defined with password.
      * </p>
      * <p>
-     * If recipient with given identifier is absent - do nothing.
+     * Use it for password based encryption.
      * </p>
      * 
      * 
-     * @param recipientId
-     *            Recipient's unique identifier.
+     * @param pwd
+     *            Recipient's password, MUST not be empty.
+     * 
      */
-    public void removeKeyRecipient(byte[] recipientId) {
-        virgil_crypto_javaJNI.VirgilCipherBase_removeKeyRecipient(swigCPtr, this, recipientId);
+    public void addPasswordRecipient(byte[] pwd) {
+        virgil_crypto_javaJNI.VirgilCipherBase_addPasswordRecipient(swigCPtr, this, pwd);
+    }
+
+    @Override
+    public void close() {
+        delete();
+    }
+
+    /**
+     * <p>
+     * Provide access to the object that handles custom parameters.
+     * </p>
+     * <p>
+     * Use this method to add custom parameters to the content info object.
+     * </p>
+     * <p>
+     * Use this method before encryption process.
+     * </p>
+     * 
+     * @return custom params.
+     */
+    public VirgilCustomParams customParams() {
+        return new VirgilCustomParams(virgil_crypto_javaJNI.VirgilCipherBase_customParams__SWIG_0(swigCPtr, this),
+                false);
+    }
+
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilCipherBase(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+    }
+
+    protected void finalize() {
+        delete();
+    }
+
+    /**
+     * <p>
+     * Get Virgil Security Cryptogram, that contains public algorithm parameters that was used for encryption.
+     * </p>
+     * <p>
+     * Call this method after encryption process.
+     * </p>
+     * 
+     * @return Encrypted data info.
+     */
+    public byte[] getContentInfo() {
+        return virgil_crypto_javaJNI.VirgilCipherBase_getContentInfo(swigCPtr, this);
     }
 
     /**
@@ -130,39 +212,6 @@ public class VirgilCipherBase implements java.lang.AutoCloseable {
      */
     public boolean keyRecipientExists(byte[] recipientId) {
         return virgil_crypto_javaJNI.VirgilCipherBase_keyRecipientExists(swigCPtr, this, recipientId);
-    }
-
-    /**
-     * <p>
-     * Add recipient defined with password.
-     * </p>
-     * <p>
-     * Use it for password based encryption.
-     * </p>
-     * 
-     * 
-     * @param pwd
-     *            Recipient's password, MUST not be empty.
-     * 
-     */
-    public void addPasswordRecipient(byte[] pwd) {
-        virgil_crypto_javaJNI.VirgilCipherBase_addPasswordRecipient(swigCPtr, this, pwd);
-    }
-
-    /**
-     * <p>
-     * Remove recipient with given password.
-     * </p>
-     * <p>
-     * If recipient with given password is absent - do nothing.
-     * </p>
-     * 
-     * 
-     * @param pwd
-     *            Recipient's password.
-     */
-    public void removePasswordRecipient(byte[] pwd) {
-        virgil_crypto_javaJNI.VirgilCipherBase_removePasswordRecipient(swigCPtr, this, pwd);
     }
 
     /**
@@ -194,16 +243,34 @@ public class VirgilCipherBase implements java.lang.AutoCloseable {
 
     /**
      * <p>
-     * Get Virgil Security Cryptogram, that contains public algorithm parameters that was used for encryption.
+     * Remove recipient with given identifier.
      * </p>
      * <p>
-     * Call this method after encryption process.
+     * If recipient with given identifier is absent - do nothing.
      * </p>
      * 
-     * @return Encrypted data info.
+     * 
+     * @param recipientId
+     *            Recipient's unique identifier.
      */
-    public byte[] getContentInfo() {
-        return virgil_crypto_javaJNI.VirgilCipherBase_getContentInfo(swigCPtr, this);
+    public void removeKeyRecipient(byte[] recipientId) {
+        virgil_crypto_javaJNI.VirgilCipherBase_removeKeyRecipient(swigCPtr, this, recipientId);
+    }
+
+    /**
+     * <p>
+     * Remove recipient with given password.
+     * </p>
+     * <p>
+     * If recipient with given password is absent - do nothing.
+     * </p>
+     * 
+     * 
+     * @param pwd
+     *            Recipient's password.
+     */
+    public void removePasswordRecipient(byte[] pwd) {
+        virgil_crypto_javaJNI.VirgilCipherBase_removePasswordRecipient(swigCPtr, this, pwd);
     }
 
     /**
@@ -219,73 +286,6 @@ public class VirgilCipherBase implements java.lang.AutoCloseable {
      */
     public void setContentInfo(byte[] contentInfo) {
         virgil_crypto_javaJNI.VirgilCipherBase_setContentInfo(swigCPtr, this, contentInfo);
-    }
-
-    /**
-     * Read content info size as part of the data.
-     * 
-     * @param data
-     *            the data.
-     * @return Size of the content info if it is exist as part of the data, {@code 0} - otherwise.
-     */
-    public static long defineContentInfoSize(byte[] data) {
-        return virgil_crypto_javaJNI.VirgilCipherBase_defineContentInfoSize(data);
-    }
-
-    /**
-     * <p>
-     * Provide access to the object that handles custom parameters.
-     * </p>
-     * <p>
-     * Use this method to add custom parameters to the content info object.
-     * </p>
-     * <p>
-     * Use this method before encryption process.
-     * </p>
-     * 
-     * @return custom params.
-     */
-    public VirgilCustomParams customParams() {
-        return new VirgilCustomParams(virgil_crypto_javaJNI.VirgilCipherBase_customParams__SWIG_0(swigCPtr, this),
-                false);
-    }
-
-    /**
-     * <p>
-     * Compute shared secret key on a given keys.
-     * </p>
-     * <p>
-     * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
-     * </p>
-     * 
-     * @param publicKey
-     *            the public key.
-     * @param privateKey
-     *            the private key.
-     * @param privateKeyPassword
-     *            the private key password.
-     * @return the shared secret key.
-     */
-    public static byte[] computeShared(byte[] publicKey, byte[] privateKey, byte[] privateKeyPassword) {
-        return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_0(publicKey, privateKey, privateKeyPassword);
-    }
-
-    /**
-     * <p>
-     * Compute shared secret key on a given keys.
-     * </p>
-     * <p>
-     * Keys SHOULD be of the identical type, i.e. both of type Curve25519.
-     * </p>
-     * 
-     * @param publicKey
-     *            the public key.
-     * @param privateKey
-     *            the private key.
-     * @return the shared secret key.
-     */
-    public static byte[] computeShared(byte[] publicKey, byte[] privateKey) {
-        return virgil_crypto_javaJNI.VirgilCipherBase_computeShared__SWIG_1(publicKey, privateKey);
     }
 
 }

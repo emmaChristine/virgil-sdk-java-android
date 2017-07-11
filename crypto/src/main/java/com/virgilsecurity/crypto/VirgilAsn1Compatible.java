@@ -37,7 +37,11 @@
 package com.virgilsecurity.crypto;
 
 public class VirgilAsn1Compatible implements java.lang.AutoCloseable {
+    protected static long getCPtr(VirgilAsn1Compatible obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
     private transient long swigCPtr;
+
     protected transient boolean swigCMemOwn;
 
     protected VirgilAsn1Compatible(long cPtr, boolean cMemoryOwn) {
@@ -45,11 +49,8 @@ public class VirgilAsn1Compatible implements java.lang.AutoCloseable {
         swigCPtr = cPtr;
     }
 
-    protected static long getCPtr(VirgilAsn1Compatible obj) {
-        return (obj == null) ? 0 : obj.swigCPtr;
-    }
-
-    protected void finalize() {
+    @Override
+    public void close() {
         delete();
     }
 
@@ -63,17 +64,16 @@ public class VirgilAsn1Compatible implements java.lang.AutoCloseable {
         }
     }
 
-    @Override
-    public void close() {
+    protected void finalize() {
         delete();
-    }
-
-    public byte[] toAsn1() {
-        return virgil_crypto_javaJNI.VirgilAsn1Compatible_toAsn1(swigCPtr, this);
     }
 
     public void fromAsn1(byte[] asn1) {
         virgil_crypto_javaJNI.VirgilAsn1Compatible_fromAsn1(swigCPtr, this, asn1);
+    }
+
+    public byte[] toAsn1() {
+        return virgil_crypto_javaJNI.VirgilAsn1Compatible_toAsn1(swigCPtr, this);
     }
 
 }

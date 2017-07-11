@@ -30,6 +30,7 @@
 package com.virgilsecurity.sdk.client.model;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
@@ -55,6 +56,9 @@ public class CardMetaModel {
      * @return the signatures
      */
     public Map<String, byte[]> getSignatures() {
+        if (signatures == null) {
+            signatures = new HashMap<>();
+        }
         return signatures;
     }
 

@@ -44,20 +44,28 @@ package com.virgilsecurity.crypto;
  * @author Andrii Iakovenko
  *
  */
-public class VirgilSigner implements java.lang.AutoCloseable {
-    private transient long swigCPtr;
-    protected transient boolean swigCMemOwn;
-
-    protected VirgilSigner(long cPtr, boolean cMemoryOwn) {
-        swigCMemOwn = cMemoryOwn;
-        swigCPtr = cPtr;
-    }
-
+public class VirgilSigner extends VirgilSignerBase implements java.lang.AutoCloseable {
     protected static long getCPtr(VirgilSigner obj) {
         return (obj == null) ? 0 : obj.swigCPtr;
     }
 
-    protected void finalize() {
+    private transient long swigCPtr;
+
+    /**
+     * Create a new instance of {@code VirgilSigner}
+     *
+     */
+    public VirgilSigner() {
+        this(virgil_crypto_javaJNI.new_VirgilSigner(), true);
+    }
+
+    protected VirgilSigner(long cPtr, boolean cMemoryOwn) {
+        super(virgil_crypto_javaJNI.VirgilSigner_SWIGUpcast(cPtr), cMemoryOwn);
+        swigCPtr = cPtr;
+    }
+
+    @Override
+    public void close() {
         delete();
     }
 
@@ -69,34 +77,24 @@ public class VirgilSigner implements java.lang.AutoCloseable {
             }
             swigCPtr = 0;
         }
+        super.delete();
     }
 
-    @Override
-    public void close() {
+    protected void finalize() {
         delete();
     }
 
     /**
-     * <p>
-     * Create a new instance of {@code VirgilSigner}
-     * </p>
-     * <p>
-     * Specified hash function algorithm is used only during signing.
-     * </p>
-     *
-     * @param hashAlgorithm
-     *            the hash algorithm.
+     * Sign data with given private key.
+     * 
+     * @param data
+     *            the data to be signed.
+     * @param privateKey
+     *            the private key.
+     * @return the signature as byte array.
      */
-    public VirgilSigner(VirgilHash.Algorithm hashAlgorithm) {
-        this(virgil_crypto_javaJNI.new_VirgilSigner__SWIG_0(hashAlgorithm.swigValue()), true);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilSigner}
-     *
-     */
-    public VirgilSigner() {
-        this(virgil_crypto_javaJNI.new_VirgilSigner__SWIG_1(), true);
+    public byte[] sign(byte[] data, byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilSigner_sign__SWIG_1(swigCPtr, this, data, privateKey);
     }
 
     /**
@@ -112,19 +110,6 @@ public class VirgilSigner implements java.lang.AutoCloseable {
      */
     public byte[] sign(byte[] data, byte[] privateKey, byte[] privateKeyPassword) {
         return virgil_crypto_javaJNI.VirgilSigner_sign__SWIG_0(swigCPtr, this, data, privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Sign data with given private key.
-     * 
-     * @param data
-     *            the data to be signed.
-     * @param privateKey
-     *            the private key.
-     * @return the signature as byte array.
-     */
-    public byte[] sign(byte[] data, byte[] privateKey) {
-        return virgil_crypto_javaJNI.VirgilSigner_sign__SWIG_1(swigCPtr, this, data, privateKey);
     }
 
     /**

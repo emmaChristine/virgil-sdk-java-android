@@ -45,19 +45,29 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilDataSource implements java.lang.AutoCloseable {
+    protected static long getCPtr(VirgilDataSource obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
     private transient long swigCPtr;
+
     protected transient boolean swigCMemOwn;
+
+    /**
+     * Create a new instance of {@code VirgilDataSource}
+     *
+     */
+    public VirgilDataSource() {
+        this(virgil_crypto_javaJNI.new_VirgilDataSource(), true);
+        virgil_crypto_javaJNI.VirgilDataSource_director_connect(this, swigCPtr, swigCMemOwn, true);
+    }
 
     protected VirgilDataSource(long cPtr, boolean cMemoryOwn) {
         swigCMemOwn = cMemoryOwn;
         swigCPtr = cPtr;
     }
 
-    protected static long getCPtr(VirgilDataSource obj) {
-        return (obj == null) ? 0 : obj.swigCPtr;
-    }
-
-    protected void finalize() {
+    @Override
+    public void close() throws java.io.IOException {
         delete();
     }
 
@@ -71,23 +81,7 @@ public class VirgilDataSource implements java.lang.AutoCloseable {
         }
     }
 
-    protected void swigDirectorDisconnect() {
-        swigCMemOwn = false;
-        delete();
-    }
-
-    public void swigReleaseOwnership() {
-        swigCMemOwn = false;
-        virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, false);
-    }
-
-    public void swigTakeOwnership() {
-        swigCMemOwn = true;
-        virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, true);
-    }
-
-    @Override
-    public void close() throws java.io.IOException {
+    protected void finalize() {
         delete();
     }
 
@@ -110,13 +104,19 @@ public class VirgilDataSource implements java.lang.AutoCloseable {
         return virgil_crypto_javaJNI.VirgilDataSource_read(swigCPtr, this);
     }
 
-    /**
-     * Create a new instance of {@code VirgilDataSource}
-     *
-     */
-    public VirgilDataSource() {
-        this(virgil_crypto_javaJNI.new_VirgilDataSource(), true);
-        virgil_crypto_javaJNI.VirgilDataSource_director_connect(this, swigCPtr, swigCMemOwn, true);
+    protected void swigDirectorDisconnect() {
+        swigCMemOwn = false;
+        delete();
+    }
+
+    public void swigReleaseOwnership() {
+        swigCMemOwn = false;
+        virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, false);
+    }
+
+    public void swigTakeOwnership() {
+        swigCMemOwn = true;
+        virgil_crypto_javaJNI.VirgilDataSource_change_ownership(this, swigCPtr, true);
     }
 
 }

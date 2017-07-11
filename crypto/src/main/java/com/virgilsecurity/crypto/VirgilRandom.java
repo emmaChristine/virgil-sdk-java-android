@@ -37,7 +37,11 @@
 package com.virgilsecurity.crypto;
 
 public class VirgilRandom implements java.lang.AutoCloseable {
+    protected static long getCPtr(VirgilRandom obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
     private transient long swigCPtr;
+
     protected transient boolean swigCMemOwn;
 
     protected VirgilRandom(long cPtr, boolean cMemoryOwn) {
@@ -45,11 +49,16 @@ public class VirgilRandom implements java.lang.AutoCloseable {
         swigCPtr = cPtr;
     }
 
-    protected static long getCPtr(VirgilRandom obj) {
-        return (obj == null) ? 0 : obj.swigCPtr;
+    public VirgilRandom(String personalInfo) {
+        this(virgil_crypto_javaJNI.new_VirgilRandom__SWIG_0(personalInfo), true);
     }
 
-    protected void finalize() {
+    public VirgilRandom(VirgilRandom rhs) {
+        this(virgil_crypto_javaJNI.new_VirgilRandom__SWIG_1(VirgilRandom.getCPtr(rhs), rhs), true);
+    }
+
+    @Override
+    public void close() {
         delete();
     }
 
@@ -63,21 +72,16 @@ public class VirgilRandom implements java.lang.AutoCloseable {
         }
     }
 
-    @Override
-    public void close() {
+    protected void finalize() {
         delete();
-    }
-
-    public VirgilRandom(String personalInfo) {
-        this(virgil_crypto_javaJNI.new_VirgilRandom(personalInfo), true);
-    }
-
-    public byte[] randomize(long bytesNum) {
-        return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_0(swigCPtr, this, bytesNum);
     }
 
     public long randomize() {
         return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_1(swigCPtr, this);
+    }
+
+    public byte[] randomize(long bytesNum) {
+        return virgil_crypto_javaJNI.VirgilRandom_randomize__SWIG_0(swigCPtr, this, bytesNum);
     }
 
     public long randomize(long min, long max) {
