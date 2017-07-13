@@ -63,6 +63,7 @@
 		<module>sdk-android</module>
 		<module>samples</module>
 		<module>pfs</module>
+		<module>pfs-android</module>
 	</modules>
 
 	<dependencyManagement>

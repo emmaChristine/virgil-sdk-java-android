@@ -40,29 +40,11 @@ import com.virgilsecurity.sdk.client.model.CardModel;
  */
 public class BootstrapCardsResponse {
 
-    @SerializedName("identity_card")
-    private CardModel identityCard;
-
     @SerializedName("long_time_card")
     private CardModel longTimeCard;
 
     @SerializedName("one_time_cards")
     private List<CardModel> oneTimeCards;
-
-    /**
-     * @return the identityCard
-     */
-    public CardModel getIdentityCard() {
-        return identityCard;
-    }
-
-    /**
-     * @param identityCard
-     *            the identityCard to set
-     */
-    public void setIdentityCard(CardModel identityCard) {
-        this.identityCard = identityCard;
-    }
 
     /**
      * @return the longTimeCard

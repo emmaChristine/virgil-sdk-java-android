@@ -42,6 +42,7 @@ public class CreateEphemeralCardRequest extends PublishCardRequest {
 
     /**
      * Create new instance of {@link CreateEphemeralCardRequest}.
+     * 
      * @param snapshot
      * @param signatures
      */
@@ -51,6 +52,7 @@ public class CreateEphemeralCardRequest extends PublishCardRequest {
 
     /**
      * Create new instance of {@link CreateEphemeralCardRequest}.
+     * 
      * @param identity
      * @param identityType
      * @param publicKeyData
@@ -64,6 +66,7 @@ public class CreateEphemeralCardRequest extends PublishCardRequest {
 
     /**
      * Create new instance of {@link CreateEphemeralCardRequest}.
+     * 
      * @param identity
      * @param identityType
      * @param publicKeyData
@@ -75,6 +78,7 @@ public class CreateEphemeralCardRequest extends PublishCardRequest {
 
     /**
      * Create new instance of {@link CreateEphemeralCardRequest}.
+     * 
      * @param identity
      * @param identityType
      * @param publicKeyData
@@ -85,11 +89,11 @@ public class CreateEphemeralCardRequest extends PublishCardRequest {
 
     /**
      * Create new instance of {@link CreateEphemeralCardRequest}.
+     * 
      * @param stringifiedRequest
      */
     public CreateEphemeralCardRequest(String stringifiedRequest) {
         super(stringifiedRequest);
     }
 
-    
 }

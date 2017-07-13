@@ -27,64 +27,55 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.pfs;
+package com.virgilsecurity.sdk.securechat;
 
-import java.util.HashMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.UUID;
 
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.Fingerprint;
-import com.virgilsecurity.sdk.crypto.PublicKey;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class EphemeralCardValidator {
+public class DefaultUserDataStorageTest {
 
-    private Crypto crypto;
-    private Map<String, PublicKey> verifiers;
+    private UserDataStorage dateStorage;
+    private String storageName;
 
-    /**
-     * Create new instance of {@link EphemeralCardValidator}.
-     * 
-     * @param crypto
-     */
-    public EphemeralCardValidator(Crypto crypto) {
-        this.crypto = crypto;
-        this.verifiers = new HashMap<>();
+    @Before
+    public void setUp() {
+        dateStorage = new DefaultUserDataStorage();
+        storageName = UUID.randomUUID().toString();
     }
 
-    public void addVerifier(String verifierId, byte[] publicKeyData) {
-        PublicKey publicKey = this.crypto.importPublicKey(publicKeyData);
-
-        this.verifiers.put(verifierId, publicKey);
+    @Test
+    public void getAllData_notExists() {
+        Map<String, String> data = dateStorage.getAllData(storageName);
+        assertNotNull(data);
+        assertTrue(data.isEmpty());
     }
 
-    public boolean validate(CardModel card) {
-        Fingerprint fingerprint = this.crypto.calculateFingerprint(card.getSnapshot());
-        String cardId = fingerprint.toHex();
+    @Test
+    public void getAllData() {
+        dateStorage.addData(storageName, "key1", "value1");
+        Map<String, String> data = dateStorage.getAllData(storageName);
+        assertNotNull(data);
+        assertEquals(1, data.size());
+        assertEquals("value1", data.get("key1"));
+    }
 
-        if (!cardId.equals(card.getId())) {
-            return false;
-        }
-
-        for (Entry<String, PublicKey> verifier : this.verifiers.entrySet()) {
-
-            if (!card.getMeta().getSignatures().containsKey(verifier.getKey())) {
-                return false;
-            }
-            byte[] signature = card.getMeta().getSignatures().get(verifier.getKey());
-            try {
-                this.crypto.verify(fingerprint.getValue(), signature, verifier.getValue());
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        return true;
+    @Test
+    public void getData() {
+        dateStorage.addData(storageName, "key1", "value1");
+        assertEquals("value1", dateStorage.getData(storageName, "key1"));
+        assertNull(dateStorage.getData(storageName, "key2"));
     }
 
 }

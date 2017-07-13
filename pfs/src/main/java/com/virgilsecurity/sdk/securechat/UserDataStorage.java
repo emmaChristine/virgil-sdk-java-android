@@ -27,64 +27,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.pfs;
+package com.virgilsecurity.sdk.securechat;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.Fingerprint;
-import com.virgilsecurity.sdk.crypto.PublicKey;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class EphemeralCardValidator {
+public interface UserDataStorage {
 
-    private Crypto crypto;
-    private Map<String, PublicKey> verifiers;
+    Map<String, String> getAllData(String storageName);
 
-    /**
-     * Create new instance of {@link EphemeralCardValidator}.
-     * 
-     * @param crypto
-     */
-    public EphemeralCardValidator(Crypto crypto) {
-        this.crypto = crypto;
-        this.verifiers = new HashMap<>();
-    }
+    String getData(String storageName, String key);
 
-    public void addVerifier(String verifierId, byte[] publicKeyData) {
-        PublicKey publicKey = this.crypto.importPublicKey(publicKeyData);
+    void addData(String storageName, String key, String value);
 
-        this.verifiers.put(verifierId, publicKey);
-    }
-
-    public boolean validate(CardModel card) {
-        Fingerprint fingerprint = this.crypto.calculateFingerprint(card.getSnapshot());
-        String cardId = fingerprint.toHex();
-
-        if (!cardId.equals(card.getId())) {
-            return false;
-        }
-
-        for (Entry<String, PublicKey> verifier : this.verifiers.entrySet()) {
-
-            if (!card.getMeta().getSignatures().containsKey(verifier.getKey())) {
-                return false;
-            }
-            byte[] signature = card.getMeta().getSignatures().get(verifier.getKey());
-            try {
-                this.crypto.verify(fingerprint.getValue(), signature, verifier.getValue());
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        return true;
-    }
+    void removeData(String storageName, String key);
 
 }

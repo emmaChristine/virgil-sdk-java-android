@@ -56,15 +56,16 @@ public class SecureChatSessionHelper {
     private static final String DEFAULT_SESSION_NAME_SEARCH_PATTERN = "VIRGIL.SESSION.";
 
     private String cardId;
-    private UserDefaults userDefaults;
+    private UserDataStorage userDefaults;
 
     /**
      * Create new instance of {@link SecureChatSessionHelper}.
      * 
      * @param cardId
+     * @param dataStorage
      */
-    public SecureChatSessionHelper(String cardId) {
-        this.userDefaults = new UserDefaults();
+    public SecureChatSessionHelper(String cardId, UserDataStorage dataStorage) {
+        this.userDefaults = dataStorage;
         this.cardId = cardId;
     }
 
@@ -93,12 +94,11 @@ public class SecureChatSessionHelper {
 
     public void saveSessionState(SessionState sessionState, String cardId) {
         String json = GsonUtils.getGson().toJson(sessionState);
-        userDefaults.getDefauls(this.getSuiteName()).put(this.getSessionName(cardId), json);
+        userDefaults.addData(this.getSuiteName(), this.getSessionName(cardId), json);
     }
 
     public void removeSessionState(String cardId) {
-        Map<String, String> map = userDefaults.getDefauls(this.getSuiteName());
-        map.remove(this.getSessionName(cardId));
+        userDefaults.removeData(this.getSuiteName(), this.getSessionName(cardId));
     }
 
     public void removeOldSessions() {
@@ -113,8 +113,7 @@ public class SecureChatSessionHelper {
     }
 
     public SessionState getSessionState(String cardId) {
-        Map<String, String> defaults = userDefaults.getDefauls(this.getSuiteName());
-        String json = defaults.get(this.getSessionName(cardId));
+        String json = userDefaults.getData(this.getSuiteName(), this.getSessionName(cardId));
 
         if (json == null) {
             return null;
@@ -139,7 +138,7 @@ public class SecureChatSessionHelper {
     public Map<String, SessionState> getAllSessions() {
         Map<String, SessionState> result = new HashMap<>();
 
-        Map<String, String> defaults = userDefaults.getDefauls(this.getSuiteName());
+        Map<String, String> defaults = userDefaults.getAllData(this.getSuiteName());
         for (Entry<String, String> entry : defaults.entrySet()) {
             if (!isSessionName(entry.getKey())) {
                 continue;

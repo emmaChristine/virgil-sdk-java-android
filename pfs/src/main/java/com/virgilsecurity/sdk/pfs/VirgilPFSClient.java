@@ -31,13 +31,15 @@ package com.virgilsecurity.sdk.pfs;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.virgilsecurity.sdk.client.ClientBase;
-import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
 import com.virgilsecurity.sdk.client.model.CardModel;
+import com.virgilsecurity.sdk.client.model.dto.SignableRequestModel;
+import com.virgilsecurity.sdk.pfs.exceptions.VirgilPFSServiceException;
 import com.virgilsecurity.sdk.pfs.model.RecipientCardsSet;
 import com.virgilsecurity.sdk.pfs.model.request.BootstrapCardsRequest;
 import com.virgilsecurity.sdk.pfs.model.request.CreateEphemeralCardRequest;
@@ -67,12 +69,15 @@ public class VirgilPFSClient extends ClientBase {
     public BootstrapCardsResponse bootstrapCardsSet(String recipientId, CreateEphemeralCardRequest longTimeCardRequest,
             List<CreateEphemeralCardRequest> oneTimeCardRequests) throws VirgilServiceException {
         try {
-            URL url = new URL(getContext().getReadOnlyCardsServiceURL(),
-                    String.format("/v1/recipient/%s", recipientId));
+            URL url = new URL(getContext().getEphemeralServiceURL(), String.format("/v1/recipient/%s", recipientId));
 
+            List<SignableRequestModel> otcRequests = new ArrayList<>();
+            for (CreateEphemeralCardRequest request : oneTimeCardRequests) {
+                otcRequests.add(request.getRequestModel());
+            }
             BootstrapCardsRequest requestModel = new BootstrapCardsRequest();
-            requestModel.setLongTimeCard(longTimeCardRequest);
-            requestModel.setOneTimeCards(oneTimeCardRequests);
+            requestModel.setLongTimeCard(longTimeCardRequest.getRequestModel());
+            requestModel.setOneTimeCards(otcRequests);
 
             String body = ConvertionUtils.getGson().toJson(requestModel);
 
@@ -81,9 +86,9 @@ public class VirgilPFSClient extends ClientBase {
 
             return responseModel;
         } catch (VirgilServiceException e) {
-            throw e;
+            throw new VirgilPFSServiceException(e.getErrorCode(), e);
         } catch (Exception e) {
-            throw new VirgilCardServiceException(e);
+            throw new VirgilPFSServiceException(e);
         }
     }
 
@@ -92,16 +97,16 @@ public class VirgilPFSClient extends ClientBase {
             URL url = new URL(getContext().getEphemeralServiceURL(),
                     String.format("/v1/recipient/%s/actions/push-ltc", recipientId));
 
-            String body = ConvertionUtils.getGson().toJson(longTermCardRequest);
+            String body = ConvertionUtils.getGson().toJson(longTermCardRequest.getRequestModel());
 
             CardModel responseModel = execute(url, "POST", new ByteArrayInputStream(ConvertionUtils.toBytes(body)),
                     CardModel.class);
 
             return responseModel;
         } catch (VirgilServiceException e) {
-            throw e;
+            throw new VirgilPFSServiceException(e.getErrorCode(), e);
         } catch (Exception e) {
-            throw new VirgilCardServiceException(e);
+            throw new VirgilPFSServiceException(e);
         }
     }
 
@@ -111,16 +116,20 @@ public class VirgilPFSClient extends ClientBase {
             URL url = new URL(getContext().getEphemeralServiceURL(),
                     String.format("/v1/recipient/%s/actions/push-otcs", recipientId));
 
-            String body = ConvertionUtils.getGson().toJson(oneTimeCardsRequest);
+            List<SignableRequestModel> request = new ArrayList<>();
+            for (CreateEphemeralCardRequest oneTimeCardRequest : oneTimeCardsRequest) {
+                request.add(oneTimeCardRequest.getRequestModel());
+            }
+            String body = ConvertionUtils.getGson().toJson(request);
 
             CardModel[] responseModel = execute(url, "POST", new ByteArrayInputStream(ConvertionUtils.toBytes(body)),
                     CardModel[].class);
 
             return Arrays.asList(responseModel);
         } catch (VirgilServiceException e) {
-            throw e;
+            throw new VirgilPFSServiceException(e.getErrorCode(), e);
         } catch (Exception e) {
-            throw new VirgilCardServiceException(e);
+            throw new VirgilPFSServiceException(e);
         }
     }
 
@@ -133,9 +142,9 @@ public class VirgilPFSClient extends ClientBase {
 
             return responseModel;
         } catch (VirgilServiceException e) {
-            throw e;
+            throw new VirgilPFSServiceException(e.getErrorCode(), e);
         } catch (Exception e) {
-            throw new VirgilCardServiceException(e);
+            throw new VirgilPFSServiceException(e);
         }
     }
 
@@ -150,16 +159,16 @@ public class VirgilPFSClient extends ClientBase {
 
             return Arrays.asList(responseModel);
         } catch (VirgilServiceException e) {
-            throw e;
+            throw new VirgilPFSServiceException(e.getErrorCode(), e);
         } catch (Exception e) {
-            throw new VirgilCardServiceException(e);
+            throw new VirgilPFSServiceException(e);
         }
     }
 
     public List<String> validateOneTimeCards(String recipientId, List<String> cardsIds) {
         try {
             URL url = new URL(getContext().getEphemeralServiceURL(),
-                    String.format("/v1/recipient/%s/actions/count-otcs", recipientId));
+                    String.format("/v1/recipient/%s/actions/validate-otcs", recipientId));
 
             String body = ConvertionUtils.getGson().toJson(new ValidateOTCRequest(cardsIds));
 
@@ -168,9 +177,9 @@ public class VirgilPFSClient extends ClientBase {
 
             return responseModel.getCardsIds();
         } catch (VirgilServiceException e) {
-            throw e;
+            throw new VirgilPFSServiceException(e.getErrorCode(), e);
         } catch (Exception e) {
-            throw new VirgilCardServiceException(e);
+            throw new VirgilPFSServiceException(e);
         }
     }
 

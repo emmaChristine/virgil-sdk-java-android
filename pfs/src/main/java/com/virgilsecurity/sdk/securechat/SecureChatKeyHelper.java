@@ -40,6 +40,7 @@ import java.util.Set;
 import com.virgilsecurity.sdk.client.exceptions.VirgilException;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
 import com.virgilsecurity.sdk.securechat.model.ServiceInfoEntry;
 import com.virgilsecurity.sdk.securechat.utils.GsonUtils;
 import com.virgilsecurity.sdk.storage.KeyStorage;
@@ -304,7 +305,13 @@ public class SecureChatKeyHelper {
     }
 
     private ServiceInfoEntry getServiceInfoEntry() {
-        com.virgilsecurity.sdk.storage.KeyEntry keyEntry = this.keyStorage.load(this.getServiceInfoName());
+
+        com.virgilsecurity.sdk.storage.KeyEntry keyEntry = null;
+        try {
+            keyEntry = this.keyStorage.load(this.getServiceInfoName());
+        } catch (KeyEntryNotFoundException e) {
+            return null;
+        }
         String json = ConvertionUtils.toString(keyEntry.getValue());
         ServiceInfoEntry serviceInfoEntry = GsonUtils.getGson().fromJson(json, ServiceInfoEntry.class);
 
@@ -316,7 +323,9 @@ public class SecureChatKeyHelper {
     }
 
     private void removePrivateKey(String keyEntryName) {
-        this.keyStorage.delete(keyEntryName);
+        if (this.keyStorage.exists(keyEntryName)) {
+            this.keyStorage.delete(keyEntryName);
+        }
     }
 
     private String saveEphPrivateKey(PrivateKey key, String name) {
@@ -347,7 +356,9 @@ public class SecureChatKeyHelper {
 
     private void updateServiceInfoEntry(ServiceInfoEntry newEntry) {
         String entryName = this.getServiceInfoName();
-        this.keyStorage.delete(entryName);
+        if (this.keyStorage.exists(entryName)) {
+            this.keyStorage.delete(entryName);
+        }
 
         String json = GsonUtils.getGson().toJson(newEntry);
         byte[] data = ConvertionUtils.toBytes(json);

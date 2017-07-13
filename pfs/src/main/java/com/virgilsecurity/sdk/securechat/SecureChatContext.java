@@ -48,6 +48,7 @@ public class SecureChatContext {
     private KeyStorage keyStorage;
     private VirgilPFSClientContext context;
     private DeviceManager deviceManager;
+    private UserDataStorage userDefaults;
     private int numberOfActiveOneTimeCards;
 
     /* Long term key time to live in seconds */
@@ -60,10 +61,18 @@ public class SecureChatContext {
      * Create new instance of {@link SecureChatContext}.
      */
     public SecureChatContext() {
-        super();
         numberOfActiveOneTimeCards = 100;
         longTermKeysTtl = 24 * 60 * 60; // One day
         sessionTtl = 7 * 24 * 60 * 60; // One week
+    }
+
+    public SecureChatContext(CardModel myIdentityCard, PrivateKey myPrivateKey, Crypto crypto,
+            VirgilPFSClientContext context) {
+        this();
+        this.myIdentityCard = myIdentityCard;
+        this.myPrivateKey = myPrivateKey;
+        this.crypto = crypto;
+        this.context = context;
     }
 
     /**
@@ -74,7 +83,7 @@ public class SecureChatContext {
      * @param crypto
      */
     public SecureChatContext(CardModel myIdentityCard, PrivateKey myPrivateKey, Crypto crypto, String accessToken) {
-        super();
+        this();
         this.myIdentityCard = myIdentityCard;
         this.myPrivateKey = myPrivateKey;
         this.crypto = crypto;
@@ -214,6 +223,20 @@ public class SecureChatContext {
      */
     public void setSessionTtl(int sessionTtl) {
         this.sessionTtl = sessionTtl;
+    }
+
+    /**
+     * @return the userDefaults
+     */
+    public UserDataStorage getUserDefaults() {
+        return userDefaults;
+    }
+
+    /**
+     * @param userDefaults the userDefaults to set
+     */
+    public void setUserDefaults(UserDataStorage userDefaults) {
+        this.userDefaults = userDefaults;
     }
 
 }

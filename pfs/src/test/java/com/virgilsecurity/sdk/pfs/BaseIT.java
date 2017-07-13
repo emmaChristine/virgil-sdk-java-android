@@ -27,33 +27,29 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.securechat;
+package com.virgilsecurity.sdk.pfs;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class UserDefaults {
+public class BaseIT {
 
-    private Map<String, Map<String, String>> defaults;
+    protected String APP_ID = getPropertyByName("APP_ID");
+    protected String APP_BUNDLE = getPropertyByName("APP_BUNDLE");
+    protected String APP_TOKEN = getPropertyByName("APP_TOKEN");
+    protected String APP_PRIVATE_KEY_PASSWORD = getPropertyByName("APP_PRIVATE_KEY_PASSWORD");
+    protected String APP_PRIVATE_KEY = StringUtils.replace(getPropertyByName("APP_PRIVATE_KEY"), "\\n", "\n");
+    protected String EMAIL = getPropertyByName("TEST_EMAIL");
+    protected String MAILINATOR_ID = getPropertyByName("MAILINATOR_ID");
 
-    /**
-     * Create new instance of {@link UserDefaults}.
-     */
-    public UserDefaults() {
-        defaults = new HashMap<>();
-    }
-
-    public Map<String, String> getDefauls(String suiteName) {
-        if (defaults.containsKey(suiteName)) {
-            return defaults.get(suiteName);
+    public String getPropertyByName(String propertyName) {
+        if (StringUtils.isBlank(System.getProperty(propertyName))) {
+            return null;
         }
-        Map<String, String> result = new HashMap<>();
-        defaults.put(suiteName, result);
-        return result;
+        return System.getProperty(propertyName);
     }
 
 }

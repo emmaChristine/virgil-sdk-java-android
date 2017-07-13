@@ -65,13 +65,13 @@ public class SecureSessionResponder extends SecureSession {
         this.initiateSession(ephPublicKeyData, receiverLtcId, receiverOtcId);
     }
 
-    public SecureSessionResponder(SecureChatContext context, SecureChatSessionHelper sessionHelper, byte[] additionalData,
-            SecureChatKeyHelper secureChatKeyHelper, CardEntry initiatorCardEntry, Date creationDate, Date expirationDate) {
+    public SecureSessionResponder(SecureChatContext context, SecureChatSessionHelper sessionHelper,
+            byte[] additionalData, SecureChatKeyHelper secureChatKeyHelper, CardEntry initiatorCardEntry,
+            Date creationDate, Date expirationDate) {
         super(context, false, additionalData, sessionHelper, creationDate, expirationDate);
         this.initiatorIdCard = initiatorCardEntry;
         this.secureChatKeyHelper = secureChatKeyHelper;
-        
-        
+
     }
 
     private void initiateSession(InitiationMessage initiationMessage) {
@@ -103,21 +103,29 @@ public class SecureSessionResponder extends SecureSession {
 
         PrivateKey myOtPrivateKey = null;
         byte[] otPrivateKeyData = null;
-        VirgilPFSPrivateKey otPrivateKey = null;
-        if (receiverOtcId != null) {
+        VirgilPFSResponderPrivateInfo responderPrivateInfo;
+        if (receiverOtcId == null) {
+            responderPrivateInfo = new VirgilPFSResponderPrivateInfo(privateKey, ltPrivateKey);
+        } else {
             myOtPrivateKey = this.secureChatKeyHelper.getOtPrivateKey(receiverOtcId);
             otPrivateKeyData = this.getContext().getCrypto().exportPrivateKey(myOtPrivateKey);
-            otPrivateKey = new VirgilPFSPrivateKey(otPrivateKeyData);
+            VirgilPFSPrivateKey otPrivateKey = new VirgilPFSPrivateKey(otPrivateKeyData);
+
+            responderPrivateInfo = new VirgilPFSResponderPrivateInfo(privateKey, ltPrivateKey, otPrivateKey);
         }
-        VirgilPFSResponderPrivateInfo responderPrivateInfo = new VirgilPFSResponderPrivateInfo(privateKey, ltPrivateKey,
-                otPrivateKey);
+
         VirgilPFSPublicKey initiatorEphPublicKey = new VirgilPFSPublicKey(ephPublicKeyData);
         VirgilPFSPublicKey initiatorIdPublicKey = new VirgilPFSPublicKey(this.initiatorIdCard.getPublicKeyData());
         VirgilPFSInitiatorPublicInfo initiatorPublicInfo = new VirgilPFSInitiatorPublicInfo(initiatorIdPublicKey,
                 initiatorEphPublicKey);
 
-        VirgilPFSSession session = this.getPfs().startResponderSession(responderPrivateInfo, initiatorPublicInfo,
-                this.getAdditionalData());
+        VirgilPFSSession session;
+        if (this.getAdditionalData() == null) {
+            session = this.getPfs().startResponderSession(responderPrivateInfo, initiatorPublicInfo);
+        } else {
+            session = this.getPfs().startResponderSession(responderPrivateInfo, initiatorPublicInfo,
+                    this.getAdditionalData());
+        }
 
         if (!this.isRecovered()) {
             byte[] sessionId = session.getIdentifier();

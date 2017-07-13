@@ -53,6 +53,7 @@ public abstract class SecureSession {
     private VirgilPFS pfs;
 
     public SecureSession() {
+        this.pfs = new VirgilPFS();
     }
 
     /**
@@ -67,18 +68,17 @@ public abstract class SecureSession {
      */
     public SecureSession(SecureChatContext context, boolean recovered, byte[] additionalData,
             SecureChatSessionHelper sessionHelper, Date creationDate, Date expirationDate) {
+        this();
         this.context = context;
         this.recovered = recovered;
         this.additionalData = additionalData;
         this.sessionHelper = sessionHelper;
         this.creationDate = creationDate;
         this.expirationDate = expirationDate;
-
-        this.pfs = new VirgilPFS();
     }
 
     public boolean isSessionInitialized() {
-        return false;
+        return (this.getPfs().getSession() != null) && (!this.getPfs().getSession().isEmpty());
     }
 
     public boolean isExpired() {

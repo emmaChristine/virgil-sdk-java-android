@@ -27,87 +27,61 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.pfs.model;
+package com.virgilsecurity.sdk.pfs.exceptions;
 
-import com.google.gson.annotations.SerializedName;
-import com.virgilsecurity.sdk.client.model.CardModel;
+import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class RecipientCardsSet {
+public class VirgilPFSServiceException extends VirgilServiceException {
 
-    @SerializedName("identity_card")
-    private CardModel identityCard;
-
-    @SerializedName("long_time_card")
-    private CardModel longTermCard;
-
-    @SerializedName("one_time_card")
-    private CardModel oneTimeCard;
+    private static final long serialVersionUID = -1631751276395713658L;
 
     /**
-     * Create new instance of {@link RecipientCardsSet}.
+     * Create new instance of {@link VirgilPFSServiceException}.
      */
-    public RecipientCardsSet() {
-    }
-
-    /**
-     * Create new instance of {@link RecipientCardsSet}.
-     * 
-     * @param longTermCard
-     * @param oneTimeCard
-     */
-    public RecipientCardsSet(CardModel longTermCard, CardModel oneTimeCard) {
+    public VirgilPFSServiceException() {
         super();
-        this.longTermCard = longTermCard;
-        this.oneTimeCard = oneTimeCard;
     }
 
     /**
-     * @return the longTermCard
+     * Create new instance of {@link VirgilPFSServiceException}.
+     * 
+     * @param cause
      */
-    public CardModel getLongTermCard() {
-        return longTermCard;
+    public VirgilPFSServiceException(Exception cause) {
+        super(cause);
     }
 
     /**
-     * @param longTermCard
-     *            the longTermCard to set
+     * Create new instance of {@link VirgilPFSServiceException}.
+     * 
+     * @param code
+     * @param cause
      */
-    public void setLongTermCard(CardModel longTermCard) {
-        this.longTermCard = longTermCard;
+    public VirgilPFSServiceException(int code, Exception cause) {
+        super(code, cause);
     }
 
     /**
-     * @return the oneTimeCard
+     * Create new instance of {@link VirgilPFSServiceException}.
+     * 
+     * @param code
      */
-    public CardModel getOneTimeCard() {
-        return oneTimeCard;
+    public VirgilPFSServiceException(int code) {
+        super(code);
     }
 
-    /**
-     * @param oneTimeCard
-     *            the oneTimeCard to set
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.exceptions.VirgilServiceException#getMessageBundleName()
      */
-    public void setOneTimeCard(CardModel oneTimeCard) {
-        this.oneTimeCard = oneTimeCard;
-    }
-
-    /**
-     * @return the identityCard
-     */
-    public CardModel getIdentityCard() {
-        return identityCard;
-    }
-
-    /**
-     * @param identityCard
-     *            the identityCard to set
-     */
-    public void setIdentityCard(CardModel identityCard) {
-        this.identityCard = identityCard;
+    @Override
+    protected String getMessageBundleName() {
+        return "PFSMessages";
     }
 
 }

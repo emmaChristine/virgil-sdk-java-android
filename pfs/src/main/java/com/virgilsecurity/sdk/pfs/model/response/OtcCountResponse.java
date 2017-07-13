@@ -38,15 +38,15 @@ import com.google.gson.annotations.SerializedName;
 public class OtcCountResponse {
 
     @SerializedName("active")
-    private long active;
+    private int active;
 
     @SerializedName("exhausted")
-    private long exhausted;
+    private int exhausted;
 
     /**
      * @return the active
      */
-    public long getActive() {
+    public int getActive() {
         return active;
     }
 
@@ -54,14 +54,14 @@ public class OtcCountResponse {
      * @param active
      *            the active to set
      */
-    public void setActive(long active) {
+    public void setActive(int active) {
         this.active = active;
     }
 
     /**
      * @return the exhausted
      */
-    public long getExhausted() {
+    public int getExhausted() {
         return exhausted;
     }
 
@@ -69,7 +69,7 @@ public class OtcCountResponse {
      * @param exhausted
      *            the exhausted to set
      */
-    public void setExhausted(long exhausted) {
+    public void setExhausted(int exhausted) {
         this.exhausted = exhausted;
     }
 

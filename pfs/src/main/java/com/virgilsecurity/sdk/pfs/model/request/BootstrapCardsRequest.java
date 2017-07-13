@@ -32,47 +32,48 @@ package com.virgilsecurity.sdk.pfs.model.request;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.client.model.dto.SignableRequestModel;
 
 /**
  * @author Andrii Iakovenko
  *
  */
 public class BootstrapCardsRequest {
-    
+
     @SerializedName("long_time_card")
-    private CreateEphemeralCardRequest longTimeCard;
-    
+    private SignableRequestModel longTimeCard;
+
     @SerializedName("one_time_cards")
-    private List<CreateEphemeralCardRequest> oneTimeCards;
+    private List<SignableRequestModel> oneTimeCards;
 
     /**
      * @return the longTimeCard
      */
-    public CreateEphemeralCardRequest getLongTimeCard() {
+    public SignableRequestModel getLongTimeCard() {
         return longTimeCard;
     }
 
     /**
-     * @param longTimeCard the longTimeCard to set
+     * @param longTimeCard
+     *            the longTimeCard to set
      */
-    public void setLongTimeCard(CreateEphemeralCardRequest longTimeCard) {
+    public void setLongTimeCard(SignableRequestModel longTimeCard) {
         this.longTimeCard = longTimeCard;
     }
 
     /**
      * @return the oneTimeCards
      */
-    public List<CreateEphemeralCardRequest> getOneTimeCards() {
+    public List<SignableRequestModel> getOneTimeCards() {
         return oneTimeCards;
     }
 
     /**
-     * @param oneTimeCards the oneTimeCards to set
+     * @param oneTimeCards
+     *            the oneTimeCards to set
      */
-    public void setOneTimeCards(List<CreateEphemeralCardRequest> oneTimeCards) {
+    public void setOneTimeCards(List<SignableRequestModel> oneTimeCards) {
         this.oneTimeCards = oneTimeCards;
     }
-    
-    
 
 }

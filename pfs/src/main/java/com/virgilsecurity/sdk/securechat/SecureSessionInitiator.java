@@ -93,17 +93,22 @@ public class SecureSessionInitiator extends SecureSession {
         byte[] responderLongTermPublicKeyData = this.recipientLtCard.getPublicKeyData();
         VirgilPFSPublicKey responderLongTermPublicKey = new VirgilPFSPublicKey(responderLongTermPublicKeyData);
 
-        VirgilPFSPublicKey responderOneTimePublicKey = null;
-        if (this.recipientOtCard != null) {
+        VirgilPFSResponderPublicInfo responderPublicInfo = null;
+        if (this.recipientOtCard == null) {
+            responderPublicInfo = new VirgilPFSResponderPublicInfo(responderPublicKey, responderLongTermPublicKey);
+        } else {
             byte[] responderOneTimePublicKeyData = this.recipientOtCard.getPublicKeyData();
-            responderOneTimePublicKey = new VirgilPFSPublicKey(responderOneTimePublicKeyData);
+            VirgilPFSPublicKey responderOneTimePublicKey = new VirgilPFSPublicKey(responderOneTimePublicKeyData);
+            responderPublicInfo = new VirgilPFSResponderPublicInfo(responderPublicKey, responderLongTermPublicKey,
+                    responderOneTimePublicKey);
         }
 
-        VirgilPFSResponderPublicInfo responderPublicInfo = new VirgilPFSResponderPublicInfo(responderPublicKey,
-                responderLongTermPublicKey, responderOneTimePublicKey);
-
-        VirgilPFSSession session = this.getPfs().startInitiatorSession(initiatorPrivateInfo, responderPublicInfo,
-                this.getAdditionalData());
+        VirgilPFSSession session = null;
+        if (this.getAdditionalData() == null) {
+            session = this.getPfs().startInitiatorSession(initiatorPrivateInfo, responderPublicInfo);
+        } else {
+            session = this.getPfs().startInitiatorSession(initiatorPrivateInfo, responderPublicInfo, this.getAdditionalData());
+        }
 
         if (!this.isRecovered()) {
             byte[] sessionId = session.getIdentifier();
