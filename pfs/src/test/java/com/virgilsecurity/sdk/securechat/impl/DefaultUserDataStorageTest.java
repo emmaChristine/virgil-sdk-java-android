@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.securechat;
+package com.virgilsecurity.sdk.securechat.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -39,6 +39,8 @@ import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.virgilsecurity.sdk.securechat.UserDataStorage;
 
 /**
  * @author Andrii Iakovenko

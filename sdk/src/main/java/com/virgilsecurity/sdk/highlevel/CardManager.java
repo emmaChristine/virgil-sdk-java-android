@@ -32,6 +32,7 @@ package com.virgilsecurity.sdk.highlevel;
 import java.util.Collection;
 import java.util.Map;
 
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.IdentityType;
 
 /**
@@ -168,6 +169,15 @@ public interface CardManager {
      * @return An instance of {@link VirgilCard}.
      */
     VirgilCard importCard(String exportedCard);
+    
+    /**
+     * Imports a {@link VirgilCard} from specified buffer.
+     * 
+     * @param cardModel
+     *            The Card model.
+     * @return An instance of {@link VirgilCard}.
+     */
+    VirgilCard importCard(CardModel cardModel);
 
     /**
      * Publishes a {@link VirgilCard} into global Virgil Services scope.

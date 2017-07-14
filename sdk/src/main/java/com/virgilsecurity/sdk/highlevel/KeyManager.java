@@ -30,6 +30,7 @@
 package com.virgilsecurity.sdk.highlevel;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsNotFoundException;
+import com.virgilsecurity.sdk.crypto.PrivateKey;
 
 /**
  * The {@linkplain KeyManager} interface defines a list of methods to generate the {@link VirgilKey} and further them
@@ -53,7 +54,8 @@ public interface KeyManager {
      * @param keyName
      *            The name of the Key.
      * @return An instance of {@link VirgilKey} class.
-     * @throws VirgilKeyIsNotFoundException If key not exists.
+     * @throws VirgilKeyIsNotFoundException
+     *             If key not exists.
      */
     VirgilKey load(String keyName);
 
@@ -65,7 +67,8 @@ public interface KeyManager {
      * @param keyPassword
      *            The Key password.
      * @return An instance of {@link VirgilKey} class.
-     * @throws VirgilKeyIsNotFoundException If key not exists.
+     * @throws VirgilKeyIsNotFoundException
+     *             If key not exists.
      */
     VirgilKey load(String keyName, String keyPassword) throws VirgilKeyIsNotFoundException;
 
@@ -97,4 +100,14 @@ public interface KeyManager {
      * @return An instance of {@link VirgilKey} class.
      */
     VirgilKey importKey(VirgilBuffer keyBuffer, String keyPassword);
+
+    /**
+     * Imports the {@linkplain VirgilKey}.
+     * 
+     * @param privateKey
+     *            The private key.
+     * @return An instance of {@link VirgilKey} class.
+     */
+    VirgilKey importKey(PrivateKey privateKey);
+
 }

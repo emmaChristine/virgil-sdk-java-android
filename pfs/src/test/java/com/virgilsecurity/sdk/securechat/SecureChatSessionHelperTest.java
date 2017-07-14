@@ -42,6 +42,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.virgilsecurity.sdk.exception.NullArgumentException;
+import com.virgilsecurity.sdk.securechat.impl.DefaultUserDataStorage;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
 import com.virgilsecurity.sdk.securechat.model.ResponderSessionState;
 import com.virgilsecurity.sdk.securechat.model.SessionState;

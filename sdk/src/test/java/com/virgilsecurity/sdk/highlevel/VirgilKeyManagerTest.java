@@ -29,8 +29,11 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.util.Date;
@@ -38,6 +41,9 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.virgilsecurity.sdk.crypto.Crypto;
+import com.virgilsecurity.sdk.crypto.KeyPair;
+import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
 import com.virgilsecurity.sdk.highlevel.KeyManager;
@@ -51,12 +57,14 @@ import com.virgilsecurity.sdk.highlevel.VirgilKey;
 public class VirgilKeyManagerTest {
 
     private KeyManager keyManager;
+    private Crypto crypto;
     private String suffix;
 
     @Before
     public void setUp() {
         keyManager = new VirgilApiImpl().getKeys();
         suffix = String.valueOf(new Date().getTime());
+        crypto = new VirgilCrypto();
     }
 
     @Test
@@ -147,6 +155,16 @@ public class VirgilKeyManagerTest {
         keyManager.destroy(keyName);
         
         keyManager.load(keyName);
+    }
+    
+    @Test
+    public void import_privateKey() {
+        KeyPair keyPair = crypto.generateKeys();
+        VirgilKey virgilKey = keyManager.importKey(keyPair.getPrivateKey());
+        assertNotNull(virgilKey);
+        assertThat(virgilKey.getPrivateKey(), is(keyPair.getPrivateKey()));
+        assertArrayEquals(keyPair.getPrivateKey().getId(), virgilKey.getPrivateKey().getId());
+        assertArrayEquals(keyPair.getPrivateKey().getValue(), virgilKey.getPrivateKey().getValue());
     }
 
 }

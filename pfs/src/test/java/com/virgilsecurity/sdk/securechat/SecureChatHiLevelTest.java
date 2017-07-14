@@ -45,15 +45,16 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.virgilsecurity.sdk.client.RequestSigner;
-import com.virgilsecurity.sdk.client.VirgilClient;
+import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
-import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.KeyPair;
-import com.virgilsecurity.sdk.crypto.PrivateKey;
-import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.device.DefaultDeviceManager;
+import com.virgilsecurity.sdk.highlevel.AppCredentials;
+import com.virgilsecurity.sdk.highlevel.VirgilApi;
+import com.virgilsecurity.sdk.highlevel.VirgilApiContext;
+import com.virgilsecurity.sdk.highlevel.VirgilApiImpl;
+import com.virgilsecurity.sdk.highlevel.VirgilBuffer;
+import com.virgilsecurity.sdk.highlevel.VirgilCard;
+import com.virgilsecurity.sdk.highlevel.VirgilKey;
 import com.virgilsecurity.sdk.pfs.BaseIT;
 import com.virgilsecurity.sdk.pfs.VirgilPFSClientContext;
 import com.virgilsecurity.sdk.securechat.impl.DefaultUserDataStorage;
@@ -64,22 +65,20 @@ import com.virgilsecurity.sdk.storage.VirgilKeyStorage;
  * @author Andrii Iakovenko
  *
  */
-public class SecureChatTest extends BaseIT {
-
+public class SecureChatHiLevelTest extends BaseIT {
+    
     private static final String USERNAME_IDENTITY_TYPE = "username";
-    private Crypto crypto;
-    private VirgilClient client;
-    private RequestSigner requestSigner;
-    private PrivateKey appKey;
+
+    private VirgilApi virgilApi;
 
     private String aliceIdentity;
     private String bobIdentity;
 
-    private CardModel aliceCard;
-    private CardModel bobCard;
+    private VirgilCard aliceCard;
+    private VirgilCard bobCard;
 
-    private KeyPair aliceKeys;
-    private KeyPair bobKeys;
+    private VirgilKey aliceKey;
+    private VirgilKey bobKey;
 
     private SecureChatContext aliceChatContext;
     private SecureChatContext bobChatContext;
@@ -89,9 +88,6 @@ public class SecureChatTest extends BaseIT {
 
     @Before
     public void setUp() throws MalformedURLException {
-        // Initialize Crypto
-        crypto = new VirgilCrypto();
-
         // Prepare context
         VirgilPFSClientContext ctx = new VirgilPFSClientContext(APP_TOKEN);
 
@@ -112,28 +108,45 @@ public class SecureChatTest extends BaseIT {
             ctx.setEphemeralServiceURL(new URL(url));
         }
 
-        client = new VirgilClient(ctx);
-        requestSigner = new RequestSigner(crypto);
+        // Initialize Hi-Level api
+        AppCredentials credentials = new AppCredentials();
+        credentials.setAppId(APP_ID);
+        credentials.setAppKey(VirgilBuffer.from(APP_PRIVATE_KEY));
+        credentials.setAppKeyPassword(APP_PRIVATE_KEY_PASSWORD);
 
-        appKey = crypto.importPrivateKey(APP_PRIVATE_KEY.getBytes(), APP_PRIVATE_KEY_PASSWORD);
+        VirgilApiContext context = new VirgilApiContext(APP_TOKEN);
+        context.setCredentials(credentials);
+        context.setClientContext(ctx);
+        
+        virgilApi = new VirgilApiImpl(context);
+
+        // For tests only
+        context.getClient().setCardValidator(new CardValidator() {
+
+            @Override
+            public boolean validate(CardModel card) {
+                return true;
+            }
+        });
 
         // Create alice card
         aliceIdentity = "alice" + UUID.randomUUID().toString();
         bobIdentity = "bob" + UUID.randomUUID().toString();
 
-        aliceKeys = crypto.generateKeys();
-        aliceCard = publishCard(aliceIdentity, aliceKeys);
+        aliceKey = virgilApi.getKeys().generate();
+        aliceCard = virgilApi.getCards().create(aliceIdentity, aliceKey, USERNAME_IDENTITY_TYPE).publish();
 
-        bobKeys = crypto.generateKeys();
-        bobCard = publishCard(bobIdentity, bobKeys);
+        bobKey = virgilApi.getKeys().generate();
+        bobCard = virgilApi.getCards().create(bobIdentity, bobKey, USERNAME_IDENTITY_TYPE).publish();
 
-        aliceChatContext = new SecureChatContext(aliceCard, aliceKeys.getPrivateKey(), crypto, ctx);
+        aliceChatContext = new SecureChatContext(aliceCard.getModel(), aliceKey.getPrivateKey(), context.getCrypto(),
+                ctx);
         aliceChatContext.setKeyStorage(new VirgilKeyStorage());
         aliceChatContext.setDeviceManager(new DefaultDeviceManager());
         aliceChatContext.setUserDefaults(new DefaultUserDataStorage());
         aliceChat = new SecureChat(aliceChatContext);
 
-        bobChatContext = new SecureChatContext(bobCard, bobKeys.getPrivateKey(), crypto, ctx);
+        bobChatContext = new SecureChatContext(bobCard.getModel(), bobKey.getPrivateKey(), context.getCrypto(), ctx);
         bobChatContext.setKeyStorage(new VirgilKeyStorage());
         bobChatContext.setDeviceManager(new DefaultDeviceManager());
         bobChatContext.setUserDefaults(new DefaultUserDataStorage());
@@ -149,7 +162,7 @@ public class SecureChatTest extends BaseIT {
         assertNull("No active session yet", aliceSession);
 
         /** Start new session */
-        aliceSession = aliceChat.startNewSession(bobCard, null);
+        aliceSession = aliceChat.startNewSession(bobCard.getModel(), null);
         assertNotNull("New session started", aliceSession);
         assertThat("Alice is initiator", aliceSession, instanceOf(SecureSessionInitiator.class));
 
@@ -160,7 +173,7 @@ public class SecureChatTest extends BaseIT {
         assertTrue(SessionStateResolver.isInitiationMessage(encryptedFirstMessage));
 
         // Bob receives message and create session
-        SecureSession bobSession = bobChat.loadUpSession(aliceCard, encryptedFirstMessage);
+        SecureSession bobSession = bobChat.loadUpSession(aliceCard.getModel(), encryptedFirstMessage);
         assertNotNull(bobSession);
         assertThat("Bob is responder", bobSession, instanceOf(SecureSessionResponder.class));
         String decryptedFirstMessage = bobSession.decrypt(encryptedFirstMessage);
@@ -179,13 +192,6 @@ public class SecureChatTest extends BaseIT {
         String decryptedMessage = bobSession.decrypt(encryptedMessage);
         assertNotNull(decryptedMessage);
         assertEquals("Message should be decrypted properly", message, decryptedMessage);
-
-        // Alice should be able to decrypt message she sent
-        // TODO not implemented yet
-        // aliceSession = aliceChat.activeSession(bobCard.getId());
-        // decryptedMessage = aliceSession.decrypt(encryptedMessage);
-        // assertNotNull(decryptedMessage);
-        // assertEquals("Message should be decrypted properly", message, decryptedMessage);
 
         /** Send the message to Alice */
         message = UUID.randomUUID().toString();
@@ -238,7 +244,7 @@ public class SecureChatTest extends BaseIT {
 
         // Alice receives a message
         aliceChat = new SecureChat(aliceChatContext);
-        aliceSession = aliceChat.loadUpSession(bobCard, encryptedMessage);
+        aliceSession = aliceChat.loadUpSession(bobCard.getModel(), encryptedMessage);
         assertNotNull(aliceSession);
         assertThat("Alice is initiator", aliceSession, instanceOf(SecureSessionInitiator.class));
 
@@ -251,7 +257,7 @@ public class SecureChatTest extends BaseIT {
 
         // Alice receives a message
         bobChat = new SecureChat(bobChatContext);
-        bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage);
+        bobSession = bobChat.loadUpSession(aliceCard.getModel(), encryptedMessage);
         assertNotNull(bobSession);
         assertThat("Alice is initiator", bobSession, instanceOf(SecureSessionResponder.class));
 
@@ -260,70 +266,6 @@ public class SecureChatTest extends BaseIT {
         /** Expire Bob's session */
 
         /** Expire long term card */
-    }
-
-    private CardModel publishCard(String identity, KeyPair keyPair) {
-        byte[] exportedPublicKey = crypto.exportPublicKey(keyPair.getPublicKey());
-        PublishCardRequest createCardRequest = new PublishCardRequest(identity, USERNAME_IDENTITY_TYPE,
-                exportedPublicKey);
-        requestSigner.selfSign(createCardRequest, keyPair.getPrivateKey());
-        requestSigner.authoritySign(createCardRequest, APP_ID, appKey);
-
-        return client.publishCard(createCardRequest);
-    }
-
-    private void sendMessage(SecureChat chat, CardModel receiverCard, String message) {
-        // get an active session by recipient's card id
-        SecureSession session = chat.activeSession(receiverCard.getId());
-
-        if (session == null) {
-            // start new session with recipient if session wasn't initialized yet
-            session = chat.startNewSession(receiverCard, null);
-        }
-
-        sendMessage(session, receiverCard, message);
-    }
-
-    private void sendMessage(SecureSession session, CardModel receiverCard, String message) {
-        String ciphertext = null;
-        try {
-            // encrypt the message using previously initialized session
-            ciphertext = session.encrypt(message);
-        } catch (Exception e) {
-            // error handling
-            return;
-        }
-
-        // send a cipher message to recipient using your messaging service
-        sendMessageToRecipient(receiverCard.getSnapshotModel().getIdentity(), ciphertext);
-    }
-
-    private void sendMessageToRecipient(String identity, String ciphertext) {
-        // TODO Auto-generated method stub
-
-    }
-
-    private void receiveMessage(SecureChat chat, CardModel senderCard, String message) {
-        try {
-            // load an existing session or establish new one
-            SecureSession session = chat.loadUpSession(senderCard, message);
-
-            // decrypt message using established session
-            String plaintext = session.decrypt(message);
-
-            // handle a message
-            handleMessage(plaintext);
-        } catch (Exception e) {
-            // Error handling
-        }
-    }
-
-    /**
-     * @param plaintext
-     */
-    private void handleMessage(String plaintext) {
-        // TODO Auto-generated method stub
-
     }
 
 }

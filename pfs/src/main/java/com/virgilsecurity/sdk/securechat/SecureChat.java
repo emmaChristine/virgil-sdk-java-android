@@ -69,10 +69,7 @@ public class SecureChat {
      * Create new instance of {@link SecureChat}.
      * 
      * @param config
-     * @param client
-     * @param keyHelper
-     * @param cardsHelper
-     * @param sessionHelper
+     *            the secure chat context.
      */
     public SecureChat(SecureChatContext config) {
         this.config = config;

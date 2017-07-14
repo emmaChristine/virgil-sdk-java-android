@@ -54,6 +54,7 @@ import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.highlevel.VirgilCard;
 import com.virgilsecurity.sdk.pfs.model.RecipientCardsSet;
 import com.virgilsecurity.sdk.pfs.model.request.CreateEphemeralCardRequest;
 import com.virgilsecurity.sdk.pfs.model.response.BootstrapCardsResponse;

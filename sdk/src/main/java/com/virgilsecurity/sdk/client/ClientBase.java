@@ -52,7 +52,7 @@ public class ClientBase {
     /**
      * Create new instance of {@link ClientBase}.
      * 
-     * @param context
+     * @param context the VirgilClient context.
      */
     public ClientBase(VirgilClientContext context) {
         super();
@@ -93,12 +93,6 @@ public class ClientBase {
         return urlConnection;
     }
 
-    /**
-     * @param url
-     * @param methodName
-     * @param class1
-     * @return
-     */
     protected <T> T execute(URL url, String method, InputStream inputStream, Class<T> clazz) {
         try {
             HttpURLConnection urlConnection = createConnection(url, method);

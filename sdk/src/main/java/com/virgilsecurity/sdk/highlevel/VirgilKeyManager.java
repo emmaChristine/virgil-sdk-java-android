@@ -45,7 +45,8 @@ public class VirgilKeyManager implements KeyManager {
     /**
      * Create new instance of {@link VirgilKeyManager}.
      * 
-     * @param context The context.
+     * @param context
+     *            The context.
      */
     public VirgilKeyManager(VirgilApiContext context) {
         this.context = context;
@@ -118,6 +119,17 @@ public class VirgilKeyManager implements KeyManager {
         PrivateKey privateKey = this.context.getCrypto().importPrivateKey(keyBuffer.getBytes(), keyPassword);
         VirgilKey virgilKey = new VirgilKey(this.context, privateKey);
 
+        return virgilKey;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.highlevel.KeyManager#importKey(com.virgilsecurity.sdk.crypto.PrivateKey)
+     */
+    @Override
+    public VirgilKey importKey(PrivateKey privateKey) {
+        VirgilKey virgilKey = new VirgilKey(this.context, privateKey);
         return virgilKey;
     }
 

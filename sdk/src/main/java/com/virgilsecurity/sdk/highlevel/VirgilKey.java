@@ -86,6 +86,13 @@ public class VirgilKey {
     }
 
     /**
+     * @return the private key.
+     */
+    public PrivateKey getPrivateKey() {
+        return this.privateKey;
+    }
+
+    /**
      * Generates a digital signature for specified data using current {@linkplain VirgilKey}.
      * 
      * @param buffer

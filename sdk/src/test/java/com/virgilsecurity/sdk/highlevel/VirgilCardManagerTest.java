@@ -173,13 +173,22 @@ public class VirgilCardManagerTest extends BaseIT {
         assertEquals("value1", virgilCard.getCustomFields().get("field1"));
         assertEquals("value2", virgilCard.getCustomFields().get("field2"));
     }
-    
+
     @Test
     public void importCard() {
         VirgilCard aliceCard = cardManager.create(aliceIdentity, virgilKey, "username");
         String exportedCard = aliceCard.export();
-        
+
         VirgilCard importedCard = cardManager.importCard(exportedCard);
+        assertNotNull(importedCard);
+        compareCards(aliceCard, importedCard);
+    }
+
+    @Test
+    public void importCard_cardModel() {
+        VirgilCard aliceCard = cardManager.create(aliceIdentity, virgilKey, "username");
+        CardModel cardModel = aliceCard.getModel();
+        VirgilCard importedCard = cardManager.importCard(cardModel);
         assertNotNull(importedCard);
         compareCards(aliceCard, importedCard);
     }
@@ -213,11 +222,11 @@ public class VirgilCardManagerTest extends BaseIT {
         assertNotNull(foundCard);
         compareCards(aliceCard, foundCard);
 
-        // Find by identity type (negative) 
+        // Find by identity type (negative)
         aliceCards = cardManager.find("usernames", Arrays.asList(aliceIdentity));
         assertNotNull(aliceCards);
         assertTrue(aliceCards.isEmpty());
-        
+
         // Find by identity type (positive)
         aliceCards = cardManager.find("username", Arrays.asList(aliceIdentity));
         assertNotNull(aliceCards);
@@ -230,7 +239,7 @@ public class VirgilCardManagerTest extends BaseIT {
         // Revoke
         cardManager.revoke(aliceCard);
         foundCard = cardManager.get(aliceCard.getId());
-//        assertNull(foundCard);
+        // assertNull(foundCard);
     }
 
     private VirgilCard selectById(String cardId, List<VirgilCard> cards) {

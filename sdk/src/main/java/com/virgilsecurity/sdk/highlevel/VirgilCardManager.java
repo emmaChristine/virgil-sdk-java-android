@@ -279,6 +279,15 @@ public class VirgilCardManager implements CardManager {
         return new VirgilCard(this.context, importedCardModel);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.highlevel.CardManager#importCard(com.virgilsecurity.sdk.client.model.CardModel)
+     */
+    public VirgilCard importCard(CardModel cardModel) {
+        return new VirgilCard(this.context, cardModel);
+    }
+
     /**
      * Publishes a {@link VirgilCard} into application Virgil Services scope.
      * 

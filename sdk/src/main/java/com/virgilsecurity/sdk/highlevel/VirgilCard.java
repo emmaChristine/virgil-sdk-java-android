@@ -101,6 +101,15 @@ public class VirgilCard {
     }
 
     /**
+     * Get the card model.
+     * 
+     * @return the card model.
+     */
+    public CardModel getModel() {
+        return this.card;
+    }
+
+    /**
      * Gets the custom Virgil Card parameters.
      * 
      * @return Custom fields.
@@ -323,8 +332,10 @@ public class VirgilCard {
     /**
      * Encrypts data for list of recipients Cards.
      * 
-     * @param buffer The data to be encrypted.
-     * @param recipients The recipients.
+     * @param buffer
+     *            The data to be encrypted.
+     * @param recipients
+     *            The recipients.
      * @return A new {@link VirgilBuffer} with encrypted data.
      */
     VirgilBuffer encrypt(VirgilBuffer buffer, Collection<VirgilCard> recipients) {
