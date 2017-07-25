@@ -76,12 +76,13 @@ public class SecureChatKeyHelperTest {
 
     @Test
     public void getEphPrivateKey() {
-        when(keyStorage.load("VIRGIL.EPH_KEY.EPH_PRIVATE_KEY"))
-                .thenReturn(new VirgilKeyEntry("VIRGIL.EPH_KEY.EPH_PRIVATE_KEY", privateKey.getValue()));
+        String key = String.format("VIRGIL.OWNER.%s.EPH_KEY.EPH_PRIVATE_KEY", IDENTITY_CARD_ID);
+        when(keyStorage.load(key))
+                .thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
         PrivateKey loadedKey = keyHelper.getEphPrivateKey("EPH_PRIVATE_KEY");
 
         assertArrayEquals(this.privateKey.getId(), loadedKey.getId());
-        verify(keyStorage, times(1)).load("VIRGIL.EPH_KEY.EPH_PRIVATE_KEY");
+        verify(keyStorage, times(1)).load(key);
     }
 
     @Test
@@ -96,22 +97,24 @@ public class SecureChatKeyHelperTest {
 
     @Test
     public void getLtPrivateKey() {
-        when(keyStorage.load("VIRGIL.LT_KEY.LT_PRIVATE_KEY"))
-                .thenReturn(new VirgilKeyEntry("VIRGIL.LT_KEY.LT_PRIVATE_KEY", privateKey.getValue()));
+        String key = String.format("VIRGIL.OWNER.%s.LT_KEY.LT_PRIVATE_KEY", IDENTITY_CARD_ID);
+        when(keyStorage.load(key))
+                .thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
         PrivateKey loadedKey = keyHelper.getLtPrivateKey("LT_PRIVATE_KEY");
 
         assertArrayEquals(this.privateKey.getId(), loadedKey.getId());
-        verify(keyStorage, times(1)).load("VIRGIL.LT_KEY.LT_PRIVATE_KEY");
+        verify(keyStorage, times(1)).load(key);
     }
 
     @Test
     public void getOtPrivateKey() {
-        when(keyStorage.load("VIRGIL.OT_KEY.OT_PRIVATE_KEY"))
-                .thenReturn(new VirgilKeyEntry("VIRGIL.OT_KEY.OT_PRIVATE_KEY", privateKey.getValue()));
+        String key = String.format("VIRGIL.OWNER.%s.OT_KEY.OT_PRIVATE_KEY", IDENTITY_CARD_ID);
+        when(keyStorage.load(key))
+                .thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
         PrivateKey loadedKey = keyHelper.getOtPrivateKey("OT_PRIVATE_KEY");
 
         assertArrayEquals(this.privateKey.getId(), loadedKey.getId());
-        verify(keyStorage, times(1)).load("VIRGIL.OT_KEY.OT_PRIVATE_KEY");
+        verify(keyStorage, times(1)).load(key);
     }
 
     @Test

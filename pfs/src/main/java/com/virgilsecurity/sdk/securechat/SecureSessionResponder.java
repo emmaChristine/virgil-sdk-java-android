@@ -94,7 +94,7 @@ public class SecureSessionResponder extends SecureSession {
     }
 
     private void initiateSession(byte[] ephPublicKeyData, String receiverLtcId, String receiverOtcId) {
-        byte[] privateKeyData = this.getContext().getCrypto().exportPrivateKey(this.getContext().getMyPrivateKey());
+        byte[] privateKeyData = this.getContext().getCrypto().exportPrivateKey(this.getContext().getPrivateKey());
         VirgilPFSPrivateKey privateKey = new VirgilPFSPrivateKey(privateKeyData);
 
         PrivateKey myLtPrivateKey = this.secureChatKeyHelper.getLtPrivateKey(receiverLtcId);
@@ -138,7 +138,7 @@ public class SecureSessionResponder extends SecureSession {
     }
 
     public String encrypt(String message) {
-        if (!this.isSessionInitialized()) {
+        if (!this.isInitialized()) {
             throw new VirgilException("Session is still not initialized.");
         }
 
@@ -146,11 +146,11 @@ public class SecureSessionResponder extends SecureSession {
     }
 
     public String decrypt(InitiationMessage initiationMessage) {
-        if (!this.isSessionInitialized()) {
+        if (!this.isInitialized()) {
             this.initiateSession(initiationMessage);
         }
 
-        if (!this.isSessionInitialized()) {
+        if (!this.isInitialized()) {
             throw new VirgilException("Session is still not initialized.");
         }
 
@@ -176,7 +176,7 @@ public class SecureSessionResponder extends SecureSession {
             InitiationMessage initiationMessage = SecureSession.extractInitiationMessage(encryptedMessage);
             return this.decrypt(initiationMessage);
         } else {
-            if (!this.isSessionInitialized()) {
+            if (!this.isInitialized()) {
                 throw new VirgilException("Session is still not initialized.");
             }
             Message msg = SecureSession.extractMessage(encryptedMessage);

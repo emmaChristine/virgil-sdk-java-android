@@ -45,4 +45,6 @@ public interface UserDataStorage {
 
     void removeData(String storageName, String key);
 
+    void synchronize();
+
 }

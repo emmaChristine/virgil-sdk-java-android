@@ -78,7 +78,7 @@ public class SecureSessionInitiator extends SecureSession {
     }
 
     private void initiateSession() {
-        byte[] privateKeyData = this.getContext().getCrypto().exportPrivateKey(this.getContext().getMyPrivateKey());
+        byte[] privateKeyData = this.getContext().getCrypto().exportPrivateKey(this.getContext().getPrivateKey());
         byte[] ephPrivateKeyData = this.getContext().getCrypto().exportPrivateKey(this.ephPrivateKey);
 
         VirgilPFSPrivateKey privateKey = new VirgilPFSPrivateKey(privateKeyData);
@@ -139,12 +139,12 @@ public class SecureSessionInitiator extends SecureSession {
     @Override
     public String encrypt(String message) {
         boolean isFirstMessage = false;
-        if (!this.isSessionInitialized()) {
+        if (!this.isInitialized()) {
             isFirstMessage = true;
             this.initiateSession();
         }
 
-        if (!this.isSessionInitialized()) {
+        if (!this.isInitialized()) {
             throw new VirgilException("Session is still not initialized.");
         }
 
@@ -159,7 +159,7 @@ public class SecureSessionInitiator extends SecureSession {
             PublicKey ephPublicKey = this.getContext().getCrypto().extractPublicKey(this.ephPrivateKey);
             byte[] ephPublicKeyData = this.getContext().getCrypto().exportPublicKey(ephPublicKey);
             byte[] ephPublicKeySignature = this.getContext().getCrypto().sign(ephPublicKeyData,
-                    this.getContext().getMyPrivateKey());
+                    this.getContext().getPrivateKey());
 
             InitiationMessage initMsg = null;
             if (this.recipientOtCard != null) {
@@ -186,7 +186,7 @@ public class SecureSessionInitiator extends SecureSession {
      */
     @Override
     public String decrypt(String encryptedMessage) {
-        if (!this.isSessionInitialized()) {
+        if (!this.isInitialized()) {
             throw new VirgilException("Session is still not initialized.");
         }
         Message message = SecureSession.extractMessage(encryptedMessage);

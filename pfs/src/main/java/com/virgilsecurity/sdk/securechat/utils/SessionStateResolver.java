@@ -39,6 +39,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import com.virgilsecurity.sdk.securechat.model.InitiationMessage;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
+import com.virgilsecurity.sdk.securechat.model.Message;
 import com.virgilsecurity.sdk.securechat.model.ResponderSessionState;
 
 /**
@@ -50,6 +51,7 @@ public class SessionStateResolver {
     private static final Set<String> INITIATOR_SESSION_STATE_FIELDS;
     private static final Set<String> RESPONDER_SESSION_STATE_FIELDS;
     private static final Set<String> INITIALIZATION_MESSAGE_FIELDS;
+    private static final Set<String> REGULAR_MESSAGE_FIELDS;
 
     static {
         INITIATOR_SESSION_STATE_FIELDS = Collections
@@ -57,6 +59,7 @@ public class SessionStateResolver {
         RESPONDER_SESSION_STATE_FIELDS = Collections
                 .unmodifiableSet(getSerializedNameValues(ResponderSessionState.class));
         INITIALIZATION_MESSAGE_FIELDS = Collections.unmodifiableSet(getSerializedNameValues(InitiationMessage.class));
+        REGULAR_MESSAGE_FIELDS = Collections.unmodifiableSet(getSerializedNameValues(Message.class));
     }
 
     private static Set<String> getSerializedNameValues(Class<?> clazz) {
@@ -93,6 +96,16 @@ public class SessionStateResolver {
     public static boolean isInitiationMessage(String json) {
         JsonObject jsObj = (JsonObject) new JsonParser().parse(json);
         for (String fieldName : INITIALIZATION_MESSAGE_FIELDS) {
+            if (!jsObj.has(fieldName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isRegularMessage(String json) {
+        JsonObject jsObj = (JsonObject) new JsonParser().parse(json);
+        for (String fieldName : REGULAR_MESSAGE_FIELDS) {
             if (!jsObj.has(fieldName)) {
                 return false;
             }

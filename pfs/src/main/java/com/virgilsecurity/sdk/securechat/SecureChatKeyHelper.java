@@ -249,12 +249,12 @@ public class SecureChatKeyHelper {
 
         Set<String> ltKeysToRemove = new HashSet<>(outdatedLtKeysNames);
         for (String relevantLtCard : relevantLtCards) {
-            ltKeysToRemove.remove(this.getPrivateKeyName(this.getLtPrivateKeyName(relevantLtCard)));
+            ltKeysToRemove.remove(this.getPrivateKeyEntryName(this.getLtPrivateKeyName(relevantLtCard)));
         }
 
         Set<String> otKeysToRemove = new HashSet<>(serviceInfoEntry.getOtcKeysNames());
         for (String relevantOtCard : relevantOtCards) {
-            otKeysToRemove.remove(this.getPrivateKeyName(this.getOtPrivateKeyName(relevantOtCard)));
+            otKeysToRemove.remove(this.getPrivateKeyEntryName(this.getOtPrivateKeyName(relevantOtCard)));
         }
 
         Set<String> ephKeysToRemove = new HashSet<>(serviceInfoEntry.getEphKeysNames());
@@ -271,7 +271,7 @@ public class SecureChatKeyHelper {
     }
 
     private String extractCardId(String otKeyEntryName) {
-        return otKeyEntryName.replace("VIRGIL.OT_KEY.", "");
+        return otKeyEntryName.replace(this.getPrivateKeyEntryHeader() + this.getOtPrivateKeyNameHeader(), "");
     }
 
     private String getEphPrivateKeyName(String name) {
@@ -283,11 +283,19 @@ public class SecureChatKeyHelper {
     }
 
     private String getOtPrivateKeyName(String name) {
-        return String.format("OT_KEY.%s", name);
+        return String.format("%s%s", this.getOtPrivateKeyNameHeader(), name);
+    }
+
+    private String getPrivateKeyEntryHeader() {
+        return String.format("VIRGIL.OWNER.%s.", this.identityCardId);
+    }
+
+    private String getOtPrivateKeyNameHeader() {
+        return "OT_KEY.";
     }
 
     private PrivateKey getPrivateKey(String keyName) {
-        String keyEntryName = this.getPrivateKeyName(keyName);
+        String keyEntryName = this.getPrivateKeyEntryName(keyName);
 
         return this.getPrivateKeyByEntryName(keyEntryName);
     }
@@ -300,8 +308,8 @@ public class SecureChatKeyHelper {
         return privateKey;
     }
 
-    private String getPrivateKeyName(String name) {
-        return String.format("VIRGIL.%s", name);
+    private String getPrivateKeyEntryName(String name) {
+        return String.format("%s%s", this.getPrivateKeyEntryHeader(), name);
     }
 
     private ServiceInfoEntry getServiceInfoEntry() {
@@ -322,10 +330,30 @@ public class SecureChatKeyHelper {
         return String.format(SERVICE_KEY_NAME, this.identityCardId);
     }
 
-    private void removePrivateKey(String keyEntryName) {
+    public void removePrivateKey(String keyEntryName) {
         if (this.keyStorage.exists(keyEntryName)) {
             this.keyStorage.delete(keyEntryName);
         }
+    }
+
+    public void removeEphPrivateKey(String name) {
+        String keyEntryName = this.getPrivateKeyEntryName(this.getEphPrivateKeyName(name));
+        this.removePrivateKey(keyEntryName);
+    }
+
+    public void removeOneTimePrivateKey(String name) {
+        String keyEntryName = this.getPrivateKeyEntryName(this.getOtPrivateKeyName(name));
+        this.removePrivateKey(keyEntryName);
+    }
+
+    public boolean isEphKeyExists(String ephName) {
+        String keyEntryName = this.getPrivateKeyEntryName(this.getEphPrivateKeyName(ephName));
+        return this.keyStorage.exists(keyEntryName);
+    }
+
+    public boolean isOtKeyExists(String otName) {
+        String keyEntryName = this.getPrivateKeyEntryName(this.getOtPrivateKeyName(otName));
+        return this.keyStorage.exists(keyEntryName);
     }
 
     private String saveEphPrivateKey(PrivateKey key, String name) {
@@ -346,7 +374,7 @@ public class SecureChatKeyHelper {
     private String savePrivateKey(PrivateKey key, String keyName) {
         byte[] privateKeyData = this.crypto.exportPrivateKey(key);
 
-        String keyEntryName = this.getPrivateKeyName(keyName);
+        String keyEntryName = this.getPrivateKeyEntryName(keyName);
         com.virgilsecurity.sdk.storage.KeyEntry keyEntry = new VirgilKeyEntry(keyEntryName, privateKeyData);
 
         this.keyStorage.store(keyEntry);

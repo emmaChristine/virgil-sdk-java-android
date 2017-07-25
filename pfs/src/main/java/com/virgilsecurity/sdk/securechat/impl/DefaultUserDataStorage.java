@@ -96,4 +96,12 @@ public class DefaultUserDataStorage implements UserDataStorage {
         getAllData(storageName).remove(key);
     }
 
+    /* (non-Javadoc)
+     * @see com.virgilsecurity.sdk.securechat.UserDataStorage#synchronize()
+     */
+    @Override
+    public void synchronize() {
+        // TODO Auto-generated method stub        
+    }
+
 }

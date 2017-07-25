@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,42 +27,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.exceptions;
+package com.virgilsecurity.sdk.securechat.model;
 
 /**
- * Represents errors occurred during interaction with SDK components.
- *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
+public enum MessageType {
 
-    private static final long serialVersionUID = -8369792754821656857L;
+    UNKNOWN("unknown"), INITIAL("initial"), REGULAR("regular");
+
+    private String code;
 
     /**
-     * Create a new instance of {@code VirgilException}
-     *
+     * Create new instance of {@link MessageType}.
+     * 
+     * @param code
      */
-    public VirgilException() {
+    private MessageType(String code) {
+        this.code = code;
     }
 
     /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param message
-     *            the detail message.
+     * @return the code
      */
-    public VirgilException(String message) {
-        super(message);
+    public String getCode() {
+        return code;
     }
 
-    /**
-     * Create new instance of {@link VirgilException}.
-     * @param message
-     * @param cause
-     */
-    public VirgilException(String message, Throwable  cause) {
-        super(message, cause);
+    public static MessageType fromString(String value) {
+        for (MessageType theType : MessageType.values()) {
+            if (theType.getCode().equalsIgnoreCase(value)) {
+                return theType;
+            }
+        }
+        return MessageType.UNKNOWN;
     }
 
 }

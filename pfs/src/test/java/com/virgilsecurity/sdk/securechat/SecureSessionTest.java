@@ -49,7 +49,7 @@ public class SecureSessionTest {
             }
             
         };
-        assertFalse(secureSession.isSessionInitialized());
+        assertFalse(secureSession.isInitialized());
     }
 
 }

@@ -59,6 +59,7 @@ import com.virgilsecurity.sdk.pfs.BaseIT;
 import com.virgilsecurity.sdk.pfs.VirgilPFSClientContext;
 import com.virgilsecurity.sdk.securechat.impl.DefaultUserDataStorage;
 import com.virgilsecurity.sdk.securechat.utils.SessionStateResolver;
+import com.virgilsecurity.sdk.storage.DefaultKeyStorage;
 import com.virgilsecurity.sdk.storage.VirgilKeyStorage;
 
 /**
@@ -66,7 +67,7 @@ import com.virgilsecurity.sdk.storage.VirgilKeyStorage;
  *
  */
 public class SecureChatHiLevelTest extends BaseIT {
-    
+
     private static final String USERNAME_IDENTITY_TYPE = "username";
 
     private VirgilApi virgilApi;
@@ -117,7 +118,7 @@ public class SecureChatHiLevelTest extends BaseIT {
         VirgilApiContext context = new VirgilApiContext(APP_TOKEN);
         context.setCredentials(credentials);
         context.setClientContext(ctx);
-        
+
         virgilApi = new VirgilApiImpl(context);
 
         // For tests only
@@ -141,13 +142,13 @@ public class SecureChatHiLevelTest extends BaseIT {
 
         aliceChatContext = new SecureChatContext(aliceCard.getModel(), aliceKey.getPrivateKey(), context.getCrypto(),
                 ctx);
-        aliceChatContext.setKeyStorage(new VirgilKeyStorage());
+        aliceChatContext.setKeyStorage(new DefaultKeyStorage(System.getProperty("java.io.tmpdir"), aliceIdentity));
         aliceChatContext.setDeviceManager(new DefaultDeviceManager());
         aliceChatContext.setUserDefaults(new DefaultUserDataStorage());
         aliceChat = new SecureChat(aliceChatContext);
 
         bobChatContext = new SecureChatContext(bobCard.getModel(), bobKey.getPrivateKey(), context.getCrypto(), ctx);
-        bobChatContext.setKeyStorage(new VirgilKeyStorage());
+        bobChatContext.setKeyStorage(new DefaultKeyStorage(System.getProperty("java.io.tmpdir"), aliceIdentity));
         bobChatContext.setDeviceManager(new DefaultDeviceManager());
         bobChatContext.setUserDefaults(new DefaultUserDataStorage());
         bobChat = new SecureChat(bobChatContext);

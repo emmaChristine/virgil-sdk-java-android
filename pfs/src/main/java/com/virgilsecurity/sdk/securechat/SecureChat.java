@@ -29,17 +29,22 @@
  */
 package com.virgilsecurity.sdk.securechat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.virgilsecurity.sdk.client.exceptions.VirgilException;
 import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
-import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.pfs.EphemeralCardValidator;
 import com.virgilsecurity.sdk.pfs.VirgilPFSClient;
 import com.virgilsecurity.sdk.pfs.model.RecipientCardsSet;
@@ -47,6 +52,7 @@ import com.virgilsecurity.sdk.pfs.model.response.OtcCountResponse;
 import com.virgilsecurity.sdk.securechat.model.InitiationMessage;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
 import com.virgilsecurity.sdk.securechat.model.Message;
+import com.virgilsecurity.sdk.securechat.model.MessageType;
 import com.virgilsecurity.sdk.securechat.model.ResponderSessionState;
 import com.virgilsecurity.sdk.securechat.model.SessionState;
 import com.virgilsecurity.sdk.securechat.utils.SessionStateResolver;
@@ -57,6 +63,8 @@ import com.virgilsecurity.sdk.utils.StringUtils;
  *
  */
 public class SecureChat {
+
+    private static final Logger LOGGER = Logger.getLogger(SecureChat.class.getName());
 
     private SecureChatContext config;
     private VirgilPFSClient client;
@@ -75,10 +83,10 @@ public class SecureChat {
         this.config = config;
         this.client = new VirgilPFSClient(config.getContext());
         this.keyHelper = new SecureChatKeyHelper(config.getCrypto(), config.getKeyStorage(),
-                config.getMyIdentityCard().getId(), config.getLongTermKeysTtl());
-        this.cardsHelper = new SecureChatCardsHelper(config.getCrypto(), config.getMyPrivateKey(), this.client,
+                config.getIdentityCard().getId(), config.getLongTermKeysTtl());
+        this.cardsHelper = new SecureChatCardsHelper(config.getCrypto(), config.getPrivateKey(), this.client,
                 this.config.getDeviceManager(), this.keyHelper);
-        this.sessionHelper = new SecureChatSessionHelper(config.getMyIdentityCard().getId(), config.getUserDefaults());
+        this.sessionHelper = new SecureChatSessionHelper(config.getIdentityCard().getId(), config.getUserDefaults());
     }
 
     private SecureSession startNewSession(CardModel recipientCard, RecipientCardsSet cardsSet, byte[] additionalData) {
@@ -116,13 +124,35 @@ public class SecureChat {
 
         Date date = new Date();
         SecureSessionInitiator secureSession = new SecureSessionInitiator(this.config, this.sessionHelper,
-                additionalData, this.config.getMyIdentityCard(), ephPrivateKey, ephKeyName, identityCardEntry,
+                additionalData, this.config.getIdentityCard(), ephPrivateKey, ephKeyName, identityCardEntry,
                 ltCardEntry, otCardEntry, false, date, this.getSessionExpirationDate(date));
 
         return secureSession;
     }
 
     public SecureSession startNewSession(CardModel card, byte[] additionalData) {
+        // Check for existing session state
+        SessionState sessionState = null;
+        try {
+            sessionState = this.sessionHelper.getSessionState(card.getId());
+        } catch (Exception e) {
+            throw new VirgilException("Error checking for existing session.", e);
+        }
+        // If we have existing session
+        if (sessionState != null) {
+            // If session is not expired - return error
+            if (!this.isSessionStateExpired(new Date(), sessionState)) {
+                throw new VirgilException("Found active session for given recipient. Try to loadUpSession.");
+            }
+            // If session is expired, just remove old session and create new one
+            try {
+                this.removeSession(card.getId());
+            } catch (Exception e) {
+                throw new VirgilException("Error removing expired session while creating new.", e);
+            }
+        }
+
+        // Get recipient's credentials
         List<RecipientCardsSet> cardsSets = this.client.getRecipientCardsSet(Arrays.asList(card.getId()));
         if (cardsSets.isEmpty()) {
             throw new VirgilException("Error obtaining recipient cards set. Empty set.");
@@ -132,15 +162,27 @@ public class SecureChat {
         return this.startNewSession(card, cardsSet, additionalData);
     }
 
-    public SecureSession activeSession(String recipientWithCardId) {
-        SessionState sessionState = this.sessionHelper.getSessionState(recipientWithCardId);
+    public SecureSession activeSession(String recipientCardId) {
+        SessionState sessionState = this.sessionHelper.getSessionState(recipientCardId);
         if (sessionState == null) {
             return null;
         }
+        if (this.isSessionStateExpired(new Date(), sessionState)) {
+            try {
+                this.removeSession(recipientCardId);
+            } catch (VirgilException e) {
+                LOGGER.log(Level.WARNING, "Error occured while removing expired session in activeSession", e);
+            }
+            return null;
+        }
 
-        SecureSession secureSession = this.recoverSession(this.config.getMyIdentityCard(), sessionState);
+        SecureSession secureSession = this.recoverSession(this.config.getIdentityCard(), sessionState);
 
         return secureSession;
+    }
+
+    private boolean isSessionStateExpired(Date date, SessionState sessionState) {
+        return (date.after(sessionState.getExpirationDate()));
     }
 
     private SecureSession recoverSession(CardModel myIdentityCard, SessionState sessionState) {
@@ -209,7 +251,7 @@ public class SecureChat {
             InitiationMessage initiationMessage = SecureSession.extractInitiationMessage(message);
 
             // Added new one time card
-            this.cardsHelper.addCards(this.config.getMyIdentityCard(), false, 1);
+            this.cardsHelper.addCards(this.config.getIdentityCard(), false, 1);
 
             SecureSession.CardEntry cardEntry = new SecureSession.CardEntry(card.getId(),
                     card.getSnapshotModel().getPublicKeyData());
@@ -232,21 +274,80 @@ public class SecureChat {
                 throw new VirgilException("Session not found.");
             }
 
-            SecureSession session = this.recoverSession(this.config.getMyIdentityCard(), sessionState);
+            SecureSession session = this.recoverSession(this.config.getIdentityCard(), sessionState);
 
             return session;
         }
     }
 
+    public void removeSession(String cardId) {
+        SessionState sessionState = this.sessionHelper.getSessionState(cardId);
+        if (sessionState == null) {
+            // Session was not found.
+            this.removeSessionKeys(cardId);
+        } else {
+            this.removeSessionKeys(sessionState);
+            this.sessionHelper.removeSessionsStates(Arrays.asList(cardId));
+        }
+    }
+
+    private void removeSessionKeys(String cardId) {
+        if (this.keyHelper.isEphKeyExists(cardId)) {
+            this.keyHelper.removeEphPrivateKey(cardId);
+        }
+        if (this.keyHelper.isOtKeyExists(cardId)) {
+            this.keyHelper.removeOneTimePrivateKey(cardId);
+        }
+    }
+
+    private void removeSessionKeys(SessionState sessionState) {
+        if (sessionState instanceof InitiatorSessionState) {
+            this.removeSessionKeys((InitiatorSessionState) sessionState);
+        } else if (sessionState instanceof ResponderSessionState) {
+            this.removeSessionKeys((ResponderSessionState) sessionState);
+        } else {
+            throw new VirgilException("Unknown session state.");
+        }
+    }
+
+    private void removeSessionKeys(InitiatorSessionState sessionState) {
+        this.keyHelper.removePrivateKey(sessionState.getEphKeyName());
+    }
+
+    private void removeSessionKeys(ResponderSessionState sessionState) {
+        String otCardId = sessionState.getRecipientOneTimeCardId();
+        if (otCardId == null) {
+            // Nothing to remove
+            return;
+        }
+        this.keyHelper.removeOneTimePrivateKey(otCardId);
+    }
+
+    private void removeExpiredSessionsStates() {
+        Map<String, SessionState> sessionsStates = this.sessionHelper.getAllSessions();
+
+        Date date = new Date();
+
+        List<String> expiredSessionsStates = new ArrayList<>();
+
+        for (Entry<String, SessionState> sessionState : sessionsStates.entrySet()) {
+            if (this.isSessionStateExpired(date, sessionState.getValue())) {
+                expiredSessionsStates.add(sessionState.getKey());
+            }
+        }
+
+        this.sessionHelper.removeSessionsStates(expiredSessionsStates);
+    }
+
     private void cleanup() {
-        this.sessionHelper.removeOldSessions();
+        this.removeExpiredSessionsStates();
         Set<String> relevantEphKeys = this.sessionHelper.getEphKeys();
         Set<String> relevantLtCards = this.sessionHelper.getLtCards();
         Set<String> relevantOtCards = this.sessionHelper.getOtCards();
 
         List<String> otKeys = this.keyHelper.getAllOtCardsIds();
 
-        List<String> exhaustedCardsIds = this.client.validateOneTimeCards(this.config.getMyIdentityCard().getId(),
+        List<String> exhaustedCardsIds = this.client.validateOneTimeCards(this.config.getIdentityCard().getId(),
                 otKeys);
 
         Set<String> relOtCards = new HashSet<>(otKeys);
@@ -254,14 +355,13 @@ public class SecureChat {
         relOtCards.addAll(relevantOtCards);
 
         this.keyHelper.removeOldKeys(relevantEphKeys, relevantLtCards, relOtCards);
-
     }
 
     public void initialize() {
         this.cleanup();
 
         // Check ephemeral cards status
-        OtcCountResponse status = this.client.getOtcCount(this.config.getMyIdentityCard().getId());
+        OtcCountResponse status = this.client.getOtcCount(this.config.getIdentityCard().getId());
 
         // Not enough cards, add more
         int numberOfMissingCards = Math.max(this.config.getNumberOfActiveOneTimeCards() - status.getActive(), 0);
@@ -270,7 +370,7 @@ public class SecureChat {
 
     private void addMissingCards(int numberOfMissingCards) {
         boolean addLtCard = !this.keyHelper.hasRelevantLtKey();
-        this.cardsHelper.addCards(this.config.getMyIdentityCard(), addLtCard, numberOfMissingCards);
+        this.cardsHelper.addCards(this.config.getIdentityCard(), addLtCard, numberOfMissingCards);
     }
 
     private Date getSessionExpirationDate(Date date) {
@@ -279,6 +379,16 @@ public class SecureChat {
         cal.add(Calendar.SECOND, this.config.getSessionTtl());
 
         return cal.getTime();
+    }
+
+    public MessageType getMessageType(String message) {
+        if (SessionStateResolver.isInitiationMessage(message)) {
+            return MessageType.INITIAL;
+        } else if (SessionStateResolver.isRegularMessage(message)) {
+            return MessageType.REGULAR;
+        }
+
+        return MessageType.UNKNOWN;
     }
 
 }

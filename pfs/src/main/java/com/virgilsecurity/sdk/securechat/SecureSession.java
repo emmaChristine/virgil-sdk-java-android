@@ -77,15 +77,19 @@ public abstract class SecureSession {
         this.expirationDate = expirationDate;
     }
 
-    public boolean isSessionInitialized() {
+    public boolean isInitialized() {
         return (this.getPfs().getSession() != null) && (!this.getPfs().getSession().isEmpty());
     }
 
-    public boolean isExpired() {
+    public boolean isExpired(Date currentDate) {
         if (this.expirationDate == null) {
             return false;
         }
-        return new Date().after(this.expirationDate);
+        return currentDate.after(this.expirationDate);
+    }
+
+    public boolean isExpired() {
+        return this.isExpired(new Date());
     }
 
     public String encrypt(String message) {

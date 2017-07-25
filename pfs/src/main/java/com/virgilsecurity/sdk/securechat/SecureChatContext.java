@@ -42,8 +42,8 @@ import com.virgilsecurity.sdk.storage.KeyStorage;
  */
 public class SecureChatContext {
 
-    private CardModel myIdentityCard;
-    private PrivateKey myPrivateKey;
+    private CardModel identityCard;
+    private PrivateKey privateKey;
     private Crypto crypto;
     private KeyStorage keyStorage;
     private VirgilPFSClientContext context;
@@ -69,8 +69,8 @@ public class SecureChatContext {
     public SecureChatContext(CardModel myIdentityCard, PrivateKey myPrivateKey, Crypto crypto,
             VirgilPFSClientContext context) {
         this();
-        this.myIdentityCard = myIdentityCard;
-        this.myPrivateKey = myPrivateKey;
+        this.identityCard = myIdentityCard;
+        this.privateKey = myPrivateKey;
         this.crypto = crypto;
         this.context = context;
     }
@@ -84,40 +84,40 @@ public class SecureChatContext {
      */
     public SecureChatContext(CardModel myIdentityCard, PrivateKey myPrivateKey, Crypto crypto, String accessToken) {
         this();
-        this.myIdentityCard = myIdentityCard;
-        this.myPrivateKey = myPrivateKey;
+        this.identityCard = myIdentityCard;
+        this.privateKey = myPrivateKey;
         this.crypto = crypto;
         this.context = new VirgilPFSClientContext(accessToken);
     }
 
     /**
-     * @return the myIdentityCard
+     * @return the identityCard
      */
-    public CardModel getMyIdentityCard() {
-        return myIdentityCard;
+    public CardModel getIdentityCard() {
+        return identityCard;
     }
 
     /**
-     * @param myIdentityCard
+     * @param identityCard
      *            the myIdentityCard to set
      */
-    public void setMyIdentityCard(CardModel myIdentityCard) {
-        this.myIdentityCard = myIdentityCard;
+    public void setIdentityCard(CardModel identityCard) {
+        this.identityCard = identityCard;
     }
 
     /**
-     * @return the myPrivateKey
+     * @return the privateKey
      */
-    public PrivateKey getMyPrivateKey() {
-        return myPrivateKey;
+    public PrivateKey getPrivateKey() {
+        return privateKey;
     }
 
     /**
-     * @param myPrivateKey
-     *            the myPrivateKey to set
+     * @param privateKey
+     *            the privateKey to set
      */
-    public void setMyPrivateKey(PrivateKey myPrivateKey) {
-        this.myPrivateKey = myPrivateKey;
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = privateKey;
     }
 
     /**
@@ -211,15 +211,19 @@ public class SecureChatContext {
     }
 
     /**
-     * @return the sessionTtl
+     * Get session time to live in seconds.
+     * 
+     * @return the session TTL.
      */
     public int getSessionTtl() {
         return sessionTtl;
     }
 
     /**
+     * Set session time to live in seconds.
+     * 
      * @param sessionTtl
-     *            the sessionTtl to set
+     *            the session TTL.
      */
     public void setSessionTtl(int sessionTtl) {
         this.sessionTtl = sessionTtl;
@@ -233,7 +237,8 @@ public class SecureChatContext {
     }
 
     /**
-     * @param userDefaults the userDefaults to set
+     * @param userDefaults
+     *            the userDefaults to set
      */
     public void setUserDefaults(UserDataStorage userDefaults) {
         this.userDefaults = userDefaults;

@@ -29,6 +29,7 @@
  */
 package com.virgilsecurity.sdk.securechat;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,7 +99,21 @@ public class SecureChatSessionHelper {
     }
 
     public void removeSessionState(String cardId) {
+        removeSessionState(cardId, true);
+    }
+    
+    private void removeSessionState(String cardId, boolean synchronize) {
         userDefaults.removeData(this.getSuiteName(), this.getSessionName(cardId));
+        if (synchronize) {
+            userDefaults.synchronize();
+        }
+    }
+
+    public void removeSessionsStates(Collection<String> recipientCardIds) {
+        for (String cardId : recipientCardIds) {
+            this.removeSessionState(cardId, false);
+        }
+        userDefaults.synchronize();
     }
 
     public void removeOldSessions() {
@@ -128,17 +143,16 @@ public class SecureChatSessionHelper {
             throw new VirgilException("Corrupted saved session.");
         }
 
-        if (isSessionStateExpired(new Date(), state)) {
-            return null;
-        }
-
         return state;
     }
 
     public Map<String, SessionState> getAllSessions() {
-        Map<String, SessionState> result = new HashMap<>();
-
         Map<String, String> defaults = userDefaults.getAllData(this.getSuiteName());
+        return getAllSessions(defaults);
+    }
+
+    private Map<String, SessionState> getAllSessions(Map<String, String> defaults) {
+        Map<String, SessionState> result = new HashMap<>();
         for (Entry<String, String> entry : defaults.entrySet()) {
             if (!isSessionName(entry.getKey())) {
                 continue;

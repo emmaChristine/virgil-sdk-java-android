@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,42 +27,36 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.exceptions;
+package com.virgilsecurity.sdk.securechat.model;
+
+import static org.junit.Assert.assertSame;
+
+import org.junit.Test;
 
 /**
- * Represents errors occurred during interaction with SDK components.
- *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
+public class MessageTypeTest {
 
-    private static final long serialVersionUID = -8369792754821656857L;
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     */
-    public VirgilException() {
+    @Test
+    public void defaultValue() {
+        assertSame(MessageType.UNKNOWN, MessageType.fromString(""));
     }
 
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param message
-     *            the detail message.
-     */
-    public VirgilException(String message) {
-        super(message);
+    @Test
+    public void unknown() {
+        assertSame(MessageType.UNKNOWN, MessageType.fromString("unknown"));
     }
 
-    /**
-     * Create new instance of {@link VirgilException}.
-     * @param message
-     * @param cause
-     */
-    public VirgilException(String message, Throwable  cause) {
-        super(message, cause);
+    @Test
+    public void initial() {
+        assertSame(MessageType.INITIAL, MessageType.fromString("initial"));
+    }
+
+    @Test
+    public void regular() {
+        assertSame(MessageType.REGULAR, MessageType.fromString("regular"));
     }
 
 }
