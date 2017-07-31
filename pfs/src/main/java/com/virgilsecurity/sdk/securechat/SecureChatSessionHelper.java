@@ -37,8 +37,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
+import com.virgilsecurity.sdk.securechat.exceptions.CorruptedSavedSessionException;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
 import com.virgilsecurity.sdk.securechat.model.ResponderSessionState;
 import com.virgilsecurity.sdk.securechat.model.SessionState;
@@ -101,7 +101,7 @@ public class SecureChatSessionHelper {
     public void removeSessionState(String cardId) {
         removeSessionState(cardId, true);
     }
-    
+
     private void removeSessionState(String cardId, boolean synchronize) {
         userDefaults.removeData(this.getSuiteName(), this.getSessionName(cardId));
         if (synchronize) {
@@ -140,7 +140,7 @@ public class SecureChatSessionHelper {
         } else if (SessionStateResolver.isResponderSessionState(json)) {
             state = GsonUtils.getGson().fromJson(json, ResponderSessionState.class);
         } else {
-            throw new VirgilException("Corrupted saved session.");
+            throw new CorruptedSavedSessionException();
         }
 
         return state;
@@ -165,7 +165,7 @@ public class SecureChatSessionHelper {
             } else if (SessionStateResolver.isResponderSessionState(json)) {
                 sessionState = GsonUtils.getGson().fromJson(json, ResponderSessionState.class);
             } else {
-                throw new VirgilException("Corrupted saved session.");
+                throw new CorruptedSavedSessionException();
             }
             result.put(entry.getKey(), sessionState);
         }

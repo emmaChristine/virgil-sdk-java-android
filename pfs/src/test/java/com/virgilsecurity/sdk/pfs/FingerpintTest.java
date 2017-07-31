@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,75 +27,36 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.exceptions;
+package com.virgilsecurity.sdk.pfs;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+
+import org.junit.Test;
 
 /**
- * Represents errors occurred during interaction with SDK components.
- *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
+public class FingerpintTest {
 
-    private static final long serialVersionUID = -8369792754821656857L;
-
-    private int code;
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     */
-    public VirgilException() {
+    @Test
+    public void calculateFingerprint() {
+        assertEquals("95767 63932 18392 87777 58010 79361 43185 89666 69268 33576 75875 36436",
+                Fingerpint.calculateFingerprint(Arrays.asList("b", "c", "a")));
     }
 
-    /**
-     * Create new instance of {@link VirgilException}.
-     * 
-     * @param code
-     *            the error code.
-     */
-    public VirgilException(int code) {
-        this.code = code;
+    @Test
+    public void calculateFingerprint_null() {
+        assertEquals("84740 44638 53204 49687 48335 51221 34727 50906 23944 90052 35753 17922",
+                Fingerpint.calculateFingerprint(null));
     }
 
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param message
-     *            the detail message.
-     */
-    public VirgilException(String message) {
-        super(message);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param message
-     *            the detail message.
-     * @param code
-     *            the error code.
-     */
-    public VirgilException(int code, String message) {
-        super(message);
-        this.code = code;
-    }
-
-    /**
-     * Create new instance of {@link VirgilException}.
-     * 
-     * @param message
-     * @param cause
-     */
-    public VirgilException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * @return the code
-     */
-    public int getCode() {
-        return code;
+    @Test
+    public void calculateFingerprint_empty() {
+        assertEquals("84740 44638 53204 49687 48335 51221 34727 50906 23944 90052 35753 17922",
+                Fingerpint.calculateFingerprint(null));
     }
 
 }

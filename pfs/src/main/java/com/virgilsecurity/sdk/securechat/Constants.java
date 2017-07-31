@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,75 +27,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.exceptions;
+package com.virgilsecurity.sdk.securechat;
 
 /**
- * Represents errors occurred during interaction with SDK components.
- *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
-
-    private static final long serialVersionUID = -8369792754821656857L;
-
-    private int code;
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     */
-    public VirgilException() {
-    }
-
-    /**
-     * Create new instance of {@link VirgilException}.
-     * 
-     * @param code
-     *            the error code.
-     */
-    public VirgilException(int code) {
-        this.code = code;
-    }
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param message
-     *            the detail message.
-     */
-    public VirgilException(String message) {
-        super(message);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param message
-     *            the detail message.
-     * @param code
-     *            the error code.
-     */
-    public VirgilException(int code, String message) {
-        super(message);
-        this.code = code;
-    }
-
-    /**
-     * Create new instance of {@link VirgilException}.
-     * 
-     * @param message
-     * @param cause
-     */
-    public VirgilException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * @return the code
-     */
-    public int getCode() {
-        return code;
+public interface Constants {
+    
+    public interface Errors {
+        int LTC_VALIDATION_FAILED   = 0x00001;
+        int OTC_VALIDATION_FAILED   = 0x00002;
+        int CORRUPTED_SAVED_SESSION = 0x00003;
     }
 
 }

@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilException;
 import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.crypto.KeyPair;
@@ -103,12 +104,14 @@ public class SecureChat {
         validator.addVerifier(identityCardId, identityPublicKeyData);
 
         if (!validator.validate(cardsSet.getLongTermCard())) {
-            throw new VirgilException("Responder LongTerm card validation failed.");
+            throw new CardValidationException(Constants.Errors.LTC_VALIDATION_FAILED,
+                    "Responder LongTerm card validation failed.");
         }
 
         if (cardsSet.getOneTimeCard() != null) {
             if (!validator.validate(cardsSet.getOneTimeCard())) {
-                throw new VirgilException("Responder OneTime card validation failed.");
+                throw new CardValidationException(Constants.Errors.OTC_VALIDATION_FAILED,
+                        "Responder OneTime card validation failed.");
             }
         }
 

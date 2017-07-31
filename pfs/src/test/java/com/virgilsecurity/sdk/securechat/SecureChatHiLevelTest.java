@@ -60,7 +60,6 @@ import com.virgilsecurity.sdk.pfs.VirgilPFSClientContext;
 import com.virgilsecurity.sdk.securechat.impl.DefaultUserDataStorage;
 import com.virgilsecurity.sdk.securechat.utils.SessionStateResolver;
 import com.virgilsecurity.sdk.storage.DefaultKeyStorage;
-import com.virgilsecurity.sdk.storage.VirgilKeyStorage;
 
 /**
  * @author Andrii Iakovenko

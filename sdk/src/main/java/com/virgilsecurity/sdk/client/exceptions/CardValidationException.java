@@ -58,6 +58,31 @@ public class CardValidationException extends VirgilException {
     }
 
     /**
+     * Create a new instance of {@code CardValidationException}
+     *
+     * @param message
+     *            the message.
+     * @param invalidCards
+     *            the list of invalid cards.
+     */
+    public CardValidationException(String message, List<CardModel> invalidCards) {
+        super(message);
+        this.invalidCards = new ArrayList<>(invalidCards);
+    }
+
+    /**
+     * Create new instance of {@link CardValidationException}.
+     * 
+     * @param code
+     *            the error code.
+     * @param message
+     *            the message.
+     */
+    public CardValidationException(int code, String message) {
+        super(code, message);
+    }
+
+    /**
      * Gets the invalid cards.
      * 
      * @return the invalidCards
