@@ -49,13 +49,13 @@ public class FingerpintTest {
 
     @Test
     public void calculateFingerprint_null() {
-        assertEquals("84740 44638 53204 49687 48335 51221 34727 50906 23944 90052 35753 17922",
+        assertEquals("77280 94838 05109 76792 79810 36961 01962 79001 88169 95517 85123 91127",
                 Fingerpint.calculateFingerprint(null));
     }
 
     @Test
     public void calculateFingerprint_empty() {
-        assertEquals("84740 44638 53204 49687 48335 51221 34727 50906 23944 90052 35753 17922",
+        assertEquals("77280 94838 05109 76792 79810 36961 01962 79001 88169 95517 85123 91127",
                 Fingerpint.calculateFingerprint(null));
     }
 

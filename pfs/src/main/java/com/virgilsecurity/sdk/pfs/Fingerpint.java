@@ -31,7 +31,10 @@ package com.virgilsecurity.sdk.pfs;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,6 +51,13 @@ public class Fingerpint {
 
     private static final int ITERATIONS = 4096;
 
+    /**
+     * Calculate fingerprint for card identifiers.
+     * 
+     * @param cardsIds
+     *            the card identifiers.
+     * @return the fingerprint as a string.
+     */
     public static String calculateFingerprint(List<String> cardsIds) {
         List<String> sortedCardsIds = new ArrayList<>();
         if (cardsIds != null) {
@@ -83,7 +93,7 @@ public class Fingerpint {
         return hashToStr(previousHash);
     }
 
-    public static String hashToStr(byte[] hash) {
+    private static String hashToStr(byte[] hash) {
         if (hash == null) {
             throw new NullArgumentException("hash");
         }
@@ -94,14 +104,11 @@ public class Fingerpint {
         StringBuilder res = new StringBuilder();
         for (int index = 0; index < hash.length; index += 4) {
             int endIndex = index + 4;
-            int num = 0;
-            for (int i = index; i < endIndex; i++) {
-                num <<= 8;
-                num |= (hash[i] & 0xFF);
-                System.out.println(Long.toBinaryString(hash[i] & 0xFF));
-            }
-            System.out.println("To: " + Long.toBinaryString(num));
-            num = Integer.remainderUnsigned(num, 100000);
+            ByteBuffer buffer = ByteBuffer.wrap(Arrays.copyOfRange(hash, index, endIndex));
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+            long num = Integer.toUnsignedLong(buffer.getInt());
+            num = Long.remainderUnsigned(num, 100000);
             res.append(String.format("%05d ", num));
         }
 
