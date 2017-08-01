@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,84 +27,26 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.exceptions;
+package com.virgilsecurity.sdk.securechat.exceptions;
+
+import com.virgilsecurity.sdk.client.exceptions.VirgilException;
 
 /**
- * Represents errors occurred during interaction with SDK components.
- *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
+public class StartNewSessionException extends VirgilException {
 
-    private static final long serialVersionUID = -8369792754821656857L;
-
-    private int code;
+    private static final long serialVersionUID = -8172887972476553536L;
 
     /**
-     * Create a new instance of {@code VirgilException}
-     *
-     */
-    public VirgilException() {
-    }
-
-    /**
-     * Create new instance of {@link VirgilException}.
+     * Create new instance of {@link StartNewSessionException}.
      * 
      * @param code
-     *            the error code.
-     */
-    public VirgilException(int code) {
-        this.code = code;
-    }
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
      * @param message
-     *            the detail message.
      */
-    public VirgilException(String message) {
-        super(message);
-    }
-
-    /**
-     * Create new instance of {@link VirgilException}.
-     * @param cause
-     */
-    public VirgilException(Throwable cause) {
-        super(cause);
-        // TODO Auto-generated constructor stub
-    }
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param message
-     *            the detail message.
-     * @param code
-     *            the error code.
-     */
-    public VirgilException(int code, String message) {
-        super(message);
-        this.code = code;
-    }
-
-    /**
-     * Create new instance of {@link VirgilException}.
-     * 
-     * @param message
-     * @param cause
-     */
-    public VirgilException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * @return the code
-     */
-    public int getCode() {
-        return code;
+    public StartNewSessionException(int code, String message) {
+        super(code, message);
     }
 
 }

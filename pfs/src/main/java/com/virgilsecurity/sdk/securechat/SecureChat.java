@@ -50,6 +50,10 @@ import com.virgilsecurity.sdk.pfs.EphemeralCardValidator;
 import com.virgilsecurity.sdk.pfs.VirgilPFSClient;
 import com.virgilsecurity.sdk.pfs.model.RecipientCardsSet;
 import com.virgilsecurity.sdk.pfs.model.response.OtcCountResponse;
+import com.virgilsecurity.sdk.securechat.exceptions.CorruptedSavedSessionException;
+import com.virgilsecurity.sdk.securechat.exceptions.RemoveSessionException;
+import com.virgilsecurity.sdk.securechat.exceptions.SessionCheckException;
+import com.virgilsecurity.sdk.securechat.exceptions.StartNewSessionException;
 import com.virgilsecurity.sdk.securechat.model.InitiationMessage;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
 import com.virgilsecurity.sdk.securechat.model.Message;
@@ -138,21 +142,20 @@ public class SecureChat {
         SessionState sessionState = null;
         try {
             sessionState = this.sessionHelper.getSessionState(card.getId());
+        } catch (CorruptedSavedSessionException e) {
+            throw e;
         } catch (Exception e) {
-            throw new VirgilException("Error checking for existing session.", e);
+            throw new SessionCheckException("Error checking for existing session.", e);
         }
         // If we have existing session
         if (sessionState != null) {
             // If session is not expired - return error
             if (!this.isSessionStateExpired(new Date(), sessionState)) {
-                throw new VirgilException("Found active session for given recipient. Try to loadUpSession.");
+                throw new StartNewSessionException(Constants.Errors.ACTIVE_SESSION_EXISTS,
+                        "Found active session for given recipient. Try to loadUpSession.");
             }
             // If session is expired, just remove old session and create new one
-            try {
-                this.removeSession(card.getId());
-            } catch (Exception e) {
-                throw new VirgilException("Error removing expired session while creating new.", e);
-            }
+            this.removeSession(card.getId());
         }
 
         // Get recipient's credentials
@@ -284,13 +287,17 @@ public class SecureChat {
     }
 
     public void removeSession(String cardId) {
-        SessionState sessionState = this.sessionHelper.getSessionState(cardId);
-        if (sessionState == null) {
-            // Session was not found.
-            this.removeSessionKeys(cardId);
-        } else {
-            this.removeSessionKeys(sessionState);
-            this.sessionHelper.removeSessionsStates(Arrays.asList(cardId));
+        try {
+            SessionState sessionState = this.sessionHelper.getSessionState(cardId);
+            if (sessionState == null) {
+                // Session was not found.
+                this.removeSessionKeys(cardId);
+            } else {
+                this.removeSessionKeys(sessionState);
+                this.sessionHelper.removeSessionsStates(Arrays.asList(cardId));
+            }
+        } catch (Exception e) {
+            throw new RemoveSessionException(e);
         }
     }
 
@@ -384,7 +391,7 @@ public class SecureChat {
         return cal.getTime();
     }
 
-    public MessageType getMessageType(String message) {
+    public static MessageType getMessageType(String message) {
         if (SessionStateResolver.isInitiationMessage(message)) {
             return MessageType.INITIAL;
         } else if (SessionStateResolver.isRegularMessage(message)) {

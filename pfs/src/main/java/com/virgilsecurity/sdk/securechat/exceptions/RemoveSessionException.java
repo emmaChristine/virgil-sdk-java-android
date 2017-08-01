@@ -27,20 +27,24 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.securechat;
+package com.virgilsecurity.sdk.securechat.exceptions;
+
+import com.virgilsecurity.sdk.client.exceptions.VirgilException;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public interface Constants {
-    
-    public interface Errors {
-        int LTC_VALIDATION_FAILED   = 0x00001;
-        int OTC_VALIDATION_FAILED   = 0x00002;
-        int CORRUPTED_SAVED_SESSION = 0x00003;
-        int ACTIVE_SESSION_EXISTS   = 0x00004;
-        int REMOVE_EXPIRES_SESSION  = 0x00005;
-    }
+public class RemoveSessionException extends VirgilException {
 
+    private static final long serialVersionUID = -2910193987838983769L;
+
+    /**
+     * Create new instance of {@link RemoveSessionException}.
+     * 
+     * @param cause
+     */
+    public RemoveSessionException(Throwable cause) {
+        super("Error removing session", cause);
+    }
 }

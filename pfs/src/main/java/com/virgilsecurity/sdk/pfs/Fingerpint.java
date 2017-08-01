@@ -104,11 +104,11 @@ public class Fingerpint {
         StringBuilder res = new StringBuilder();
         for (int index = 0; index < hash.length; index += 4) {
             int endIndex = index + 4;
+
             ByteBuffer buffer = ByteBuffer.wrap(Arrays.copyOfRange(hash, index, endIndex));
             buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-            long num = Integer.toUnsignedLong(buffer.getInt());
-            num = Long.remainderUnsigned(num, 100000);
+            long num = buffer.getInt() & 0x00000000ffffffffL;
+            num = num % 100000;
             res.append(String.format("%05d ", num));
         }
 

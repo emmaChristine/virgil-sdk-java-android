@@ -296,7 +296,7 @@ public class SecureChatTest extends BaseIT {
         // Wait until Alice session expire
         long waitTime = aliceSession.getExpirationDate().getTime() - new Date().getTime();
         if (waitTime > 0) {
-            Thread.sleep(waitTime);
+            Thread.sleep(waitTime + 3000);
         }
         
         assertTrue("Alice session should be expired at the moment", aliceSession.isExpired());
