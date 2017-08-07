@@ -32,6 +32,7 @@ package com.virgilsecurity.sdk.securechat;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -39,6 +40,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -58,7 +60,9 @@ import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.device.DefaultDeviceManager;
 import com.virgilsecurity.sdk.pfs.BaseIT;
+import com.virgilsecurity.sdk.pfs.VirgilPFSClient;
 import com.virgilsecurity.sdk.pfs.VirgilPFSClientContext;
+import com.virgilsecurity.sdk.pfs.model.RecipientCardsSet;
 import com.virgilsecurity.sdk.securechat.impl.DefaultUserDataStorage;
 import com.virgilsecurity.sdk.securechat.utils.SessionStateResolver;
 import com.virgilsecurity.sdk.storage.DefaultKeyStorage;
@@ -72,6 +76,7 @@ public class SecureChatTest extends BaseIT {
     private static final String USERNAME_IDENTITY_TYPE = "username";
     private Crypto crypto;
     private VirgilClient client;
+    private VirgilPFSClient pfsClient;
     private RequestSigner requestSigner;
     private PrivateKey appKey;
 
@@ -89,6 +94,8 @@ public class SecureChatTest extends BaseIT {
 
     private SecureChat aliceChat;
     private SecureChat bobChat;
+
+    private int numberOfCards;
 
     @Before
     public void setUp() throws MalformedURLException {
@@ -115,7 +122,10 @@ public class SecureChatTest extends BaseIT {
             ctx.setEphemeralServiceURL(new URL(url));
         }
 
+        this.numberOfCards = 5;
+
         client = new VirgilClient(ctx);
+        pfsClient = new VirgilPFSClient(ctx);
         requestSigner = new RequestSigner(crypto);
 
         appKey = crypto.importPrivateKey(APP_PRIVATE_KEY.getBytes(), APP_PRIVATE_KEY_PASSWORD);
@@ -145,8 +155,8 @@ public class SecureChatTest extends BaseIT {
 
     @Test
     public void aliceToBobFlow() {
-        aliceChat.initialize();
-        bobChat.initialize();
+        aliceChat.rotateKeys(this.numberOfCards);
+        bobChat.rotateKeys(this.numberOfCards);
 
         SecureSession aliceSession = aliceChat.activeSession(bobCard.getId());
         assertNull("No active session yet", aliceSession);
@@ -255,18 +265,40 @@ public class SecureChatTest extends BaseIT {
         assertNotNull(bobSession);
         assertThat("Alice is initiator", bobSession, instanceOf(SecureSessionResponder.class));
 
-        /** Expire Alices's session */
+        /** Expire Alices's session. See expire_alice_session */
 
-        /** Expire Bob's session */
+        /** Expire Bob's session. See expire_bob_session */
 
-        /** Expire long term card */
+        /** Expire long term card. See expire_ltc */
+
+        /** Force weak session */
+
+        /** Start 2 separate responder sessions */
+
+        /** Start 2 separate initiator sessions */
+
+        /** Remove active session */
+
+        /** Recreate removed active session */
+
+        /** Restart invalid session */
+
+        /** Secure chat double initialization */
+
+        /** Secure session time expiration */
+
+        /** Recreate expired session */
+
+        /** Setup session check message type */
+
+        /** Gentle reset */
     }
-    
+
     @Test
     public void expire_alice_session() throws InterruptedException {
         aliceChatContext.setSessionTtl(10);
-        aliceChat.initialize();
-        bobChat.initialize();
+        aliceChat.rotateKeys(this.numberOfCards);
+        bobChat.rotateKeys(this.numberOfCards);
 
         SecureSession aliceSession = aliceChat.activeSession(bobCard.getId());
         assertNull("No active session yet", aliceSession);
@@ -292,15 +324,15 @@ public class SecureChatTest extends BaseIT {
         assertFalse("Identity card should be created", bobCards.isEmpty());
         String decryptedFirstMessage = bobSession.decrypt(encryptedFirstMessage);
         assertEquals("Message should be decrypted properly", firstMessage, decryptedFirstMessage);
-        
+
         // Wait until Alice session expire
         long waitTime = aliceSession.getExpirationDate().getTime() - new Date().getTime();
         if (waitTime > 0) {
             Thread.sleep(waitTime + 3000);
         }
-        
+
         assertTrue("Alice session should be expired at the moment", aliceSession.isExpired());
-        
+
         /** Send second message to Bob */
         String message = UUID.randomUUID().toString();
         aliceSession = aliceChat.activeSession(bobCard.getId());
@@ -316,6 +348,165 @@ public class SecureChatTest extends BaseIT {
         String decryptedMessage = bobSession.decrypt(encryptedMessage);
         assertNotNull(decryptedMessage);
         assertEquals("Message should be decrypted properly", message, decryptedMessage);
+    }
+
+    @Test
+    public void expire_bob_session() throws InterruptedException {
+        aliceChat.rotateKeys(this.numberOfCards);
+        bobChatContext.setSessionTtl(10);
+        bobChat.rotateKeys(this.numberOfCards);
+
+        SecureSession aliceSession = aliceChat.activeSession(bobCard.getId());
+        assertNull("No active session yet", aliceSession);
+
+        /** Start new session */
+        aliceSession = aliceChat.startNewSession(bobCard, null);
+        assertNotNull("Security session should be created", aliceSession);
+        assertThat("Alice is initiator", aliceSession, instanceOf(SecureSessionInitiator.class));
+        List<CardModel> aliceCards = client.searchCards(SearchCriteria.byIdentity(aliceIdentity));
+        assertFalse("Identity card should be created", aliceCards.isEmpty());
+
+        /** Send first message to Bob */
+        String firstMessage = UUID.randomUUID().toString();
+        String encryptedFirstMessage = aliceSession.encrypt(firstMessage);
+        assertNotNull(encryptedFirstMessage);
+        assertTrue(SessionStateResolver.isInitiationMessage(encryptedFirstMessage));
+
+        // Bob receives message and create session
+        SecureSession bobSession = bobChat.loadUpSession(aliceCard, encryptedFirstMessage);
+        assertNotNull(bobSession);
+        assertThat("Bob is responder", bobSession, instanceOf(SecureSessionResponder.class));
+        List<CardModel> bobCards = client.searchCards(SearchCriteria.byIdentity(bobIdentity));
+        assertFalse("Identity card should be created", bobCards.isEmpty());
+        String decryptedFirstMessage = bobSession.decrypt(encryptedFirstMessage);
+        assertEquals("Message should be decrypted properly", firstMessage, decryptedFirstMessage);
+
+        // Wait until Bob's session expire
+        long waitTime = bobSession.getExpirationDate().getTime() - new Date().getTime();
+        if (waitTime > 0) {
+            Thread.sleep(waitTime + 3000);
+        }
+
+        assertTrue("Bob session should be expired at the moment", bobSession.isExpired());
+        SecureSession outdatedBobSession = bobChat.activeSession(aliceCard.getId());
+        assertNull("Not active Bob's session to Alice at the moment", outdatedBobSession);
+
+        bobChat.rotateKeys(numberOfCards);
+        // Double rotate helps to check that we removed keys correctly
+        bobChat.rotateKeys(numberOfCards);
+    }
+
+    @Test
+    public void expire_ltc() throws InterruptedException {
+        aliceChat.rotateKeys(this.numberOfCards);
+        bobChatContext.setSessionTtl(10);
+        bobChat.rotateKeys(this.numberOfCards);
+
+        String longTermId1, longTermId2, oneTimeId1, oneTimeId2;
+
+        List<RecipientCardsSet> cardsSet = pfsClient.getRecipientCardsSet(Arrays.asList(bobCard.getId()));
+        assertNotNull(cardsSet);
+        assertEquals(1, cardsSet.size());
+
+        RecipientCardsSet cardSet = cardsSet.get(0);
+        longTermId1 = cardSet.getLongTermCard().getId();
+        assertFalse(com.virgilsecurity.sdk.utils.StringUtils.isBlank(longTermId1));
+
+        oneTimeId1 = cardSet.getOneTimeCard().getId();
+        assertFalse(com.virgilsecurity.sdk.utils.StringUtils.isBlank(oneTimeId1));
+
+        /** Start new session */
+        SecureSession aliceSession = aliceChat.startNewSession(bobCard, null);
+        assertNotNull("Security session should be created", aliceSession);
+        assertThat("Alice is initiator", aliceSession, instanceOf(SecureSessionInitiator.class));
+
+        /** Send first message to Bob */
+        String message = UUID.randomUUID().toString();
+        String encryptedMessage = aliceSession.encrypt(message);
+        assertNotNull(encryptedMessage);
+        assertTrue(SessionStateResolver.isInitiationMessage(encryptedMessage));
+
+        // Bob receives message and create session
+        SecureSession bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage);
+        assertNotNull(bobSession);
+        assertThat("Bob is responder", bobSession, instanceOf(SecureSessionResponder.class));
+        List<CardModel> bobCards = client.searchCards(SearchCriteria.byIdentity(bobIdentity));
+        assertFalse("Identity card should be created", bobCards.isEmpty());
+        String decryptedMessage = bobSession.decrypt(encryptedMessage);
+        assertEquals("Message should be decrypted properly", message, decryptedMessage);
+
+        // Wait until Bob's session expire
+        long waitTime = bobSession.getExpirationDate().getTime() - new Date().getTime();
+        if (waitTime > 0) {
+            Thread.sleep(waitTime + 3000);
+        }
+
+        assertTrue("Bob's session should be expired at the moment", bobSession.isExpired());
+
+        bobChat.rotateKeys(numberOfCards);
+        cardsSet = pfsClient.getRecipientCardsSet(bobCard.getId());
+        assertNotNull(cardsSet);
+        assertEquals(1, cardsSet.size());
+
+        cardSet = cardsSet.get(0);
+        longTermId2 = cardSet.getLongTermCard().getId();
+        assertFalse(com.virgilsecurity.sdk.utils.StringUtils.isBlank(longTermId2));
+
+        oneTimeId2 = cardSet.getOneTimeCard().getId();
+        assertFalse(com.virgilsecurity.sdk.utils.StringUtils.isBlank(longTermId2));
+
+        assertNotEquals(longTermId1, longTermId2);
+        assertNotEquals(oneTimeId1, oneTimeId2);
+
+        message = UUID.randomUUID().toString();
+        encryptedMessage = aliceSession.encrypt(message);
+        bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage);
+        assertNotNull(bobSession);
+        decryptedMessage = bobSession.decrypt(encryptedMessage);
+    }
+
+    @Test
+    public void gentle_reset() throws InterruptedException {
+        aliceChatContext.setSessionTtl(10);
+        aliceChat.rotateKeys(this.numberOfCards);
+
+        bobChatContext.setSessionTtl(10);
+        bobChat.rotateKeys(this.numberOfCards);
+
+        /** Start new session */
+        SecureSession aliceSession = aliceChat.startNewSession(bobCard, null);
+        assertNotNull("Security session should be created", aliceSession);
+        assertThat("Alice is initiator", aliceSession, instanceOf(SecureSessionInitiator.class));
+
+        /** Send message to Bob */
+        String message = UUID.randomUUID().toString();
+        String encryptedMessage1 = aliceSession.encrypt(message);
+        assertNotNull(encryptedMessage1);
+        assertTrue(SessionStateResolver.isInitiationMessage(encryptedMessage1));
+
+        // Bob receives message and create session
+        SecureSession bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage1);
+        assertNotNull(bobSession);
+        assertThat("Bob is responder", bobSession, instanceOf(SecureSessionResponder.class));
+        List<CardModel> bobCards = client.searchCards(SearchCriteria.byIdentity(bobIdentity));
+        assertFalse("Identity card should be created", bobCards.isEmpty());
+        String decryptedMessage = bobSession.decrypt(encryptedMessage1);
+        assertEquals("Message should be decrypted properly", message, decryptedMessage);
+
+        message = UUID.randomUUID().toString();
+        String encryptedMessage2 = aliceSession.encrypt(message);
+        
+        aliceChat.gentleReset();
+        aliceSession = aliceChat.activeSession(bobCard.getId());
+        assertNull(aliceSession);
+        
+        bobChat.gentleReset();
+        
+        bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage1);
+        assertNull(bobSession);
+        
+        bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage2);
+        assertNull(bobSession);
     }
 
     private CardModel publishCard(String identity, KeyPair keyPair) {

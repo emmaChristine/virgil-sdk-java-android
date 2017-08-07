@@ -32,8 +32,10 @@ package com.virgilsecurity.sdk.securechat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -124,6 +126,23 @@ public class SecureChatKeyHelper {
         this.keyStorage = keyStorage;
         this.identityCardId = identityCardId;
         this.longTermKeyTtl = longTermKeyTtl;
+    }
+
+    public void gentleReset() {
+        ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
+        if (serviceInfoEntry == null) {
+            return;
+        }
+        List<String> keyEntryNames = new LinkedList<>();
+        for (ServiceInfoEntry.KeyEntry keyEntry : serviceInfoEntry.getLtcKeys()) {
+            keyEntryNames.add(keyEntry.getKeyName());
+        }
+        keyEntryNames.addAll(serviceInfoEntry.getOtcKeysNames());
+        keyEntryNames.addAll(serviceInfoEntry.getEphKeysNames());
+        for (String keyEntryName : keyEntryNames) {
+            this.removePrivateKey(keyEntryName);
+        }
+        this.keyStorage.delete(this.getServiceInfoName());
     }
 
     public List<String> getAllOtCardsIds() {
@@ -268,6 +287,15 @@ public class SecureChatKeyHelper {
         for (String keyName : allKeysToRemove) {
             this.removePrivateKey(keyName);
         }
+
+        // Update service info entry
+        List<ServiceInfoEntry.KeyEntry> newLtcKeys = filterEntries(serviceInfoEntry.getLtcKeys(), ltKeysToRemove);
+        List<String> newOtcKeyNames = filter(serviceInfoEntry.getOtcKeysNames(), otKeysToRemove);
+        List<String> newEphKeyNames = filter(serviceInfoEntry.getEphKeysNames(), ephKeysToRemove);
+
+        ServiceInfoEntry newServiceInfoEntry = new ServiceInfoEntry(newLtcKeys, newOtcKeyNames, newEphKeyNames);
+
+        this.updateServiceInfoEntry(newServiceInfoEntry);
     }
 
     private String extractCardId(String otKeyEntryName) {
@@ -330,7 +358,7 @@ public class SecureChatKeyHelper {
         return String.format(SERVICE_KEY_NAME, this.identityCardId);
     }
 
-    public void removePrivateKey(String keyEntryName) {
+    private void removePrivateKey(String keyEntryName) {
         if (this.keyStorage.exists(keyEntryName)) {
             this.keyStorage.delete(keyEntryName);
         }
@@ -338,12 +366,32 @@ public class SecureChatKeyHelper {
 
     public void removeEphPrivateKey(String name) {
         String keyEntryName = this.getPrivateKeyEntryName(this.getEphPrivateKeyName(name));
+        this.removeEphPrivateKeyByEntryName(keyEntryName);
+    }
+
+    public void removeEphPrivateKeyByEntryName(String keyEntryName) {
+        ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
+        if (serviceInfoEntry == null) {
+            throw new VirgilException("Trying to remove keys, but no service entry was found.");
+        }
         this.removePrivateKey(keyEntryName);
+        ServiceInfoEntry newServiceInfo = new ServiceInfoEntry(serviceInfoEntry.getLtcKeys(),
+                serviceInfoEntry.getOtcKeysNames(),
+                filter(serviceInfoEntry.getEphKeysNames(), Arrays.asList(keyEntryName)));
+        this.updateServiceInfoEntry(newServiceInfo);
     }
 
     public void removeOneTimePrivateKey(String name) {
+        ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
+        if (serviceInfoEntry == null) {
+            throw new VirgilException("Trying to remove keys, but no service entry was found.");
+        }
         String keyEntryName = this.getPrivateKeyEntryName(this.getOtPrivateKeyName(name));
         this.removePrivateKey(keyEntryName);
+        ServiceInfoEntry newServiceInfo = new ServiceInfoEntry(serviceInfoEntry.getLtcKeys(),
+                filter(serviceInfoEntry.getOtcKeysNames(), Arrays.asList(keyEntryName)),
+                serviceInfoEntry.getEphKeysNames());
+        this.updateServiceInfoEntry(newServiceInfo);
     }
 
     public boolean isEphKeyExists(String ephName) {
@@ -394,6 +442,23 @@ public class SecureChatKeyHelper {
         com.virgilsecurity.sdk.storage.KeyEntry keyEntry = new VirgilKeyEntry(entryName, data);
 
         this.keyStorage.store(keyEntry);
+    }
+
+    private List<ServiceInfoEntry.KeyEntry> filterEntries(Collection<ServiceInfoEntry.KeyEntry> entries,
+            Collection<String> excludeNames) {
+        List<ServiceInfoEntry.KeyEntry> result = new ArrayList<>();
+        for (ServiceInfoEntry.KeyEntry entry : entries) {
+            if (!excludeNames.contains(entry.getKeyName())) {
+                result.add(entry);
+            }
+        }
+        return result;
+    }
+
+    private List<String> filter(Collection<String> keyNames, Collection<String> excludeNames) {
+        List<String> result = new ArrayList<>(keyNames);
+        result.removeAll(excludeNames);
+        return result;
     }
 
 }

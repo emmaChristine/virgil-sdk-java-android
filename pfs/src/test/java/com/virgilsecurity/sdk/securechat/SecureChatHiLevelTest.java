@@ -155,8 +155,8 @@ public class SecureChatHiLevelTest extends BaseIT {
 
     @Test
     public void aliceToBobFlow() {
-        aliceChat.initialize();
-        bobChat.initialize();
+        aliceChat.rotateKeys(5);
+        bobChat.rotateKeys(5);
 
         SecureSession aliceSession = aliceChat.activeSession(bobCard.getId());
         assertNull("No active session yet", aliceSession);

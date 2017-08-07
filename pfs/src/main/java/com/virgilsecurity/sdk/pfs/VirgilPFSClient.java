@@ -148,6 +148,10 @@ public class VirgilPFSClient extends ClientBase {
         }
     }
 
+    public List<RecipientCardsSet> getRecipientCardsSet(String cardsIds) {
+        return getRecipientCardsSet(Arrays.asList(cardsIds));
+    }
+    
     public List<RecipientCardsSet> getRecipientCardsSet(List<String> cardsIds) {
         try {
             URL url = new URL(getContext().getEphemeralServiceURL(), "/v1/recipient/actions/search-by-ids");

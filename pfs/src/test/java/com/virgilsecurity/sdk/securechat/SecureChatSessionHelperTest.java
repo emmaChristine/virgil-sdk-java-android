@@ -31,6 +31,7 @@ package com.virgilsecurity.sdk.securechat;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
@@ -105,6 +106,28 @@ public class SecureChatSessionHelperTest {
     }
 
     @Test
+    public void getCardId_null() {
+        assertNull(SecureChatSessionHelper.getCardId(null));
+    }
+
+    @Test
+    public void getCardId_empty() {
+        assertNull(SecureChatSessionHelper.getCardId(""));
+    }
+
+    @Test
+    public void getCardId_wrongPattern() {
+        assertNull(SecureChatSessionHelper.getCardId(CARD_ID));
+    }
+
+    @Test
+    public void getCardId() {
+        String cardId = UUID.randomUUID().toString();
+        assertEquals(cardId, SecureChatSessionHelper.getCardId("VIRGIL.SESSION." + cardId));
+        assertEquals(CARD_ID, SecureChatSessionHelper.getCardId(SecureChatSessionHelper.getSessionName(CARD_ID)));
+    }
+
+    @Test
     @Ignore
     public void getEphKeys() {
     }
@@ -121,28 +144,24 @@ public class SecureChatSessionHelperTest {
 
     @Test
     public void getSessionName() {
-        SecureChatSessionHelper helper = new SecureChatSessionHelper(CARD_ID, userDataStorage);
-        assertEquals("VIRGIL.SESSION." + CARD_ID, helper.getSessionName(CARD_ID));
+        assertEquals("VIRGIL.SESSION." + CARD_ID, SecureChatSessionHelper.getSessionName(CARD_ID));
     }
 
     @Test
     public void getSessionName_nullCardId() {
-        SecureChatSessionHelper helper = new SecureChatSessionHelper(CARD_ID, userDataStorage);
-        assertEquals("VIRGIL.SESSION.null", helper.getSessionName(null));
+        assertEquals("VIRGIL.SESSION.null", SecureChatSessionHelper.getSessionName(null));
     }
 
     @Test
     public void isSessionName() {
-        SecureChatSessionHelper helper = new SecureChatSessionHelper(CARD_ID, userDataStorage);
-        assertTrue(helper.isSessionName("VIRGIL.SESSION." + CARD_ID));
-        assertTrue(helper.isSessionName("VIRGIL.SESSION.null"));
-        assertFalse(helper.isSessionName("VIRGIL.SESSION."));
+        assertTrue(SecureChatSessionHelper.isSessionName("VIRGIL.SESSION." + CARD_ID));
+        assertTrue(SecureChatSessionHelper.isSessionName("VIRGIL.SESSION.null"));
+        assertFalse(SecureChatSessionHelper.isSessionName("VIRGIL.SESSION."));
     }
 
     @Test
     public void isSessionName_nullName() {
-        SecureChatSessionHelper helper = new SecureChatSessionHelper(CARD_ID, userDataStorage);
-        assertFalse(helper.isSessionName(null));
+        assertFalse(SecureChatSessionHelper.isSessionName(null));
     }
 
     @Test

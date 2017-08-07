@@ -45,6 +45,12 @@ public class FingerpintTest {
     public void calculateFingerprint() {
         assertEquals("95767 63932 18392 87777 58010 79361 43185 89666 69268 33576 75875 36436",
                 Fingerpint.calculateFingerprint(Arrays.asList("b", "c", "a")));
+
+        assertEquals("30040 86431 59747 52666 37436 94430 71043 18723 34794 81546 12838 92218",
+                Fingerpint.calculateFingerprint(
+                        Arrays.asList("7053f3b4ac89480f3a4c43c1fdb0f09b8154236175b7f55aac9b920d10a4adc7",
+                                "78e75f23163ae7d9568e992b73d77c91d868dbdf91099144bb019859364f698c",
+                                "ebbc9ebcc76c6dd1dd4f44e66b8166e57f630d28b5052a56e651dda033f3dc9d")));
     }
 
     @Test

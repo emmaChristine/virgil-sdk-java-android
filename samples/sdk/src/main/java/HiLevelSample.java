@@ -50,6 +50,7 @@ import com.virgilsecurity.sdk.highlevel.VirgilBuffer;
 import com.virgilsecurity.sdk.highlevel.VirgilCard;
 import com.virgilsecurity.sdk.highlevel.VirgilCards;
 import com.virgilsecurity.sdk.highlevel.VirgilKey;
+import com.virgilsecurity.sdk.storage.DefaultKeyStorage;
 
 /**
  * @author Andrii Iakovenko
@@ -86,7 +87,9 @@ public class HiLevelSample {
 
     private static void globalCards() throws IOException {
         /** Initialize high-level SDK with only application access token */
-        VirgilApi virgil = new VirgilApiImpl(ACCESS_TOKEN);
+        VirgilApiContext ctx = new VirgilApiContext(ACCESS_TOKEN);
+        ctx.setKeyStorage(/* keystorage you set for secure chat context */ new DefaultKeyStorage());
+        VirgilApi virgil = new VirgilApiImpl(ctx);
 
         /** Register Global Virgil Card */
         VirgilKey aliceKey = virgil.getKeys().generate().save(ALICE_KEY_NAME, ALICE_KEY_PWD);

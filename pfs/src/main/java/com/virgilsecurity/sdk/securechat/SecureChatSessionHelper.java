@@ -33,6 +33,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -70,11 +72,11 @@ public class SecureChatSessionHelper {
         this.cardId = cardId;
     }
 
-    public String getSessionName(String cardId) {
+    public static String getSessionName(String cardId) {
         return String.format(DEFAULT_SESSION_NAME, cardId);
     }
 
-    public boolean isSessionName(String name) {
+    public static boolean isSessionName(String name) {
         return name != null && name.length() > DEFAULT_SESSION_NAME_SEARCH_PATTERN.length()
                 && name.startsWith(DEFAULT_SESSION_NAME_SEARCH_PATTERN);
     }
@@ -95,7 +97,7 @@ public class SecureChatSessionHelper {
 
     public void saveSessionState(SessionState sessionState, String cardId) {
         String json = GsonUtils.getGson().toJson(sessionState);
-        userDefaults.addData(this.getSuiteName(), this.getSessionName(cardId), json);
+        userDefaults.addData(this.getSuiteName(), getSessionName(cardId), json);
     }
 
     public void removeSessionState(String cardId) {
@@ -103,14 +105,22 @@ public class SecureChatSessionHelper {
     }
 
     private void removeSessionState(String cardId, boolean synchronize) {
-        userDefaults.removeData(this.getSuiteName(), this.getSessionName(cardId));
+        userDefaults.removeData(this.getSuiteName(), getSessionName(cardId));
         if (synchronize) {
             userDefaults.synchronize();
         }
     }
 
     public void removeSessionsStates(Collection<String> recipientCardIds) {
+        List<String> names = new LinkedList<>();
         for (String cardId : recipientCardIds) {
+            names.add(getSessionName(cardId));
+        }
+        removeSessionsStatesByNames(names);
+    }
+
+    public void removeSessionsStatesByNames(Collection<String> names) {
+        for (String cardId : names) {
             this.removeSessionState(cardId, false);
         }
         userDefaults.synchronize();
@@ -128,7 +138,7 @@ public class SecureChatSessionHelper {
     }
 
     public SessionState getSessionState(String cardId) {
-        String json = userDefaults.getData(this.getSuiteName(), this.getSessionName(cardId));
+        String json = userDefaults.getData(this.getSuiteName(), getSessionName(cardId));
 
         if (json == null) {
             return null;
@@ -170,6 +180,18 @@ public class SecureChatSessionHelper {
             result.put(entry.getKey(), sessionState);
         }
         return result;
+    }
+
+    public static String getCardId(String sessionName) {
+        if (sessionName == null) {
+            return null;
+        }
+        if (!sessionName.startsWith(DEFAULT_SESSION_NAME_SEARCH_PATTERN)) {
+            return null;
+        }
+
+        String cardId = sessionName.replaceFirst(DEFAULT_SESSION_NAME_SEARCH_PATTERN, "");
+        return cardId;
     }
 
     public Set<String> getEphKeys() {

@@ -187,6 +187,22 @@ public class SecureChat {
         return secureSession;
     }
 
+    public void gentleReset() {
+        Map<String, SessionState> sessionStates = this.sessionHelper.getAllSessions();
+
+        for (Entry<String, SessionState> sessionState : sessionStates.entrySet()) {
+            String cardId = SecureChatSessionHelper.getCardId(sessionState.getKey());
+            if (cardId != null) {
+                this.removeSession(cardId);
+            }
+        }
+        this.removeAllKeys();
+    }
+
+    private void removeAllKeys() {
+        this.keyHelper.gentleReset();
+    }
+
     private boolean isSessionStateExpired(Date date, SessionState sessionState) {
         return (date.after(sessionState.getExpirationDate()));
     }
@@ -321,7 +337,7 @@ public class SecureChat {
     }
 
     private void removeSessionKeys(InitiatorSessionState sessionState) {
-        this.keyHelper.removePrivateKey(sessionState.getEphKeyName());
+        this.keyHelper.removeEphPrivateKey(sessionState.getEphKeyName());
     }
 
     private void removeSessionKeys(ResponderSessionState sessionState) {
@@ -346,7 +362,7 @@ public class SecureChat {
             }
         }
 
-        this.sessionHelper.removeSessionsStates(expiredSessionsStates);
+        this.sessionHelper.removeSessionsStatesByNames(expiredSessionsStates);
     }
 
     private void cleanup() {
@@ -367,14 +383,14 @@ public class SecureChat {
         this.keyHelper.removeOldKeys(relevantEphKeys, relevantLtCards, relOtCards);
     }
 
-    public void initialize() {
+    public void rotateKeys(int desiredNumberOfCards) {
         this.cleanup();
 
         // Check ephemeral cards status
         OtcCountResponse status = this.client.getOtcCount(this.config.getIdentityCard().getId());
 
         // Not enough cards, add more
-        int numberOfMissingCards = Math.max(this.config.getNumberOfActiveOneTimeCards() - status.getActive(), 0);
+        int numberOfMissingCards = Math.max(desiredNumberOfCards - status.getActive(), 0);
         this.addMissingCards(numberOfMissingCards);
     }
 

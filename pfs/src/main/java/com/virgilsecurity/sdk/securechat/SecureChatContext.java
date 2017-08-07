@@ -49,7 +49,6 @@ public class SecureChatContext {
     private VirgilPFSClientContext context;
     private DeviceManager deviceManager;
     private UserDataStorage userDefaults;
-    private int numberOfActiveOneTimeCards;
 
     /* Long term key time to live in seconds */
     private int longTermKeysTtl;
@@ -61,7 +60,6 @@ public class SecureChatContext {
      * Create new instance of {@link SecureChatContext}.
      */
     public SecureChatContext() {
-        numberOfActiveOneTimeCards = 100;
         longTermKeysTtl = 24 * 60 * 60; // One day
         sessionTtl = 7 * 24 * 60 * 60; // One week
     }
@@ -178,21 +176,6 @@ public class SecureChatContext {
      */
     public void setDeviceManager(DeviceManager deviceManager) {
         this.deviceManager = deviceManager;
-    }
-
-    /**
-     * @return the numberOfActiveOneTimeCards
-     */
-    public int getNumberOfActiveOneTimeCards() {
-        return numberOfActiveOneTimeCards;
-    }
-
-    /**
-     * @param numberOfActiveOneTimeCards
-     *            the numberOfActiveOneTimeCards to set
-     */
-    public void setNumberOfActiveOneTimeCards(int numberOfActiveOneTimeCards) {
-        this.numberOfActiveOneTimeCards = numberOfActiveOneTimeCards;
     }
 
     /**
