@@ -29,13 +29,15 @@
  */
 package com.virgilsecurity.sdk.client.exceptions;
 
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
+
 /**
  * Represents errors occurred during interaction with SDK components.
  *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
+public class VirgilClientException extends VirgilException {
 
     private static final long serialVersionUID = -8369792754821656857L;
 
@@ -45,16 +47,16 @@ public class VirgilException extends RuntimeException {
      * Create a new instance of {@code VirgilException}
      *
      */
-    public VirgilException() {
+    public VirgilClientException() {
     }
 
     /**
-     * Create new instance of {@link VirgilException}.
+     * Create new instance of {@link VirgilClientException}.
      * 
      * @param code
      *            the error code.
      */
-    public VirgilException(int code) {
+    public VirgilClientException(int code) {
         this.code = code;
     }
 
@@ -64,15 +66,15 @@ public class VirgilException extends RuntimeException {
      * @param message
      *            the detail message.
      */
-    public VirgilException(String message) {
+    public VirgilClientException(String message) {
         super(message);
     }
 
     /**
-     * Create new instance of {@link VirgilException}.
+     * Create new instance of {@link VirgilClientException}.
      * @param cause
      */
-    public VirgilException(Throwable cause) {
+    public VirgilClientException(Throwable cause) {
         super(cause);
         // TODO Auto-generated constructor stub
     }
@@ -85,18 +87,18 @@ public class VirgilException extends RuntimeException {
      * @param code
      *            the error code.
      */
-    public VirgilException(int code, String message) {
+    public VirgilClientException(int code, String message) {
         super(message);
         this.code = code;
     }
 
     /**
-     * Create new instance of {@link VirgilException}.
+     * Create new instance of {@link VirgilClientException}.
      * 
      * @param message
      * @param cause
      */
-    public VirgilException(String message, Throwable cause) {
+    public VirgilClientException(String message, Throwable cause) {
         super(message, cause);
     }
 

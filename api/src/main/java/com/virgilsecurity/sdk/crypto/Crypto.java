@@ -74,8 +74,9 @@ public interface Crypto {
      * @param privateKey
      *            the recipients private key.
      * @return the decrypted data as byte array.
+     * @throws DecryptionException
      */
-    byte[] decrypt(byte[] data, PrivateKey privateKey);
+    byte[] decrypt(byte[] data, PrivateKey privateKey) throws DecryptionException;
 
     /**
      * Decrypt stream data with private key.
@@ -91,7 +92,7 @@ public interface Crypto {
      * @see PublicKey
      * @see PrivateKey
      */
-    void decrypt(InputStream inputStream, OutputStream outputStream, PrivateKey privateKey);
+    void decrypt(InputStream inputStream, OutputStream outputStream, PrivateKey privateKey) throws DecryptionException;
 
     /**
      * Encrypt byte array for single recipient.
@@ -101,10 +102,11 @@ public interface Crypto {
      * @param recipient
      *            the recipient's public key.
      * @return the encrypted data as byte array.
+     * @throws EncryptionException
      * 
      * @see PublicKey
      */
-    byte[] encrypt(byte[] data, PublicKey recipient);
+    byte[] encrypt(byte[] data, PublicKey recipient) throws EncryptionException;
 
     /**
      * Encrypt byte array with public key set.
@@ -114,10 +116,11 @@ public interface Crypto {
      * @param recipients
      *            the recipients public key set.
      * @return the encrypted data as byte array.
+     * @throws EncryptionException
      * 
      * @see PublicKey
      */
-    byte[] encrypt(byte[] data, PublicKey[] recipients);
+    byte[] encrypt(byte[] data, PublicKey[] recipients) throws EncryptionException;
 
     /**
      * Encrypt stream data with public key.
@@ -131,7 +134,7 @@ public interface Crypto {
      * @throws EncryptionException
      *             if encryption failed.
      */
-    void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey recipient);
+    void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey recipient) throws EncryptionException;
 
     /**
      * Encrypt stream data with public key set.
@@ -145,7 +148,7 @@ public interface Crypto {
      * @throws EncryptionException
      *             if encryption failed.
      */
-    void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey[] recipients);
+    void encrypt(InputStream inputStream, OutputStream outputStream, PublicKey[] recipients) throws EncryptionException;
 
     /**
      * Export private key as byte array.
@@ -214,7 +217,7 @@ public interface Crypto {
      * 
      * @see PrivateKey
      */
-    PrivateKey importPrivateKey(byte[] keyData);
+    PrivateKey importPrivateKey(byte[] keyData) throws CryptoException;
 
     /**
      * Import private key from byte array.
@@ -229,7 +232,7 @@ public interface Crypto {
      * 
      * @see PrivateKey
      */
-    PrivateKey importPrivateKey(byte[] keyData, String password);
+    PrivateKey importPrivateKey(byte[] keyData, String password) throws CryptoException;
 
     /**
      * Import public key from byte array.
@@ -268,7 +271,7 @@ public interface Crypto {
      * 
      * @see PrivateKey
      */
-    byte[] sign(InputStream inputStream, PrivateKey privateKey);
+    byte[] sign(InputStream inputStream, PrivateKey privateKey) throws SigningException;
 
     /**
      * Verify byte array with signature.
@@ -283,7 +286,7 @@ public interface Crypto {
      * @throws VerificationException
      *             if data couldn't be verified.
      */
-    boolean verify(byte[] data, byte[] signature, PublicKey signer);
+    boolean verify(byte[] data, byte[] signature, PublicKey signer) throws VerificationException;
 
     /**
      * Verify stream data with signature.
@@ -298,7 +301,7 @@ public interface Crypto {
      * @throws VerificationException
      *             if data couldn't be verified.
      */
-    boolean verify(InputStream inputStream, byte[] signature, PublicKey signer);
+    boolean verify(InputStream inputStream, byte[] signature, PublicKey signer) throws VerificationException;
 
     /**
      * Sign data and encrypt.
@@ -310,8 +313,9 @@ public interface Crypto {
      * @param recipient
      *            the recipient's public key.
      * @return the signed and encrypted data.
+     * @throws CryptoException
      */
-    byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient);
+    byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient) throws CryptoException;
 
     /**
      * Sign data and encrypt.
@@ -323,8 +327,9 @@ public interface Crypto {
      * @param recipients
      *            the recipient public keys.
      * @return the signed and encrypted data.
+     * @throws CryptoException
      */
-    byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients);
+    byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients) throws CryptoException;
 
     /**
      * Decrypt data and verify.
@@ -336,6 +341,7 @@ public interface Crypto {
      * @param publicKey
      *            the public key used for verify.
      * @return the decrypted data.
+     * @throws CryptoException
      */
-    byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey);
+    byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey) throws CryptoException;
 }

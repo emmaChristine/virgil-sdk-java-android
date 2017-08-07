@@ -31,6 +31,7 @@ package com.virgilsecurity.sdk.highlevel;
 
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**
  * Provides credentials for application authentication using AppID and AppKey retrieved from development deshboard.
@@ -58,7 +59,10 @@ public class AppCredentials implements Credentials {
      */
     private String appKeyPassword;
 
-    public PrivateKey getAppKey(Crypto crypto) {
+    /* (non-Javadoc)
+     * @see com.virgilsecurity.sdk.highlevel.Credentials#getAppKey(com.virgilsecurity.sdk.crypto.Crypto)
+     */
+    public PrivateKey getAppKey(Crypto crypto) throws CryptoException {
         PrivateKey key = crypto.importPrivateKey(this.appKey.getBytes(), this.appKeyPassword);
         return key;
     }

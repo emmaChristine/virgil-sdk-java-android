@@ -33,6 +33,8 @@ import java.util.Date;
 
 import com.virgilsecurity.crypto.VirgilPFS;
 import com.virgilsecurity.crypto.VirgilPFSEncryptedMessage;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
+import com.virgilsecurity.sdk.securechat.exceptions.NoSessionException;
 import com.virgilsecurity.sdk.securechat.model.InitiationMessage;
 import com.virgilsecurity.sdk.securechat.model.Message;
 import com.virgilsecurity.sdk.securechat.utils.GsonUtils;
@@ -92,7 +94,7 @@ public abstract class SecureSession {
         return this.isExpired(new Date());
     }
 
-    public String encrypt(String message) {
+    public String encrypt(String message) throws NoSessionException {
         byte[] messageData = ConvertionUtils.toBytes(message);
 
         VirgilPFSEncryptedMessage encryptedMessage = this.pfs.encrypt(messageData);
@@ -136,7 +138,7 @@ public abstract class SecureSession {
         return msg;
     }
 
-    public abstract String decrypt(String encryptedMessage);
+    public abstract String decrypt(String encryptedMessage) throws NoSessionException, VirgilException;
 
     public static class CardEntry {
         private String identifier;

@@ -40,7 +40,7 @@ import com.virgilsecurity.sdk.client.model.CardModel;
  * @author Andrii Iakovenko
  *
  */
-public class CardValidationException extends VirgilException {
+public class CardValidationException extends VirgilClientException {
 
     private static final long serialVersionUID = 8029782256278798813L;
 

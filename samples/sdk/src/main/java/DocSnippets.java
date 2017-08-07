@@ -33,10 +33,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 
+import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsAlreadyExistsException;
 import com.virgilsecurity.sdk.client.model.IdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.highlevel.AppCredentials;
 import com.virgilsecurity.sdk.highlevel.CardVerifierInfo;
 import com.virgilsecurity.sdk.highlevel.EmailConfirmation;
@@ -80,7 +83,7 @@ public class DocSnippets {
         VirgilApi virgil = new VirgilApiImpl(context);
     }
 
-    private void data_decryption() {
+    private void data_decryption() throws VirgilException {
         String ciphertext = "Base64 encoded string";
 
         /** Snippet starts here */
@@ -92,7 +95,7 @@ public class DocSnippets {
         String originalMessage = bobKey.decrypt(ciphertext).toString();
     }
 
-    private void data_encryption() {
+    private void data_encryption() throws VirgilException {
         /** Snippet starts here */
 
         // search for Virgil Cards
@@ -104,7 +107,7 @@ public class DocSnippets {
         String ciphertext = bobCards.encrypt(message).toString(StringEncoding.Base64);
     }
 
-    private void decrypt_verify() {
+    private void decrypt_verify() throws VirgilException {
         String ciphertext = "Base64 encoded string";
 
         /** Snippet starts here */
@@ -119,7 +122,7 @@ public class DocSnippets {
         String originalMessage = bobKey.decryptThenVerify(ciphertext, aliceCard).toString();
     }
 
-    private void encrypting_for_multiple() {
+    private void encrypting_for_multiple() throws VirgilException {
         // search for Cards
         VirgilCards bobCards = virgil.getCards().find("bob");
         // message for encryption
@@ -128,7 +131,7 @@ public class DocSnippets {
         String ciphertext = bobCards.encrypt(message).toString(StringEncoding.Base64);
     }
 
-    private void sign_encrypt() {
+    private void sign_encrypt() throws VirgilException {
         // load a Virgil Key from device storage
         VirgilKey aliceKey = virgil.getKeys().load("[KEY_NAME]", "[OPTIONAL_KEY_PASSWORD]");
 
@@ -154,7 +157,7 @@ public class DocSnippets {
         VirgilBuffer signature = aliceKey.sign(message);
     }
 
-    private void load_key() {
+    private void load_key() throws VirgilException {
         // load Virgil Key
         VirgilKey aliceKey = virgil.getKeys().load("[KEY_NAME]", "[KEY _PASSWORD]");
     }
@@ -174,7 +177,7 @@ public class DocSnippets {
         }
     }
 
-    private void create_key_and_card() {
+    private void create_key_and_card() throws VirgilKeyIsAlreadyExistsException {
         /** Snippet starts here */
 
         // generate a new Virgil Key
@@ -187,7 +190,7 @@ public class DocSnippets {
         VirgilCard aliceCard = virgil.getCards().create("alice", aliceKey);
     }
 
-    private void create_key_and_global_card() {
+    private void create_key_and_global_card() throws VirgilKeyIsAlreadyExistsException {
         /** Snippet starts here */
 
         // generate a Virgil Key
@@ -210,7 +213,7 @@ public class DocSnippets {
         String exportedAliceCard = aliceCard.export();
     }
 
-    private void find_card_by_criteria() {
+    private void find_card_by_criteria() throws VirgilException {
         /** Snippet starts here */
 
         // search for all User's Virgil Cards.
@@ -226,7 +229,7 @@ public class DocSnippets {
         VirgilCard aliceCard = virgil.getCards().get("[ALICE_CARD_ID]");
     }
 
-    private void find_global_card_by_criteria() {
+    private void find_global_card_by_criteria() throws VirgilException {
         /** Snippet starts here */
 
         // search for all Global Virgil Cards
@@ -245,7 +248,7 @@ public class DocSnippets {
         VirgilCard aliceCard = virgil.getCards().importCard(exportedAliceCard);
     }
 
-    private void publish_card() {
+    private void publish_card() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         VirgilCard aliceCard = virgil.getCards().create("alice", aliceKey);
 
@@ -255,7 +258,7 @@ public class DocSnippets {
         virgil.getCards().publish(aliceCard);
     }
 
-    private void revoke_card() {
+    private void revoke_card() throws CryptoException {
         /** Snippet starts here */
 
         // get a Virgil Card by ID
@@ -265,7 +268,7 @@ public class DocSnippets {
         virgil.getCards().revoke(aliceCard);
     }
 
-    private void revoke_global_card() {
+    private void revoke_global_card() throws VirgilException {
         /** Snippet starts here */
 
         // load a Virgil Key from storage
@@ -284,7 +287,7 @@ public class DocSnippets {
         virgil.getCards().revokeGlobal(aliceCard, aliceKey, token);
     }
 
-    private void validating_cards() {
+    private void validating_cards() throws VirgilException {
         /** Snippet starts here */
 
         VirgilBuffer appPublicKey = VirgilBuffer.from("[YOUR_APP_PUBLIC_KEY_HERE]", StringEncoding.Base64);
@@ -298,7 +301,7 @@ public class DocSnippets {
         VirgilCards aliceCards = virgil.getCards().find("alice");
     }
 
-    private void verify_and_publish_global_card() {
+    private void verify_and_publish_global_card() throws VirgilException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         VirgilCard aliceCard = virgil.getCards().create("alice", aliceKey);
 
@@ -331,7 +334,7 @@ public class DocSnippets {
         VirgilKey aliceKey = virgil.getKeys().generate();
     }
 
-    private void import_key() {
+    private void import_key() throws CryptoException {
         /** Snippet starts here */
 
         // initialize a buffer from base64 encoded string
@@ -357,14 +360,14 @@ public class DocSnippets {
         VirgilKey aliceKey = virgil.getKeys().generate();
     }
 
-    private void virgil_key__load_key() {
+    private void virgil_key__load_key() throws VirgilException {
         /** Snippet starts here */
 
         // load a Virgil Key from storage
         VirgilKey aliceKey = virgil.getKeys().load("[KEY_NAME]", "[OPTIONAL_KEY_PASSWORD]");
     }
 
-    private void save_key() {
+    private void save_key() throws VirgilKeyIsAlreadyExistsException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         /** Snippet starts here */
 

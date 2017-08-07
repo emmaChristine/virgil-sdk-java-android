@@ -47,6 +47,7 @@ import org.junit.Test;
 
 import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.client.model.CardModel;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.device.DefaultDeviceManager;
 import com.virgilsecurity.sdk.highlevel.AppCredentials;
 import com.virgilsecurity.sdk.highlevel.VirgilApi;
@@ -87,7 +88,7 @@ public class SecureChatHiLevelTest extends BaseIT {
     private SecureChat bobChat;
 
     @Before
-    public void setUp() throws MalformedURLException {
+    public void setUp() throws MalformedURLException, VirgilException {
         // Prepare context
         VirgilPFSClientContext ctx = new VirgilPFSClientContext(APP_TOKEN);
 
@@ -154,7 +155,7 @@ public class SecureChatHiLevelTest extends BaseIT {
     }
 
     @Test
-    public void aliceToBobFlow() {
+    public void aliceToBobFlow() throws VirgilException {
         aliceChat.rotateKeys(5);
         bobChat.rotateKeys(5);
 

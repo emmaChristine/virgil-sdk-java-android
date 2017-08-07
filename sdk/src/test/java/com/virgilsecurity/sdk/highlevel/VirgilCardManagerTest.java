@@ -52,6 +52,7 @@ import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.client.VirgilClientContext;
 import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * @author Andrii Iakovenko
@@ -194,7 +195,7 @@ public class VirgilCardManagerTest extends BaseIT {
     }
 
     @Test
-    public void publish_find_revoke() throws InterruptedException {
+    public void publish_find_revoke() throws InterruptedException, VirgilException {
         // Publish
         VirgilCard aliceCard = cardManager.create(aliceIdentity, virgilKey, "username");
         aliceCard.publish();

@@ -29,13 +29,13 @@
  */
 package com.virgilsecurity.sdk.securechat.exceptions;
 
-import com.virgilsecurity.sdk.client.exceptions.VirgilException;
+import com.virgilsecurity.sdk.client.exceptions.VirgilClientException;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class StartNewSessionException extends VirgilException {
+public class StartNewSessionException extends VirgilClientException {
 
     private static final long serialVersionUID = -8172887972476553536L;
 

@@ -44,6 +44,7 @@ import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.utils.VirgilCardValidator;
 
 /**
@@ -55,7 +56,7 @@ import com.virgilsecurity.sdk.utils.VirgilCardValidator;
  */
 public class Quickstart {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception, VirgilException {
 
         // Initializing an API Client
         VirgilClient client = new VirgilClient("[YOUR_APP_ACCESS_TOKEN_HERE]");

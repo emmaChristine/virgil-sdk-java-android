@@ -31,6 +31,7 @@ package com.virgilsecurity.sdk.highlevel;
 
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**
  * Provides the base authentication class for retrieving credentials for the high-level API.
@@ -46,8 +47,9 @@ public interface Credentials {
      * @param crypto
      *            The Crypto.
      * @return The application key.
+     * @throws CryptoException 
      */
-    PrivateKey getAppKey(Crypto crypto);
+    PrivateKey getAppKey(Crypto crypto) throws CryptoException;
 
     /**
      * Gets the application identifier.

@@ -38,8 +38,10 @@ import com.virgilsecurity.crypto.VirgilPFSResponderPrivateInfo;
 import com.virgilsecurity.crypto.VirgilPFSSession;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
+import com.virgilsecurity.sdk.securechat.exceptions.NoSessionException;
 import com.virgilsecurity.sdk.securechat.model.InitiationMessage;
 import com.virgilsecurity.sdk.securechat.model.Message;
 import com.virgilsecurity.sdk.securechat.model.ResponderSessionState;
@@ -57,7 +59,7 @@ public class SecureSessionResponder extends SecureSession {
     public SecureSessionResponder(SecureChatContext context, SecureChatSessionHelper sessionHelper,
             byte[] additionalData, SecureChatKeyHelper secureChatKeyHelper, CardEntry initiatorIdCard,
             byte[] ephPublicKeyData, String receiverLtcId, String receiverOtcId, Date creationDate,
-            Date expirationDate) {
+            Date expirationDate) throws CryptoException {
         super(context, true, additionalData, sessionHelper, creationDate, expirationDate);
         this.secureChatKeyHelper = secureChatKeyHelper;
         this.initiatorIdCard = initiatorIdCard;
@@ -74,7 +76,7 @@ public class SecureSessionResponder extends SecureSession {
 
     }
 
-    private void initiateSession(InitiationMessage initiationMessage) {
+    private void initiateSession(InitiationMessage initiationMessage) throws VirgilException {
         PublicKey initiatorPublicKey = this.getContext().getCrypto()
                 .importPublicKey(this.initiatorIdCard.getPublicKeyData());
         try {
@@ -93,7 +95,7 @@ public class SecureSessionResponder extends SecureSession {
                 initiationMessage.getResponderOtcId());
     }
 
-    private void initiateSession(byte[] ephPublicKeyData, String receiverLtcId, String receiverOtcId) {
+    private void initiateSession(byte[] ephPublicKeyData, String receiverLtcId, String receiverOtcId) throws CryptoException {
         byte[] privateKeyData = this.getContext().getCrypto().exportPrivateKey(this.getContext().getPrivateKey());
         VirgilPFSPrivateKey privateKey = new VirgilPFSPrivateKey(privateKeyData);
 
@@ -137,15 +139,15 @@ public class SecureSessionResponder extends SecureSession {
         }
     }
 
-    public String encrypt(String message) {
+    public String encrypt(String message) throws NoSessionException {
         if (!this.isInitialized()) {
-            throw new VirgilException("Session is still not initialized.");
+            throw new NoSessionException("Session is still not initialized.");
         }
 
         return super.encrypt(message);
     }
 
-    public String decrypt(InitiationMessage initiationMessage) {
+    public String decrypt(InitiationMessage initiationMessage) throws VirgilException {
         if (!this.isInitialized()) {
             this.initiateSession(initiationMessage);
         }
@@ -170,14 +172,14 @@ public class SecureSessionResponder extends SecureSession {
      * @see com.virgilsecurity.sdk.securechat.SecureSession#decrypt(java.lang.String)
      */
     @Override
-    public String decrypt(String encryptedMessage) {
+    public String decrypt(String encryptedMessage) throws VirgilException {
         if (SessionStateResolver.isInitiationMessage(encryptedMessage)) {
 
             InitiationMessage initiationMessage = SecureSession.extractInitiationMessage(encryptedMessage);
             return this.decrypt(initiationMessage);
         } else {
             if (!this.isInitialized()) {
-                throw new VirgilException("Session is still not initialized.");
+                throw new NoSessionException("Session is still not initialized.");
             }
             Message msg = SecureSession.extractMessage(encryptedMessage);
             return super.decrypt(msg);

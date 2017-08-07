@@ -339,8 +339,9 @@ public class VirgilClient extends ClientBase {
      * @param criteria
      *            the criteria for search.
      * @return the found cards list.
+     * @throws CardValidationException
      */
-    public List<CardModel> searchCards(SearchCriteria criteria) {
+    public List<CardModel> searchCards(SearchCriteria criteria) throws CardValidationException {
         if (criteria == null) {
             throw new NullArgumentException("criteria");
         }
@@ -375,12 +376,14 @@ public class VirgilClient extends ClientBase {
 
         } catch (VirgilServiceException e) {
             throw e;
+        } catch (CardValidationException e) {
+            throw e;
         } catch (Exception e) {
             throw new VirgilCardServiceException(e);
         }
     }
 
-    private void validateCards(Collection<CardModel> cards) {
+    private void validateCards(Collection<CardModel> cards) throws CardValidationException {
         if (this.cardValidator == null) {
             return;
         }

@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.securechat.exceptions.CorruptedSavedSessionException;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
@@ -126,8 +127,13 @@ public class SecureChatSessionHelper {
         userDefaults.synchronize();
     }
 
-    public void removeOldSessions() {
-        Map<String, SessionState> allSessions = this.getAllSessions();
+    public void removeOldSessions() throws VirgilException {
+        Map<String, SessionState> allSessions;
+        try {
+            allSessions = this.getAllSessions();
+        } catch (CorruptedSavedSessionException e) {
+            throw new VirgilException(e);
+        }
 
         Date date = new Date();
         for (Entry<String, SessionState> entry : allSessions.entrySet()) {
@@ -137,7 +143,7 @@ public class SecureChatSessionHelper {
         }
     }
 
-    public SessionState getSessionState(String cardId) {
+    public SessionState getSessionState(String cardId) throws CorruptedSavedSessionException {
         String json = userDefaults.getData(this.getSuiteName(), getSessionName(cardId));
 
         if (json == null) {
@@ -156,12 +162,13 @@ public class SecureChatSessionHelper {
         return state;
     }
 
-    public Map<String, SessionState> getAllSessions() {
+    public Map<String, SessionState> getAllSessions() throws CorruptedSavedSessionException {
         Map<String, String> defaults = userDefaults.getAllData(this.getSuiteName());
         return getAllSessions(defaults);
     }
 
-    private Map<String, SessionState> getAllSessions(Map<String, String> defaults) {
+    private Map<String, SessionState> getAllSessions(Map<String, String> defaults)
+            throws CorruptedSavedSessionException {
         Map<String, SessionState> result = new HashMap<>();
         for (Entry<String, String> entry : defaults.entrySet()) {
             if (!isSessionName(entry.getKey())) {
@@ -194,7 +201,7 @@ public class SecureChatSessionHelper {
         return cardId;
     }
 
-    public Set<String> getEphKeys() {
+    public Set<String> getEphKeys() throws VirgilException {
         Set<String> result = new HashSet<>();
 
         Map<String, SessionState> allSessions = this.getAllSessions();
@@ -207,7 +214,7 @@ public class SecureChatSessionHelper {
         return result;
     }
 
-    public Set<String> getLtCards() {
+    public Set<String> getLtCards() throws VirgilException {
         Set<String> result = new HashSet<>();
 
         Map<String, SessionState> allSessions = this.getAllSessions();
@@ -220,7 +227,7 @@ public class SecureChatSessionHelper {
         return result;
     }
 
-    public Set<String> getOtCards() {
+    public Set<String> getOtCards() throws VirgilException {
         Set<String> result = new HashSet<>();
 
         Map<String, SessionState> allSessions = this.getAllSessions();

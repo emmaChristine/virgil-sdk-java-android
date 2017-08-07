@@ -46,6 +46,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.storage.KeyStorage;
 import com.virgilsecurity.sdk.storage.VirgilKeyEntry;
 
@@ -75,10 +76,9 @@ public class SecureChatKeyHelperTest {
     }
 
     @Test
-    public void getEphPrivateKey() {
+    public void getEphPrivateKey() throws VirgilException {
         String key = String.format("VIRGIL.OWNER.%s.EPH_KEY.EPH_PRIVATE_KEY", IDENTITY_CARD_ID);
-        when(keyStorage.load(key))
-                .thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
+        when(keyStorage.load(key)).thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
         PrivateKey loadedKey = keyHelper.getEphPrivateKey("EPH_PRIVATE_KEY");
 
         assertArrayEquals(this.privateKey.getId(), loadedKey.getId());
@@ -86,7 +86,7 @@ public class SecureChatKeyHelperTest {
     }
 
     @Test
-    public void getEphPrivateKeyByEntryName() {
+    public void getEphPrivateKeyByEntryName() throws VirgilException {
         when(keyStorage.load("VIRGIL.EPH_KEY.EPH_PRIVATE_KEY"))
                 .thenReturn(new VirgilKeyEntry("VIRGIL.EPH_KEY.EPH_PRIVATE_KEY", privateKey.getValue()));
         PrivateKey loadedKey = keyHelper.getEphPrivateKeyByEntryName("VIRGIL.EPH_KEY.EPH_PRIVATE_KEY");
@@ -96,10 +96,9 @@ public class SecureChatKeyHelperTest {
     }
 
     @Test
-    public void getLtPrivateKey() {
+    public void getLtPrivateKey() throws VirgilException {
         String key = String.format("VIRGIL.OWNER.%s.LT_KEY.LT_PRIVATE_KEY", IDENTITY_CARD_ID);
-        when(keyStorage.load(key))
-                .thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
+        when(keyStorage.load(key)).thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
         PrivateKey loadedKey = keyHelper.getLtPrivateKey("LT_PRIVATE_KEY");
 
         assertArrayEquals(this.privateKey.getId(), loadedKey.getId());
@@ -107,10 +106,9 @@ public class SecureChatKeyHelperTest {
     }
 
     @Test
-    public void getOtPrivateKey() {
+    public void getOtPrivateKey() throws VirgilException {
         String key = String.format("VIRGIL.OWNER.%s.OT_KEY.OT_PRIVATE_KEY", IDENTITY_CARD_ID);
-        when(keyStorage.load(key))
-                .thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
+        when(keyStorage.load(key)).thenReturn(new VirgilKeyEntry(key, privateKey.getValue()));
         PrivateKey loadedKey = keyHelper.getOtPrivateKey("OT_PRIVATE_KEY");
 
         assertArrayEquals(this.privateKey.getId(), loadedKey.getId());

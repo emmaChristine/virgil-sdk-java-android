@@ -46,9 +46,7 @@ import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
-import com.virgilsecurity.sdk.highlevel.KeyManager;
-import com.virgilsecurity.sdk.highlevel.VirgilApiImpl;
-import com.virgilsecurity.sdk.highlevel.VirgilKey;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * @author Andrii Iakovenko
@@ -74,7 +72,7 @@ public class VirgilKeyManagerTest {
     }
 
     @Test
-    public void load() {
+    public void load() throws VirgilException {
         String keyName = "key" + suffix;
         VirgilKey key = keyManager.generate();
         key.save(keyName);
@@ -86,7 +84,7 @@ public class VirgilKeyManagerTest {
     }
 
     @Test
-    public void load_with_password() {
+    public void load_with_password() throws VirgilException {
         String keyName = "key" + suffix;
         String pwd = suffix;
         VirgilKey key = keyManager.generate();
@@ -99,7 +97,7 @@ public class VirgilKeyManagerTest {
     }
 
     @Test
-    public void load_unprotected_key_with_password() {
+    public void load_unprotected_key_with_password() throws VirgilException {
         String keyName = "key" + suffix;
         String pwd = suffix;
         VirgilKey key = keyManager.generate();
@@ -112,7 +110,7 @@ public class VirgilKeyManagerTest {
     }
 
     @Test(expected = CryptoException.class)
-    public void load_with_wrongPassword() {
+    public void load_with_wrongPassword() throws VirgilException {
         String keyName = "key" + suffix;
         String pwd = suffix;
         VirgilKey key = keyManager.generate();
@@ -122,7 +120,7 @@ public class VirgilKeyManagerTest {
     }
 
     @Test(expected = CryptoException.class)
-    public void load_protected_key_withoutPassword() {
+    public void load_protected_key_withoutPassword() throws VirgilException {
         String keyName = "key" + suffix;
         String pwd = suffix;
         VirgilKey key = keyManager.generate();
@@ -132,7 +130,7 @@ public class VirgilKeyManagerTest {
     }
 
     @Test(expected = KeyEntryNotFoundException.class)
-    public void load_not_exists() {
+    public void load_not_exists() throws VirgilException {
         String keyName = "key" + suffix;
         VirgilKey key = keyManager.generate();
         key.save(keyName);
@@ -141,22 +139,21 @@ public class VirgilKeyManagerTest {
     }
 
     @Test(expected = KeyEntryNotFoundException.class)
-    public void destroy() {
+    public void destroy() throws VirgilException {
         String keyName = "key" + suffix;
         VirgilKey key = keyManager.generate();
         key.save(keyName);
 
         try {
-        assertNotNull(keyManager.load(keyName));
-        }
-        catch (Exception e) {
+            assertNotNull(keyManager.load(keyName));
+        } catch (Exception e) {
             fail();
         }
         keyManager.destroy(keyName);
-        
+
         keyManager.load(keyName);
     }
-    
+
     @Test
     public void import_privateKey() {
         KeyPair keyPair = crypto.generateKeys();

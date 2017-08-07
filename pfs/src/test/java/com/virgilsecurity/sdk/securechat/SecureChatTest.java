@@ -58,6 +58,7 @@ import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.device.DefaultDeviceManager;
 import com.virgilsecurity.sdk.pfs.BaseIT;
 import com.virgilsecurity.sdk.pfs.VirgilPFSClient;
@@ -98,7 +99,7 @@ public class SecureChatTest extends BaseIT {
     private int numberOfCards;
 
     @Before
-    public void setUp() throws MalformedURLException {
+    public void setUp() throws MalformedURLException, VirgilException {
         // Initialize Crypto
         crypto = new VirgilCrypto();
 
@@ -154,7 +155,7 @@ public class SecureChatTest extends BaseIT {
     }
 
     @Test
-    public void aliceToBobFlow() {
+    public void aliceToBobFlow() throws VirgilException {
         aliceChat.rotateKeys(this.numberOfCards);
         bobChat.rotateKeys(this.numberOfCards);
 
@@ -295,9 +296,11 @@ public class SecureChatTest extends BaseIT {
     }
 
     @Test
-    public void expire_alice_session() throws InterruptedException {
-        aliceChatContext.setSessionTtl(10);
+    public void expire_alice_session() throws InterruptedException, VirgilException {
+        aliceChatContext.setSessionTtl(5);
         aliceChat.rotateKeys(this.numberOfCards);
+
+        aliceChatContext.setSessionTtl(5);
         bobChat.rotateKeys(this.numberOfCards);
 
         SecureSession aliceSession = aliceChat.activeSession(bobCard.getId());
@@ -306,24 +309,18 @@ public class SecureChatTest extends BaseIT {
         /** Start new session */
         aliceSession = aliceChat.startNewSession(bobCard, null);
         assertNotNull("Security session should be created", aliceSession);
-        assertThat("Alice is initiator", aliceSession, instanceOf(SecureSessionInitiator.class));
-        List<CardModel> aliceCards = client.searchCards(SearchCriteria.byIdentity(aliceIdentity));
-        assertFalse("Identity card should be created", aliceCards.isEmpty());
 
         /** Send first message to Bob */
-        String firstMessage = UUID.randomUUID().toString();
-        String encryptedFirstMessage = aliceSession.encrypt(firstMessage);
-        assertNotNull(encryptedFirstMessage);
-        assertTrue(SessionStateResolver.isInitiationMessage(encryptedFirstMessage));
+        String message1 = UUID.randomUUID().toString();
+        String encryptedMessage1 = aliceSession.encrypt(message1);
+        assertNotNull(encryptedMessage1);
 
         // Bob receives message and create session
-        SecureSession bobSession = bobChat.loadUpSession(aliceCard, encryptedFirstMessage);
+        SecureSession bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage1);
         assertNotNull(bobSession);
-        assertThat("Bob is responder", bobSession, instanceOf(SecureSessionResponder.class));
-        List<CardModel> bobCards = client.searchCards(SearchCriteria.byIdentity(bobIdentity));
-        assertFalse("Identity card should be created", bobCards.isEmpty());
-        String decryptedFirstMessage = bobSession.decrypt(encryptedFirstMessage);
-        assertEquals("Message should be decrypted properly", firstMessage, decryptedFirstMessage);
+
+        String message2 = UUID.randomUUID().toString();
+        String encryptedMessage2 = aliceSession.encrypt(message2);
 
         // Wait until Alice session expire
         long waitTime = aliceSession.getExpirationDate().getTime() - new Date().getTime();
@@ -333,25 +330,19 @@ public class SecureChatTest extends BaseIT {
 
         assertTrue("Alice session should be expired at the moment", aliceSession.isExpired());
 
-        /** Send second message to Bob */
-        String message = UUID.randomUUID().toString();
-        aliceSession = aliceChat.activeSession(bobCard.getId());
-        assertNull("Alice session is expired", aliceSession);
-        aliceSession = aliceChat.startNewSession(bobCard, null);
-        String encryptedMessage = aliceSession.encrypt(message);
-        assertNotNull(encryptedMessage);
-        assertTrue(SessionStateResolver.isInitiationMessage(encryptedMessage));
+        SecureSession outdatedAliceSession = aliceChat.activeSession(bobCard.getId());
+        assertNull(outdatedAliceSession);
 
-        // Bob receives message and decrypts it
-        bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage);
-        assertNotNull("Bob session not found", bobSession);
-        String decryptedMessage = bobSession.decrypt(encryptedMessage);
-        assertNotNull(decryptedMessage);
-        assertEquals("Message should be decrypted properly", message, decryptedMessage);
+        SecureSession outdatedBobSession = bobChat.activeSession(bobCard.getId());
+        assertNull(outdatedBobSession);
+
+        aliceChat.rotateKeys(numberOfCards);
+        // Double rotate helps to check that we removed keys correctly
+        aliceChat.rotateKeys(numberOfCards);
     }
 
     @Test
-    public void expire_bob_session() throws InterruptedException {
+    public void expire_bob_session() throws InterruptedException, VirgilException {
         aliceChat.rotateKeys(this.numberOfCards);
         bobChatContext.setSessionTtl(10);
         bobChat.rotateKeys(this.numberOfCards);
@@ -397,9 +388,11 @@ public class SecureChatTest extends BaseIT {
     }
 
     @Test
-    public void expire_ltc() throws InterruptedException {
+    public void expire_ltc() throws InterruptedException, VirgilException {
         aliceChat.rotateKeys(this.numberOfCards);
-        bobChatContext.setSessionTtl(10);
+
+        bobChatContext.setLongTermKeysTtl(5);
+        bobChat = new SecureChat(bobChatContext);
         bobChat.rotateKeys(this.numberOfCards);
 
         String longTermId1, longTermId2, oneTimeId1, oneTimeId2;
@@ -436,12 +429,10 @@ public class SecureChatTest extends BaseIT {
         assertEquals("Message should be decrypted properly", message, decryptedMessage);
 
         // Wait until Bob's session expire
-        long waitTime = bobSession.getExpirationDate().getTime() - new Date().getTime();
+        long waitTime = bobSession.getContext().getLongTermKeysTtl() * 1000;
         if (waitTime > 0) {
             Thread.sleep(waitTime + 3000);
         }
-
-        assertTrue("Bob's session should be expired at the moment", bobSession.isExpired());
 
         bobChat.rotateKeys(numberOfCards);
         cardsSet = pfsClient.getRecipientCardsSet(bobCard.getId());
@@ -466,11 +457,8 @@ public class SecureChatTest extends BaseIT {
     }
 
     @Test
-    public void gentle_reset() throws InterruptedException {
-        aliceChatContext.setSessionTtl(10);
+    public void gentle_reset() throws InterruptedException, VirgilException {
         aliceChat.rotateKeys(this.numberOfCards);
-
-        bobChatContext.setSessionTtl(10);
         bobChat.rotateKeys(this.numberOfCards);
 
         /** Start new session */
@@ -487,26 +475,25 @@ public class SecureChatTest extends BaseIT {
         // Bob receives message and create session
         SecureSession bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage1);
         assertNotNull(bobSession);
-        assertThat("Bob is responder", bobSession, instanceOf(SecureSessionResponder.class));
-        List<CardModel> bobCards = client.searchCards(SearchCriteria.byIdentity(bobIdentity));
-        assertFalse("Identity card should be created", bobCards.isEmpty());
+
         String decryptedMessage = bobSession.decrypt(encryptedMessage1);
         assertEquals("Message should be decrypted properly", message, decryptedMessage);
 
         message = UUID.randomUUID().toString();
         String encryptedMessage2 = aliceSession.encrypt(message);
-        
+
         aliceChat.gentleReset();
-        aliceSession = aliceChat.activeSession(bobCard.getId());
-        assertNull(aliceSession);
-        
+
         bobChat.gentleReset();
-        
+
         bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage1);
         assertNull(bobSession);
-        
+
         bobSession = bobChat.loadUpSession(aliceCard, encryptedMessage2);
         assertNull(bobSession);
+
+        aliceSession = aliceChat.activeSession(bobCard.getId());
+        assertNull(aliceSession);
     }
 
     private CardModel publishCard(String identity, KeyPair keyPair) {
@@ -517,60 +504,6 @@ public class SecureChatTest extends BaseIT {
         requestSigner.authoritySign(createCardRequest, APP_ID, appKey);
 
         return client.publishCard(createCardRequest);
-    }
-
-    private void sendMessage(SecureChat chat, CardModel receiverCard, String message) {
-        // get an active session by recipient's card id
-        SecureSession session = chat.activeSession(receiverCard.getId());
-
-        if (session == null) {
-            // start new session with recipient if session wasn't initialized yet
-            session = chat.startNewSession(receiverCard, null);
-        }
-
-        sendMessage(session, receiverCard, message);
-    }
-
-    private void sendMessage(SecureSession session, CardModel receiverCard, String message) {
-        String ciphertext = null;
-        try {
-            // encrypt the message using previously initialized session
-            ciphertext = session.encrypt(message);
-        } catch (Exception e) {
-            // error handling
-            return;
-        }
-
-        // send a cipher message to recipient using your messaging service
-        sendMessageToRecipient(receiverCard.getSnapshotModel().getIdentity(), ciphertext);
-    }
-
-    private void sendMessageToRecipient(String identity, String ciphertext) {
-        // TODO Auto-generated method stub
-
-    }
-
-    private void receiveMessage(SecureChat chat, CardModel senderCard, String message) {
-        try {
-            // load an existing session or establish new one
-            SecureSession session = chat.loadUpSession(senderCard, message);
-
-            // decrypt message using established session
-            String plaintext = session.decrypt(message);
-
-            // handle a message
-            handleMessage(plaintext);
-        } catch (Exception e) {
-            // Error handling
-        }
-    }
-
-    /**
-     * @param plaintext
-     */
-    private void handleMessage(String plaintext) {
-        // TODO Auto-generated method stub
-
     }
 
 }

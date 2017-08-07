@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,16 +27,27 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.exceptions;
+package com.virgilsecurity.sdk.securechat.exceptions;
+
+import com.virgilsecurity.sdk.client.exceptions.VirgilClientException;
 
 /**
- * This exception occurred when Virgil Card couldn't be found.
- *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilCardIsNotFoundException extends VirgilClientException {
+public class NoSessionException extends VirgilClientException {
 
-    private static final long serialVersionUID = -6014876811363283060L;
+    private static final long serialVersionUID = -4039093309654660178L;
+
+    /**
+     * Create new instance of {@link NoSessionException}.
+     * @param message
+     */
+    public NoSessionException(String message) {
+        super(message);
+        // TODO Auto-generated constructor stub
+    }
+    
+    
 
 }

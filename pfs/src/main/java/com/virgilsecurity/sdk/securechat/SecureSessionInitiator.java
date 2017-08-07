@@ -41,6 +41,7 @@ import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
+import com.virgilsecurity.sdk.securechat.exceptions.NoSessionException;
 import com.virgilsecurity.sdk.securechat.model.InitiationMessage;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
 import com.virgilsecurity.sdk.securechat.model.Message;
@@ -137,7 +138,7 @@ public class SecureSessionInitiator extends SecureSession {
      * @see com.virgilsecurity.sdk.securechat.SecureSession#encrypt(java.lang.String)
      */
     @Override
-    public String encrypt(String message) {
+    public String encrypt(String message) throws NoSessionException {
         boolean isFirstMessage = false;
         if (!this.isInitialized()) {
             isFirstMessage = true;
@@ -145,7 +146,7 @@ public class SecureSessionInitiator extends SecureSession {
         }
 
         if (!this.isInitialized()) {
-            throw new VirgilException("Session is still not initialized.");
+            throw new NoSessionException("Session is still not initialized.");
         }
 
         if (isFirstMessage) {
@@ -185,9 +186,9 @@ public class SecureSessionInitiator extends SecureSession {
      * @see com.virgilsecurity.sdk.securechat.SecureSession#decrypt(java.lang.String)
      */
     @Override
-    public String decrypt(String encryptedMessage) {
+    public String decrypt(String encryptedMessage) throws NoSessionException {
         if (!this.isInitialized()) {
-            throw new VirgilException("Session is still not initialized.");
+            throw new NoSessionException("Session is still not initialized.");
         }
         Message message = SecureSession.extractMessage(encryptedMessage);
         return super.decrypt(message);

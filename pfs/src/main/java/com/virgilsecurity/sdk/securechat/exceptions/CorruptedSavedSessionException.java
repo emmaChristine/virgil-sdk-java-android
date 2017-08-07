@@ -29,14 +29,14 @@
  */
 package com.virgilsecurity.sdk.securechat.exceptions;
 
-import com.virgilsecurity.sdk.client.exceptions.VirgilException;
+import com.virgilsecurity.sdk.client.exceptions.VirgilClientException;
 import com.virgilsecurity.sdk.securechat.Constants;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class CorruptedSavedSessionException extends VirgilException {
+public class CorruptedSavedSessionException extends VirgilClientException {
 
     private static final long serialVersionUID = -2718043635909381767L;
 

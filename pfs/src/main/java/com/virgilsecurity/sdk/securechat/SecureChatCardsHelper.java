@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.virgilsecurity.sdk.client.RequestSigner;
+import com.virgilsecurity.sdk.client.exceptions.VirgilClientException;
 import com.virgilsecurity.sdk.client.model.CardInfoModel;
 import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.dto.PublishCardSnapshotModel;
@@ -94,7 +95,7 @@ public class SecureChatCardsHelper {
         return request;
     }
 
-    public void addCards(CardModel identityCard, boolean includeLtcCard, int numberOfOtcCards) {
+    public void addCards(CardModel identityCard, boolean includeLtcCard, int numberOfOtcCards) throws VirgilClientException {
         RequestSigner requestSigner = new RequestSigner(this.crypto);
 
         // Generate OT cards

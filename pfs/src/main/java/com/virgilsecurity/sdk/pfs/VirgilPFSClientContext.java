@@ -33,7 +33,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.virgilsecurity.sdk.client.VirgilClientContext;
-import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * @author Andrii Iakovenko
@@ -65,7 +64,7 @@ public class VirgilPFSClientContext extends VirgilClientContext {
         try {
             this.ephemeralServiceURL = new URL("https://pfs.virgilsecurity.com");
         } catch (MalformedURLException e) {
-            throw new VirgilException(e.getMessage());
+            // This should never happen
         }
     }
 

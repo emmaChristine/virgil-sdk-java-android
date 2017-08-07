@@ -42,6 +42,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.securechat.impl.DefaultUserDataStorage;
 import com.virgilsecurity.sdk.securechat.model.InitiatorSessionState;
@@ -63,7 +64,7 @@ public class SecureChatSessionHelperTest {
     }
 
     @Test
-    public void saveSessionState() {
+    public void saveSessionState() throws VirgilException {
 
         SecureChatSessionHelper helper = new SecureChatSessionHelper(CARD_ID, userDataStorage);
         assertTrue(helper.getAllSessions().isEmpty());
@@ -80,7 +81,7 @@ public class SecureChatSessionHelperTest {
     }
 
     @Test
-    public void removeSessionState() {
+    public void removeSessionState() throws VirgilException {
         SecureChatSessionHelper helper = new SecureChatSessionHelper(CARD_ID, userDataStorage);
         assertTrue(helper.getAllSessions().isEmpty());
 

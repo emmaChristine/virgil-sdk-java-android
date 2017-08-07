@@ -54,7 +54,7 @@ import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-import com.virgilsecurity.sdk.highlevel.VirgilCard;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.pfs.model.RecipientCardsSet;
 import com.virgilsecurity.sdk.pfs.model.request.CreateEphemeralCardRequest;
 import com.virgilsecurity.sdk.pfs.model.response.BootstrapCardsResponse;
@@ -79,7 +79,7 @@ public class VirgilPFSClientTest extends BaseIT {
     private KeyPair aliceKeys;
 
     @Before
-    public void setUp() throws MalformedURLException {
+    public void setUp() throws MalformedURLException, CryptoException {
         // Initialize Crypto
         crypto = new VirgilCrypto();
 

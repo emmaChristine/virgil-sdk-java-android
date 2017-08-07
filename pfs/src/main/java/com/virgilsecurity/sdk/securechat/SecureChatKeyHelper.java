@@ -39,10 +39,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.virgilsecurity.sdk.client.exceptions.VirgilException;
+import com.virgilsecurity.sdk.client.exceptions.VirgilClientException;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.securechat.model.ServiceInfoEntry;
 import com.virgilsecurity.sdk.securechat.utils.GsonUtils;
 import com.virgilsecurity.sdk.storage.KeyStorage;
@@ -159,21 +161,21 @@ public class SecureChatKeyHelper {
         return result;
     }
 
-    public PrivateKey getEphPrivateKey(String name) {
+    public PrivateKey getEphPrivateKey(String name) throws CryptoException {
         String keyName = this.getEphPrivateKeyName(name);
         return this.getPrivateKey(keyName);
     }
 
-    public PrivateKey getEphPrivateKeyByEntryName(String keyEntryName) {
+    public PrivateKey getEphPrivateKeyByEntryName(String keyEntryName) throws CryptoException {
         return this.getPrivateKeyByEntryName(keyEntryName);
     }
 
-    public PrivateKey getLtPrivateKey(String name) {
+    public PrivateKey getLtPrivateKey(String name) throws CryptoException {
         String keyName = this.getLtPrivateKeyName(name);
         return this.getPrivateKey(keyName);
     }
 
-    public PrivateKey getOtPrivateKey(String name) {
+    public PrivateKey getOtPrivateKey(String name) throws CryptoException {
         String keyName = this.getOtPrivateKeyName(name);
         return this.getPrivateKey(keyName);
     }
@@ -213,7 +215,7 @@ public class SecureChatKeyHelper {
         return ephKeyEntryName;
     }
 
-    public void persistKeys(List<KeyEntry> keys, KeyEntry ltKey) {
+    public void persistKeys(List<KeyEntry> keys, KeyEntry ltKey) throws VirgilClientException {
         List<String> keyEntryNames = new ArrayList<>(keys.size());
         for (KeyEntry key : keys) {
             keyEntryNames.add(this.saveOtPrivateKey(key.privateKey, key.keyName));
@@ -240,18 +242,18 @@ public class SecureChatKeyHelper {
                     Arrays.asList(new ServiceInfoEntry.KeyEntry(ltcKeyEntryName, new Date())), keyEntryNames,
                     new ArrayList<String>());
         } else {
-            throw new VirgilException("LT key not found and new key was not specified.");
+            throw new VirgilClientException("LT key not found and new key was not specified.");
         }
 
         this.updateServiceInfoEntry(newServiceInfo);
     }
 
-    public void removeOldKeys(Set<String> relevantEphKeys, Set<String> relevantLtCards, Set<String> relevantOtCards) {
+    public void removeOldKeys(Set<String> relevantEphKeys, Set<String> relevantLtCards, Set<String> relevantOtCards) throws VirgilClientException {
         ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
 
         if (serviceInfoEntry == null) {
             if ((!relevantEphKeys.isEmpty()) || (!relevantLtCards.isEmpty()) || (!relevantOtCards.isEmpty())) {
-                throw new VirgilException("Trying to remove keys, but no service entry was found.");
+                throw new VirgilClientException("Trying to remove keys, but no service entry was found.");
             }
             return;
         }
@@ -322,13 +324,13 @@ public class SecureChatKeyHelper {
         return "OT_KEY.";
     }
 
-    private PrivateKey getPrivateKey(String keyName) {
+    private PrivateKey getPrivateKey(String keyName) throws CryptoException {
         String keyEntryName = this.getPrivateKeyEntryName(keyName);
 
         return this.getPrivateKeyByEntryName(keyEntryName);
     }
 
-    private PrivateKey getPrivateKeyByEntryName(String keyEntryName) {
+    private PrivateKey getPrivateKeyByEntryName(String keyEntryName) throws CryptoException {
         com.virgilsecurity.sdk.storage.KeyEntry keyEntry = this.keyStorage.load(keyEntryName);
 
         PrivateKey privateKey = this.crypto.importPrivateKey(keyEntry.getValue());
@@ -364,15 +366,15 @@ public class SecureChatKeyHelper {
         }
     }
 
-    public void removeEphPrivateKey(String name) {
+    public void removeEphPrivateKey(String name) throws VirgilException {
         String keyEntryName = this.getPrivateKeyEntryName(this.getEphPrivateKeyName(name));
         this.removeEphPrivateKeyByEntryName(keyEntryName);
     }
 
-    public void removeEphPrivateKeyByEntryName(String keyEntryName) {
+    public void removeEphPrivateKeyByEntryName(String keyEntryName) throws VirgilException {
         ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
         if (serviceInfoEntry == null) {
-            throw new VirgilException("Trying to remove keys, but no service entry was found.");
+            throw new VirgilClientException("Trying to remove keys, but no service entry was found.");
         }
         this.removePrivateKey(keyEntryName);
         ServiceInfoEntry newServiceInfo = new ServiceInfoEntry(serviceInfoEntry.getLtcKeys(),
@@ -381,10 +383,10 @@ public class SecureChatKeyHelper {
         this.updateServiceInfoEntry(newServiceInfo);
     }
 
-    public void removeOneTimePrivateKey(String name) {
+    public void removeOneTimePrivateKey(String name) throws VirgilException {
         ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
         if (serviceInfoEntry == null) {
-            throw new VirgilException("Trying to remove keys, but no service entry was found.");
+            throw new VirgilClientException("Trying to remove keys, but no service entry was found.");
         }
         String keyEntryName = this.getPrivateKeyEntryName(this.getOtPrivateKeyName(name));
         this.removePrivateKey(keyEntryName);

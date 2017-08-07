@@ -42,6 +42,9 @@ import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
 import com.virgilsecurity.sdk.client.requests.PublishGlobalCardRequest;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
@@ -133,8 +136,9 @@ public class VirgilCard {
      * @param buffer
      *            The data to be encrypted.
      * @return The encrypted data.
+     * @throws EncryptionException
      */
-    public VirgilBuffer encrypt(VirgilBuffer buffer) {
+    public VirgilBuffer encrypt(VirgilBuffer buffer) throws EncryptionException {
         if (buffer == null) {
             throw new NullArgumentException("buffer");
         }
@@ -147,8 +151,9 @@ public class VirgilCard {
      * @param plaintext
      *            The plain text to be encrypted.
      * @return The encrypted data.
+     * @throws EncryptionException
      */
-    public VirgilBuffer encrypt(String plaintext) {
+    public VirgilBuffer encrypt(String plaintext) throws EncryptionException {
         if (plaintext == null) {
             throw new NullArgumentException("plaintext");
         }
@@ -161,8 +166,9 @@ public class VirgilCard {
      * @param data
      *            The data to be encrypted.
      * @return The encrypted data.
+     * @throws EncryptionException
      */
-    public VirgilBuffer encrypt(byte[] data) {
+    public VirgilBuffer encrypt(byte[] data) throws EncryptionException {
         if (data == null) {
             throw new NullArgumentException("data");
         }
@@ -178,8 +184,9 @@ public class VirgilCard {
      * @param signature
      *            The signature used to verify the data integrity.
      * @return {@code true} if verification success.
+     * @throws VerificationException
      */
-    public boolean verify(VirgilBuffer buffer, VirgilBuffer signature) {
+    public boolean verify(VirgilBuffer buffer, VirgilBuffer signature) throws VerificationException {
         if (buffer == null) {
             throw new NullArgumentException("buffer");
         }
@@ -199,8 +206,9 @@ public class VirgilCard {
      * @param signature
      *            The signature used to verify the data integrity.
      * @return {@code true} if verification success.
+     * @throws VerificationException
      */
-    public boolean verify(String plaintext, VirgilBuffer signature) {
+    public boolean verify(String plaintext, VirgilBuffer signature) throws VerificationException {
         if (plaintext == null) {
             throw new NullArgumentException("plaintext");
         }
@@ -215,8 +223,9 @@ public class VirgilCard {
      * @param signature
      *            The signature as Base64 string used to verify the data integrity.
      * @return {@code true} if verification success.
+     * @throws VerificationException
      */
-    public boolean verify(String plaintext, String signature) {
+    public boolean verify(String plaintext, String signature) throws VerificationException {
         return verify(plaintext, VirgilBuffer.from(signature, StringEncoding.Base64));
     }
 
@@ -228,8 +237,9 @@ public class VirgilCard {
      * @param signature
      *            The signature used to verify the data integrity.
      * @return {@code true} if verification success.
+     * @throws VerificationException
      */
-    public boolean verify(String plaintext, byte[] signature) {
+    public boolean verify(String plaintext, byte[] signature) throws VerificationException {
         return verify(plaintext, VirgilBuffer.from(signature));
     }
 
@@ -285,8 +295,9 @@ public class VirgilCard {
      * Publishes a current {@linkplain VirgilCard} to the Virgil Security services.
      * 
      * @return This card.
+     * @throws CryptoException
      */
-    public VirgilCard publish() {
+    public VirgilCard publish() throws CryptoException {
         PublishCardRequest publishCardRequest = new PublishCardRequest(this.card.getSnapshot(),
                 this.card.getMeta().getSignatures());
 
@@ -337,8 +348,9 @@ public class VirgilCard {
      * @param recipients
      *            The recipients.
      * @return A new {@link VirgilBuffer} with encrypted data.
+     * @throws EncryptionException
      */
-    VirgilBuffer encrypt(VirgilBuffer buffer, Collection<VirgilCard> recipients) {
+    VirgilBuffer encrypt(VirgilBuffer buffer, Collection<VirgilCard> recipients) throws EncryptionException {
         List<PublicKey> publicKeyRecipients = new ArrayList<>();
         if (recipients != null && !recipients.isEmpty()) {
             for (VirgilCard card : recipients) {
