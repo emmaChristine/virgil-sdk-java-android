@@ -304,6 +304,9 @@ public class SecureChat {
             byte[] sessionId = msg.getSessionId();
 
             SessionState sessionState = this.sessionHelper.getSessionState(card.getId());
+            if (sessionState == null) {
+                return null;
+            }
             if (!Arrays.equals(sessionId, sessionState.getSessionId())) {
                 throw new VirgilClientException("Session not found.");
             }
@@ -354,7 +357,7 @@ public class SecureChat {
     }
 
     private void removeSessionKeys(InitiatorSessionState sessionState) throws VirgilException {
-        this.keyHelper.removeEphPrivateKey(sessionState.getEphKeyName());
+        this.keyHelper.removeEphPrivateKeyByEntryName(sessionState.getEphKeyName());
     }
 
     private void removeSessionKeys(ResponderSessionState sessionState) throws VirgilException {

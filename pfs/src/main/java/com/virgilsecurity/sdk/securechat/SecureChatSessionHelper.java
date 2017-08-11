@@ -106,7 +106,11 @@ public class SecureChatSessionHelper {
     }
 
     private void removeSessionState(String cardId, boolean synchronize) {
-        userDefaults.removeData(this.getSuiteName(), getSessionName(cardId));
+        removeSessionStateByName(getSessionName(cardId), synchronize);
+    }
+
+    private void removeSessionStateByName(String sessionName, boolean synchronize) {
+        userDefaults.removeData(this.getSuiteName(), sessionName);
         if (synchronize) {
             userDefaults.synchronize();
         }
@@ -121,8 +125,8 @@ public class SecureChatSessionHelper {
     }
 
     public void removeSessionsStatesByNames(Collection<String> names) {
-        for (String cardId : names) {
-            this.removeSessionState(cardId, false);
+        for (String sessionName : names) {
+            this.removeSessionStateByName(sessionName, false);
         }
         userDefaults.synchronize();
     }
