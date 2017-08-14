@@ -105,12 +105,14 @@ public class DefaultKeyStorage implements KeyStorage {
     public void store(KeyEntry keyEntry) {
         String name = keyEntry.getName();
 
-        Entries entries = load();
-        if (entries.containsKey(name)) {
-            throw new KeyEntryAlreadyExistsException();
+        synchronized (this) {
+            Entries entries = load();
+            if (entries.containsKey(name)) {
+                throw new KeyEntryAlreadyExistsException();
+            }
+            entries.put(name, (VirgilKeyEntry) keyEntry);
+            save(entries);
         }
-        entries.put(name, (VirgilKeyEntry) keyEntry);
-        save(entries);
     }
 
     /*
@@ -120,13 +122,15 @@ public class DefaultKeyStorage implements KeyStorage {
      */
     @Override
     public KeyEntry load(String keyName) {
-        Entries entries = load();
-        if (!entries.containsKey(keyName)) {
-            throw new KeyEntryNotFoundException();
+        synchronized (this) {
+            Entries entries = load();
+            if (!entries.containsKey(keyName)) {
+                throw new KeyEntryNotFoundException();
+            }
+            VirgilKeyEntry entry = entries.get(keyName);
+            entry.setName(keyName);
+            return entry;
         }
-        VirgilKeyEntry entry = entries.get(keyName);
-        entry.setName(keyName);
-        return entry;
     }
 
     /*
@@ -139,8 +143,10 @@ public class DefaultKeyStorage implements KeyStorage {
         if (keyName == null) {
             return false;
         }
-        Entries entries = load();
-        return entries.containsKey(keyName);
+        synchronized (this) {
+            Entries entries = load();
+            return entries.containsKey(keyName);
+        }
     }
 
     /*
@@ -150,12 +156,14 @@ public class DefaultKeyStorage implements KeyStorage {
      */
     @Override
     public void delete(String keyName) {
-        Entries entries = load();
-        if (!entries.containsKey(keyName)) {
-            throw new KeyEntryNotFoundException();
+        synchronized (this) {
+            Entries entries = load();
+            if (!entries.containsKey(keyName)) {
+                throw new KeyEntryNotFoundException();
+            }
+            entries.remove(keyName);
+            save(entries);
         }
-        entries.remove(keyName);
-        save(entries);
     }
 
     private Entries load() {

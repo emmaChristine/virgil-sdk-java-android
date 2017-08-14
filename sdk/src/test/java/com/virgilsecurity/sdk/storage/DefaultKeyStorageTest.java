@@ -33,11 +33,16 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +52,7 @@ import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryAlreadyExistsException;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
+import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 /**
  * Unit tests for {@code VirgilKeyStorage}
@@ -64,6 +70,8 @@ public class DefaultKeyStorageTest {
     private KeyEntry entry;
 
     private KeyPair keyPair;
+
+    private boolean failedConcurrency = false;
 
     @Before
     public void setUp() {
@@ -148,6 +156,45 @@ public class DefaultKeyStorageTest {
     @Test(expected = KeyEntryNotFoundException.class)
     public void delete_nonExisting() {
         storage.delete(alias);
+    }
+
+    @Test
+    public void concurrentFlow() throws InterruptedException {
+        failedConcurrency = false;
+        ExecutorService exec = Executors.newFixedThreadPool(16);
+        for (int i = 0; i < 10000; i++) {
+            exec.execute(new Runnable() {
+                @Override
+                public void run() {
+                    String keyName = UUID.randomUUID().toString();
+
+                    try {
+                        assertFalse(storage.exists(keyName));
+
+                        KeyEntry keyEntry = new VirgilKeyEntry(keyName, ConvertionUtils.toBytes(keyName));
+                        storage.store(keyEntry);
+                        assertTrue(storage.exists(keyName));
+
+                        KeyEntry loadedEntry = storage.load(keyName);
+                        assertNotNull(loadedEntry);
+                        assertEquals(keyName, loadedEntry.getName());
+                        assertArrayEquals(keyEntry.getValue(), loadedEntry.getValue());
+
+                        storage.delete(keyName);
+                        assertFalse(storage.exists(keyName));
+                    } catch (Exception e) {
+                        failedConcurrency = true;
+                        throw e;
+                    }
+                }
+            });
+        }
+        exec.shutdown();
+        exec.awaitTermination(5, TimeUnit.SECONDS);
+
+        if (failedConcurrency) {
+            fail();
+        }
     }
 
 }

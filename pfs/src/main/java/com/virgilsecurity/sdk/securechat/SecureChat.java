@@ -195,7 +195,7 @@ public class SecureChat {
         return secureSession;
     }
 
-    public void gentleReset() throws CorruptedSavedSessionException, RemoveSessionException {
+    public synchronized void gentleReset() throws CorruptedSavedSessionException, RemoveSessionException {
         Map<String, SessionState> sessionStates = this.sessionHelper.getAllSessions();
 
         for (Entry<String, SessionState> sessionState : sessionStates.entrySet()) {

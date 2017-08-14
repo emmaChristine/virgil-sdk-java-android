@@ -131,20 +131,22 @@ public class SecureChatKeyHelper {
     }
 
     public void gentleReset() {
-        ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
-        if (serviceInfoEntry == null) {
-            return;
+        synchronized (this) {
+            ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
+            if (serviceInfoEntry == null) {
+                return;
+            }
+            List<String> keyEntryNames = new LinkedList<>();
+            for (ServiceInfoEntry.KeyEntry keyEntry : serviceInfoEntry.getLtcKeys()) {
+                keyEntryNames.add(keyEntry.getKeyName());
+            }
+            keyEntryNames.addAll(serviceInfoEntry.getOtcKeysNames());
+            keyEntryNames.addAll(serviceInfoEntry.getEphKeysNames());
+            for (String keyEntryName : keyEntryNames) {
+                this.removePrivateKey(keyEntryName);
+            }
+            this.keyStorage.delete(this.getServiceInfoName());
         }
-        List<String> keyEntryNames = new LinkedList<>();
-        for (ServiceInfoEntry.KeyEntry keyEntry : serviceInfoEntry.getLtcKeys()) {
-            keyEntryNames.add(keyEntry.getKeyName());
-        }
-        keyEntryNames.addAll(serviceInfoEntry.getOtcKeysNames());
-        keyEntryNames.addAll(serviceInfoEntry.getEphKeysNames());
-        for (String keyEntryName : keyEntryNames) {
-            this.removePrivateKey(keyEntryName);
-        }
-        this.keyStorage.delete(this.getServiceInfoName());
     }
 
     public List<String> getAllOtCardsIds() {
@@ -200,17 +202,19 @@ public class SecureChatKeyHelper {
     public String persistEphPrivateKey(PrivateKey key, String name) {
         String ephKeyEntryName = this.saveEphPrivateKey(key, name);
 
-        ServiceInfoEntry serviceInfo = this.getServiceInfoEntry();
-        if (serviceInfo != null) {
-            List<String> keyNames = new ArrayList<>(serviceInfo.getEphKeysNames());
-            keyNames.add(ephKeyEntryName);
-            serviceInfo = new ServiceInfoEntry(serviceInfo.getLtcKeys(), serviceInfo.getOtcKeysNames(), keyNames);
-        } else {
-            serviceInfo = new ServiceInfoEntry(
-                    new ArrayList<com.virgilsecurity.sdk.securechat.model.ServiceInfoEntry.KeyEntry>(),
-                    new ArrayList<String>(), Arrays.asList(ephKeyEntryName));
+        synchronized (this) {
+            ServiceInfoEntry serviceInfo = this.getServiceInfoEntry();
+            if (serviceInfo != null) {
+                List<String> keyNames = new ArrayList<>(serviceInfo.getEphKeysNames());
+                keyNames.add(ephKeyEntryName);
+                serviceInfo = new ServiceInfoEntry(serviceInfo.getLtcKeys(), serviceInfo.getOtcKeysNames(), keyNames);
+            } else {
+                serviceInfo = new ServiceInfoEntry(
+                        new ArrayList<com.virgilsecurity.sdk.securechat.model.ServiceInfoEntry.KeyEntry>(),
+                        new ArrayList<String>(), Arrays.asList(ephKeyEntryName));
+            }
+            this.updateServiceInfoEntry(serviceInfo);
         }
-        this.updateServiceInfoEntry(serviceInfo);
 
         return ephKeyEntryName;
     }
@@ -248,56 +252,59 @@ public class SecureChatKeyHelper {
         this.updateServiceInfoEntry(newServiceInfo);
     }
 
-    public void removeOldKeys(Set<String> relevantEphKeys, Set<String> relevantLtCards, Set<String> relevantOtCards) throws VirgilClientException {
-        ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
+    public void removeOldKeys(Set<String> relevantEphKeys, Set<String> relevantLtCards, Set<String> relevantOtCards)
+            throws VirgilClientException {
+        synchronized (this) {
+            ServiceInfoEntry serviceInfoEntry = this.getServiceInfoEntry();
 
-        if (serviceInfoEntry == null) {
-            if ((!relevantEphKeys.isEmpty()) || (!relevantLtCards.isEmpty()) || (!relevantOtCards.isEmpty())) {
-                throw new VirgilClientException("Trying to remove keys, but no service entry was found.");
+            if (serviceInfoEntry == null) {
+                if ((!relevantEphKeys.isEmpty()) || (!relevantLtCards.isEmpty()) || (!relevantOtCards.isEmpty())) {
+                    throw new VirgilClientException("Trying to remove keys, but no service entry was found.");
+                }
+                return;
             }
-            return;
-        }
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, -this.longTermKeyTtl);
-        Date date = cal.getTime();
-        Set<String> outdatedLtKeysNames = new HashSet<String>();
-        for (ServiceInfoEntry.KeyEntry ltcKey : serviceInfoEntry.getLtcKeys()) {
-            if (date.after(ltcKey.getDate())) {
-                outdatedLtKeysNames.add(ltcKey.getKeyName());
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.SECOND, -this.longTermKeyTtl);
+            Date date = cal.getTime();
+            Set<String> outdatedLtKeysNames = new HashSet<String>();
+            for (ServiceInfoEntry.KeyEntry ltcKey : serviceInfoEntry.getLtcKeys()) {
+                if (date.after(ltcKey.getDate())) {
+                    outdatedLtKeysNames.add(ltcKey.getKeyName());
+                }
             }
+
+            Set<String> ltKeysToRemove = new HashSet<>(outdatedLtKeysNames);
+            for (String relevantLtCard : relevantLtCards) {
+                ltKeysToRemove.remove(this.getPrivateKeyEntryName(this.getLtPrivateKeyName(relevantLtCard)));
+            }
+
+            Set<String> otKeysToRemove = new HashSet<>(serviceInfoEntry.getOtcKeysNames());
+            for (String relevantOtCard : relevantOtCards) {
+                otKeysToRemove.remove(this.getPrivateKeyEntryName(this.getOtPrivateKeyName(relevantOtCard)));
+            }
+
+            Set<String> ephKeysToRemove = new HashSet<>(serviceInfoEntry.getEphKeysNames());
+            ephKeysToRemove.removeAll(relevantEphKeys);
+
+            Set<String> allKeysToRemove = new HashSet<>();
+            allKeysToRemove.addAll(ltKeysToRemove);
+            allKeysToRemove.addAll(otKeysToRemove);
+            allKeysToRemove.addAll(ephKeysToRemove);
+
+            for (String keyName : allKeysToRemove) {
+                this.removePrivateKey(keyName);
+            }
+
+            // Update service info entry
+            List<ServiceInfoEntry.KeyEntry> newLtcKeys = filterEntries(serviceInfoEntry.getLtcKeys(), ltKeysToRemove);
+            List<String> newOtcKeyNames = filter(serviceInfoEntry.getOtcKeysNames(), otKeysToRemove);
+            List<String> newEphKeyNames = filter(serviceInfoEntry.getEphKeysNames(), ephKeysToRemove);
+
+            ServiceInfoEntry newServiceInfoEntry = new ServiceInfoEntry(newLtcKeys, newOtcKeyNames, newEphKeyNames);
+
+            this.updateServiceInfoEntry(newServiceInfoEntry);
         }
-
-        Set<String> ltKeysToRemove = new HashSet<>(outdatedLtKeysNames);
-        for (String relevantLtCard : relevantLtCards) {
-            ltKeysToRemove.remove(this.getPrivateKeyEntryName(this.getLtPrivateKeyName(relevantLtCard)));
-        }
-
-        Set<String> otKeysToRemove = new HashSet<>(serviceInfoEntry.getOtcKeysNames());
-        for (String relevantOtCard : relevantOtCards) {
-            otKeysToRemove.remove(this.getPrivateKeyEntryName(this.getOtPrivateKeyName(relevantOtCard)));
-        }
-
-        Set<String> ephKeysToRemove = new HashSet<>(serviceInfoEntry.getEphKeysNames());
-        ephKeysToRemove.removeAll(relevantEphKeys);
-
-        Set<String> allKeysToRemove = new HashSet<>();
-        allKeysToRemove.addAll(ltKeysToRemove);
-        allKeysToRemove.addAll(otKeysToRemove);
-        allKeysToRemove.addAll(ephKeysToRemove);
-
-        for (String keyName : allKeysToRemove) {
-            this.removePrivateKey(keyName);
-        }
-
-        // Update service info entry
-        List<ServiceInfoEntry.KeyEntry> newLtcKeys = filterEntries(serviceInfoEntry.getLtcKeys(), ltKeysToRemove);
-        List<String> newOtcKeyNames = filter(serviceInfoEntry.getOtcKeysNames(), otKeysToRemove);
-        List<String> newEphKeyNames = filter(serviceInfoEntry.getEphKeysNames(), ephKeysToRemove);
-
-        ServiceInfoEntry newServiceInfoEntry = new ServiceInfoEntry(newLtcKeys, newOtcKeyNames, newEphKeyNames);
-
-        this.updateServiceInfoEntry(newServiceInfoEntry);
     }
 
     private String extractCardId(String otKeyEntryName) {

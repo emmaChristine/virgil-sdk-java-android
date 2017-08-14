@@ -30,10 +30,15 @@
 package com.virgilsecurity.sdk.securechat;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -47,8 +52,11 @@ import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
+import com.virgilsecurity.sdk.securechat.model.ServiceInfoEntry;
+import com.virgilsecurity.sdk.securechat.model.ServiceInfoEntry.KeyEntry;
 import com.virgilsecurity.sdk.storage.KeyStorage;
 import com.virgilsecurity.sdk.storage.VirgilKeyEntry;
+import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 /**
  * @author Andrii Iakovenko
@@ -116,8 +124,57 @@ public class SecureChatKeyHelperTest {
     }
 
     @Test
-    @Ignore
+    public void hasRelevantLtKey_noKeys() {
+        List<KeyEntry> ltcKeys = new ArrayList<>();
+        List<String> otcKeysNames = new ArrayList<>();
+        List<String> ephKeysNames = new ArrayList<>();
+        ServiceInfoEntry infoEntry = new ServiceInfoEntry(ltcKeys, otcKeysNames, ephKeysNames);
+
+        String key = String.format("VIRGIL.SERVICE.INFO.%s", IDENTITY_CARD_ID);
+        when(keyStorage.load(key)).thenReturn(
+                new VirgilKeyEntry(key, ConvertionUtils.toBytes(ConvertionUtils.getGson().toJson(infoEntry))));
+
+        assertFalse(keyHelper.hasRelevantLtKey());
+    }
+
+    @Test
+    public void hasRelevantLtKey_onlyExpiredKeys() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, -1);
+        KeyEntry keyEntry = new KeyEntry(IDENTITY_CARD_ID, cal.getTime());
+
+        List<KeyEntry> ltcKeys = new ArrayList<>();
+        ltcKeys.add(keyEntry);
+
+        List<String> otcKeysNames = new ArrayList<>();
+        List<String> ephKeysNames = new ArrayList<>();
+        ServiceInfoEntry infoEntry = new ServiceInfoEntry(ltcKeys, otcKeysNames, ephKeysNames);
+
+        String key = String.format("VIRGIL.SERVICE.INFO.%s", IDENTITY_CARD_ID);
+        when(keyStorage.load(key)).thenReturn(
+                new VirgilKeyEntry(key, ConvertionUtils.toBytes(ConvertionUtils.getGson().toJson(infoEntry))));
+
+        assertFalse(keyHelper.hasRelevantLtKey());
+    }
+
+    @Test
     public void hasRelevantLtKey() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, 1);
+        KeyEntry keyEntry = new KeyEntry(IDENTITY_CARD_ID, cal.getTime());
+
+        List<KeyEntry> ltcKeys = new ArrayList<>();
+        ltcKeys.add(keyEntry);
+
+        List<String> otcKeysNames = new ArrayList<>();
+        List<String> ephKeysNames = new ArrayList<>();
+        ServiceInfoEntry infoEntry = new ServiceInfoEntry(ltcKeys, otcKeysNames, ephKeysNames);
+
+        String key = String.format("VIRGIL.SERVICE.INFO.%s", IDENTITY_CARD_ID);
+        when(keyStorage.load(key)).thenReturn(
+                new VirgilKeyEntry(key, ConvertionUtils.toBytes(ConvertionUtils.getGson().toJson(infoEntry))));
+
+        assertTrue(keyHelper.hasRelevantLtKey());
     }
 
     @Test
