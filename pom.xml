@@ -57,13 +57,9 @@
 		<module>api</module>
 		<module>crypto-android</module>
 		<module>crypto</module>
-
-
 		<module>sdk</module>
 		<module>sdk-android</module>
 		<module>samples</module>
-		<module>pfs</module>
-		<module>pfs-android</module>
 	</modules>
 
 	<dependencyManagement>
