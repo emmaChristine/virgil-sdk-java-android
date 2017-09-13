@@ -35,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 /**
@@ -62,7 +63,7 @@ public class VirgilCardTest {
     }
 
     @Test
-    public void encrypt_buffer() {
+    public void encrypt_buffer() throws CryptoException {
         VirgilBuffer cipherData = virgilCard.encrypt(VirgilBuffer.from(TEXT));
         VirgilBuffer decryptedData = virgilKey.decrypt(cipherData);
 
@@ -70,7 +71,7 @@ public class VirgilCardTest {
     }
 
     @Test
-    public void encrypt_plaintext() {
+    public void encrypt_plaintext() throws CryptoException {
         VirgilBuffer cipherData = virgilCard.encrypt(TEXT);
         VirgilBuffer decryptedData = virgilKey.decrypt(cipherData);
 
@@ -78,7 +79,7 @@ public class VirgilCardTest {
     }
 
     @Test
-    public void encrypt_bytes() {
+    public void encrypt_bytes() throws CryptoException {
         VirgilBuffer cipherData = virgilCard.encrypt(ConvertionUtils.toBytes(TEXT));
         VirgilBuffer decryptedData = virgilKey.decrypt(cipherData);
 
@@ -86,28 +87,28 @@ public class VirgilCardTest {
     }
 
     @Test
-    public void verify_buffer_buffer() {
+    public void verify_buffer_buffer() throws CryptoException {
         VirgilBuffer signature = virgilKey.sign(TEXT);
 
         assertTrue(virgilCard.verify(VirgilBuffer.from(TEXT), signature));
     }
 
     @Test
-    public void verify_string_buffer() {
+    public void verify_string_buffer() throws CryptoException {
         VirgilBuffer signature = virgilKey.sign(TEXT);
 
         assertTrue(virgilCard.verify(TEXT, signature));
     }
 
     @Test
-    public void verify_string_string() {
+    public void verify_string_string() throws CryptoException {
         VirgilBuffer signature = virgilKey.sign(TEXT);
 
         assertTrue(virgilCard.verify(TEXT, signature.toString(StringEncoding.Base64)));
     }
 
     @Test
-    public void verify_string_bytes() {
+    public void verify_string_bytes() throws CryptoException {
         VirgilBuffer signature = virgilKey.sign(TEXT);
 
         assertTrue(virgilCard.verify(TEXT, signature.getBytes()));

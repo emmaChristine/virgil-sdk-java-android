@@ -40,35 +40,54 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilByteArrayUtils implements java.lang.AutoCloseable {
-    private transient long swigCPtr;
-    protected transient boolean swigCMemOwn;
+    /**
+     * Translate given byte array to the HEX string.
+     * 
+     * @param array
+     *            The byte array.
+     * @return The HEX string.
+     */
+    public static String bytesToHex(byte[] array) {
+        return virgil_crypto_javaJNI.VirgilByteArrayUtils_bytesToHex__SWIG_1(array);
+    }
+    /**
+     * Translate given byte array to the HEX string.
+     * 
+     * @param array
+     *            The byte array.
+     * @param formatted
+     *            If {@code true}, endline will be inserted every 16 bytes, and all bytes will be separated with
+     *            whitespaces.
+     * @return The HEX string.
+     */
+    public static String bytesToHex(byte[] array, boolean formatted) {
+        return virgil_crypto_javaJNI.VirgilByteArrayUtils_bytesToHex__SWIG_0(array, formatted);
+    }
 
-    protected VirgilByteArrayUtils(long cPtr, boolean cMemoryOwn) {
-        swigCMemOwn = cMemoryOwn;
-        swigCPtr = cPtr;
+    /**
+     * Represent given byte array as string.
+     * 
+     * @param array
+     *            The byte array.
+     * @return the string.
+     */
+    public static String bytesToString(byte[] array) {
+        return virgil_crypto_javaJNI.VirgilByteArrayUtils_bytesToString(array);
     }
 
     protected static long getCPtr(VirgilByteArrayUtils obj) {
         return (obj == null) ? 0 : obj.swigCPtr;
     }
 
-    protected void finalize() {
-        delete();
-    }
-
-    public synchronized void delete() {
-        if (swigCPtr != 0) {
-            if (swigCMemOwn) {
-                swigCMemOwn = false;
-                virgil_crypto_javaJNI.delete_VirgilByteArrayUtils(swigCPtr);
-            }
-            swigCPtr = 0;
-        }
-    }
-
-    @Override
-    public void close() {
-        delete();
+    /**
+     * Translate given HEX string to the byte array.
+     * 
+     * @param hexStr
+     *            The HEX string.
+     * @return The byte array.
+     */
+    public static byte[] hexToBytes(String hexStr) {
+        return virgil_crypto_javaJNI.VirgilByteArrayUtils_hexToBytes(hexStr);
     }
 
     /**
@@ -93,51 +112,32 @@ public class VirgilByteArrayUtils implements java.lang.AutoCloseable {
         return virgil_crypto_javaJNI.VirgilByteArrayUtils_stringToBytes(str);
     }
 
-    /**
-     * Represent given byte array as string.
-     * 
-     * @param array
-     *            The byte array.
-     * @return the string.
-     */
-    public static String bytesToString(byte[] array) {
-        return virgil_crypto_javaJNI.VirgilByteArrayUtils_bytesToString(array);
+    private transient long swigCPtr;
+
+    protected transient boolean swigCMemOwn;
+
+    protected VirgilByteArrayUtils(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
     }
 
-    /**
-     * Translate given HEX string to the byte array.
-     * 
-     * @param hexStr
-     *            The HEX string.
-     * @return The byte array.
-     */
-    public static byte[] hexToBytes(String hexStr) {
-        return virgil_crypto_javaJNI.VirgilByteArrayUtils_hexToBytes(hexStr);
+    @Override
+    public void close() {
+        delete();
     }
 
-    /**
-     * Translate given byte array to the HEX string.
-     * 
-     * @param array
-     *            The byte array.
-     * @param formatted
-     *            If {@code true}, endline will be inserted every 16 bytes, and all bytes will be separated with
-     *            whitespaces.
-     * @return The HEX string.
-     */
-    public static String bytesToHex(byte[] array, boolean formatted) {
-        return virgil_crypto_javaJNI.VirgilByteArrayUtils_bytesToHex__SWIG_0(array, formatted);
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilByteArrayUtils(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
     }
 
-    /**
-     * Translate given byte array to the HEX string.
-     * 
-     * @param array
-     *            The byte array.
-     * @return The HEX string.
-     */
-    public static String bytesToHex(byte[] array) {
-        return virgil_crypto_javaJNI.VirgilByteArrayUtils_bytesToHex__SWIG_1(array);
+    protected void finalize() {
+        delete();
     }
 
 }

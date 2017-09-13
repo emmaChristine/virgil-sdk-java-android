@@ -47,20 +47,28 @@ package com.virgilsecurity.crypto;
  * @author Andrii Iakovenko
  *
  */
-public class VirgilStreamSigner implements java.lang.AutoCloseable {
-    private transient long swigCPtr;
-    protected transient boolean swigCMemOwn;
-
-    protected VirgilStreamSigner(long cPtr, boolean cMemoryOwn) {
-        swigCMemOwn = cMemoryOwn;
-        swigCPtr = cPtr;
-    }
-
+public class VirgilStreamSigner extends VirgilSignerBase implements java.lang.AutoCloseable {
     protected static long getCPtr(VirgilStreamSigner obj) {
         return (obj == null) ? 0 : obj.swigCPtr;
     }
 
-    protected void finalize() {
+    private transient long swigCPtr;
+
+    /**
+     * Create a new instance of {@code VirgilStreamSigner}
+     *
+     */
+    public VirgilStreamSigner() {
+        this(virgil_crypto_javaJNI.new_VirgilStreamSigner(), true);
+    }
+
+    protected VirgilStreamSigner(long cPtr, boolean cMemoryOwn) {
+        super(virgil_crypto_javaJNI.VirgilStreamSigner_SWIGUpcast(cPtr), cMemoryOwn);
+        swigCPtr = cPtr;
+    }
+
+    @Override
+    public void close() {
         delete();
     }
 
@@ -72,29 +80,25 @@ public class VirgilStreamSigner implements java.lang.AutoCloseable {
             }
             swigCPtr = 0;
         }
+        super.delete();
     }
 
-    @Override
-    public void close() {
+    protected void finalize() {
         delete();
     }
 
     /**
-     * Create a new instance of {@code VirgilStreamSigner}
-     *
-     * @param hashAlgorithm
-     *            the hash algorithm.
+     * Sign data provided by the source with given private key.
+     * 
+     * @param source
+     *            source of the data to be signed.
+     * @param privateKey
+     *            the private key.
+     * @return Virgil Security sign.
      */
-    public VirgilStreamSigner(VirgilHash.Algorithm hashAlgorithm) {
-        this(virgil_crypto_javaJNI.new_VirgilStreamSigner__SWIG_0(hashAlgorithm.swigValue()), true);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilStreamSigner}
-     *
-     */
-    public VirgilStreamSigner() {
-        this(virgil_crypto_javaJNI.new_VirgilStreamSigner__SWIG_1(), true);
+    public byte[] sign(VirgilDataSource source, byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilStreamSigner_sign__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
+                source, privateKey);
     }
 
     /**
@@ -111,20 +115,6 @@ public class VirgilStreamSigner implements java.lang.AutoCloseable {
     public byte[] sign(VirgilDataSource source, byte[] privateKey, byte[] privateKeyPassword) {
         return virgil_crypto_javaJNI.VirgilStreamSigner_sign__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
                 source, privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Sign data provided by the source with given private key.
-     * 
-     * @param source
-     *            source of the data to be signed.
-     * @param privateKey
-     *            the private key.
-     * @return Virgil Security sign.
-     */
-    public byte[] sign(VirgilDataSource source, byte[] privateKey) {
-        return virgil_crypto_javaJNI.VirgilStreamSigner_sign__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
-                source, privateKey);
     }
 
     /**

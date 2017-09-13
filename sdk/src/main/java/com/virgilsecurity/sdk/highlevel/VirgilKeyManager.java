@@ -32,6 +32,7 @@ package com.virgilsecurity.sdk.highlevel;
 import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsNotFoundException;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.storage.KeyEntry;
 
 /**
@@ -45,7 +46,8 @@ public class VirgilKeyManager implements KeyManager {
     /**
      * Create new instance of {@link VirgilKeyManager}.
      * 
-     * @param context The context.
+     * @param context
+     *            The context.
      */
     public VirgilKeyManager(VirgilApiContext context) {
         this.context = context;
@@ -68,7 +70,7 @@ public class VirgilKeyManager implements KeyManager {
      * @see com.virgilsecurity.sdk.highlevel.KeyManager#load(java.lang.String)
      */
     @Override
-    public VirgilKey load(String keyName) {
+    public VirgilKey load(String keyName) throws VirgilKeyIsNotFoundException, CryptoException {
         return load(keyName, null);
     }
 
@@ -78,7 +80,7 @@ public class VirgilKeyManager implements KeyManager {
      * @see com.virgilsecurity.sdk.highlevel.KeyManager#load(java.lang.String, java.lang.String)
      */
     @Override
-    public VirgilKey load(String keyName, String keyPassword) throws VirgilKeyIsNotFoundException {
+    public VirgilKey load(String keyName, String keyPassword) throws VirgilKeyIsNotFoundException, CryptoException {
         KeyEntry keyEntry = this.context.getKeyStorage().load(keyName);
         PrivateKey privateKey = this.context.getCrypto().importPrivateKey(keyEntry.getValue(), keyPassword);
         VirgilKey virgilKey = new VirgilKey(this.context, privateKey);
@@ -103,7 +105,7 @@ public class VirgilKeyManager implements KeyManager {
      * @see com.virgilsecurity.sdk.highlevel.KeyManager#importKey(com.virgilsecurity.sdk.highlevel.VirgilBuffer)
      */
     @Override
-    public VirgilKey importKey(VirgilBuffer keyBuffer) {
+    public VirgilKey importKey(VirgilBuffer keyBuffer) throws CryptoException {
         return importKey(keyBuffer, null);
     }
 
@@ -114,10 +116,21 @@ public class VirgilKeyManager implements KeyManager {
      * java.lang.String)
      */
     @Override
-    public VirgilKey importKey(VirgilBuffer keyBuffer, String keyPassword) {
+    public VirgilKey importKey(VirgilBuffer keyBuffer, String keyPassword) throws CryptoException {
         PrivateKey privateKey = this.context.getCrypto().importPrivateKey(keyBuffer.getBytes(), keyPassword);
         VirgilKey virgilKey = new VirgilKey(this.context, privateKey);
 
+        return virgilKey;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.highlevel.KeyManager#importKey(com.virgilsecurity.sdk.crypto.PrivateKey)
+     */
+    @Override
+    public VirgilKey importKey(PrivateKey privateKey) {
+        VirgilKey virgilKey = new VirgilKey(this.context, privateKey);
         return virgilKey;
     }
 

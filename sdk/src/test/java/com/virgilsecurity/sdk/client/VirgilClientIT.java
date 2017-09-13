@@ -55,6 +55,8 @@ import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * Test cases for Virgil Client.
@@ -70,7 +72,7 @@ public class VirgilClientIT extends BaseIT {
     private PrivateKey appKey;
 
     @Before
-    public void setUp() throws MalformedURLException {
+    public void setUp() throws MalformedURLException, CryptoException {
         crypto = new VirgilCrypto();
 
         VirgilClientContext ctx = new VirgilClientContext(APP_TOKEN);
@@ -95,7 +97,7 @@ public class VirgilClientIT extends BaseIT {
     }
 
     @Test
-    public void testCustomCards() throws VirgilServiceException {
+    public void testCustomCards() throws VirgilException {
         KeyPair aliceKeys = crypto.generateKeys();
 
         // Create card

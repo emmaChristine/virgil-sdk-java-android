@@ -86,4 +86,9 @@ public class RequestSigner {
         request.appendSignature(appdId, signature);
     }
 
+    public String getCardId(SignableRequest request) {
+        Fingerprint fingerprint = this.crypto.calculateFingerprint(request.getSnapshot());
+        return fingerprint.toHex();
+    }
+
 }

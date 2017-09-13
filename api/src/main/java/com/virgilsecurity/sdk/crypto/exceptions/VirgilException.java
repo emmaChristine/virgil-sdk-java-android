@@ -35,7 +35,7 @@ package com.virgilsecurity.sdk.crypto.exceptions;
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
+public class VirgilException extends Exception {
 
     private static final long serialVersionUID = -93962084934375263L;
 
@@ -66,5 +66,15 @@ public class VirgilException extends RuntimeException {
      */
     public VirgilException(String message) {
         super(message);
+    }
+
+    /**
+     * Create new instance of {@link VirgilException}.
+     * 
+     * @param message
+     * @param cause
+     */
+    public VirgilException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

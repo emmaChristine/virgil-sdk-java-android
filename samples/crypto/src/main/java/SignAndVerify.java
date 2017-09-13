@@ -37,6 +37,7 @@ import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * This sample shows how to sign and verify data.
@@ -50,7 +51,7 @@ public class SignAndVerify {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, VirgilException {
         String text = "Sign me, Please!!!";
 
         // Initialize Crypto

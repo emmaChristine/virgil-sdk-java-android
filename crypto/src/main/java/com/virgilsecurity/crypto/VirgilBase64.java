@@ -37,7 +37,19 @@
 package com.virgilsecurity.crypto;
 
 public class VirgilBase64 implements java.lang.AutoCloseable {
+    public static byte[] decode(String base64str) {
+        return virgil_crypto_javaJNI.VirgilBase64_decode(base64str);
+    }
+    public static String encode(byte[] data) {
+        return virgil_crypto_javaJNI.VirgilBase64_encode(data);
+    }
+
+    protected static long getCPtr(VirgilBase64 obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
+
     private transient long swigCPtr;
+
     protected transient boolean swigCMemOwn;
 
     protected VirgilBase64(long cPtr, boolean cMemoryOwn) {
@@ -45,11 +57,8 @@ public class VirgilBase64 implements java.lang.AutoCloseable {
         swigCPtr = cPtr;
     }
 
-    protected static long getCPtr(VirgilBase64 obj) {
-        return (obj == null) ? 0 : obj.swigCPtr;
-    }
-
-    protected void finalize() {
+    @Override
+    public void close() {
         delete();
     }
 
@@ -63,17 +72,8 @@ public class VirgilBase64 implements java.lang.AutoCloseable {
         }
     }
 
-    @Override
-    public void close() {
+    protected void finalize() {
         delete();
-    }
-
-    public static String encode(byte[] data) {
-        return virgil_crypto_javaJNI.VirgilBase64_encode(data);
-    }
-
-    public static byte[] decode(String base64str) {
-        return virgil_crypto_javaJNI.VirgilBase64_decode(base64str);
     }
 
 }

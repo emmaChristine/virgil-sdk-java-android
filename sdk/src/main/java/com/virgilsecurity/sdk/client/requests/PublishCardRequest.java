@@ -55,6 +55,7 @@ public class PublishCardRequest extends GenericSignableRequest<PublishCardSnapsh
     public PublishCardRequest(byte[] snapshot, Map<String, byte[]> signatures) {
         this.takenSnapshot = snapshot;
         this.acceptedSignatures = new HashMap<>(signatures);
+        this.type = PublishCardSnapshotModel.class;
     }
 
     /**

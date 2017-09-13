@@ -33,7 +33,7 @@ package com.virgilsecurity.sdk.client.exceptions;
  * @author Andrii Iakovenko
  *
  */
-public class NotSupportedException extends VirgilException {
+public class NotSupportedException extends RuntimeException {
 
     private static final long serialVersionUID = -7069393384373642537L;
 

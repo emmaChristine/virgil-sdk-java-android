@@ -50,6 +50,12 @@ public class VirgilStreamDataSink extends VirgilDataSink implements java.io.Clos
     }
 
     @Override
+    public void close() throws java.io.IOException {
+        this.stream.close();
+        this.delete();
+    }
+
+    @Override
     public boolean isGood() throws java.io.IOException {
         // If stream is not good, method 'write' will throw exception.
         return true;
@@ -58,11 +64,5 @@ public class VirgilStreamDataSink extends VirgilDataSink implements java.io.Clos
     @Override
     public void write(byte[] data) throws java.io.IOException {
         this.stream.write(data, 0, data.length);
-    }
-
-    @Override
-    public void close() throws java.io.IOException {
-        this.stream.close();
-        this.delete();
     }
 }

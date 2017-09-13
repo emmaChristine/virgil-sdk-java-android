@@ -35,7 +35,7 @@ package com.virgilsecurity.sdk.client.exceptions;
  * @author Andrii Iakovenko
  *
  */
-public class VirgilKeyIsNotFoundException extends VirgilException {
+public class VirgilKeyIsNotFoundException extends VirgilClientException {
 
     private static final long serialVersionUID = -6143239665038260797L;
 

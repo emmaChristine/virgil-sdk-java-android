@@ -40,7 +40,7 @@ import com.virgilsecurity.sdk.client.model.CardModel;
  * @author Andrii Iakovenko
  *
  */
-public class CardValidationException extends VirgilException {
+public class CardValidationException extends VirgilClientException {
 
     private static final long serialVersionUID = 8029782256278798813L;
 
@@ -55,6 +55,31 @@ public class CardValidationException extends VirgilException {
     public CardValidationException(List<CardModel> invalidCards) {
         super("One or more cards didn't pass the validation");
         this.invalidCards = new ArrayList<>(invalidCards);
+    }
+
+    /**
+     * Create a new instance of {@code CardValidationException}
+     *
+     * @param message
+     *            the message.
+     * @param invalidCards
+     *            the list of invalid cards.
+     */
+    public CardValidationException(String message, List<CardModel> invalidCards) {
+        super(message);
+        this.invalidCards = new ArrayList<>(invalidCards);
+    }
+
+    /**
+     * Create new instance of {@link CardValidationException}.
+     * 
+     * @param code
+     *            the error code.
+     * @param message
+     *            the message.
+     */
+    public CardValidationException(int code, String message) {
+        super(code, message);
     }
 
     /**

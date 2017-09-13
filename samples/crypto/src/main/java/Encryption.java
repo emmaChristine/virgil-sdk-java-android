@@ -38,6 +38,7 @@ import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * @author Andrii Iakovenko
@@ -49,7 +50,7 @@ public class Encryption {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, VirgilException {
         String text = "Encrypt me, Please!!!";
 
         // Initialize Crypto

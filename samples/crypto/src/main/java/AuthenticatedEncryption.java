@@ -38,6 +38,7 @@ import com.virgilsecurity.crypto.VirgilBase64;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * Authenticated encryption sample.
@@ -47,7 +48,7 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
  */
 public class AuthenticatedEncryption {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, VirgilException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter the text to be signed with alice's Private key: ");
         String dataToSign = br.readLine();

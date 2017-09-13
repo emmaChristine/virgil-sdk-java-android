@@ -29,6 +29,7 @@
  */
 package com.virgilsecurity.sdk.utils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -45,6 +46,12 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import com.virgilsecurity.crypto.VirgilBase64;
 
 /**
@@ -63,6 +70,7 @@ public class ConvertionUtils {
         if (gson == null) {
             GsonBuilder builder = new GsonBuilder();
             gson = builder.registerTypeHierarchyAdapter(byte[].class, new ByteArrayToBase64TypeAdapter())
+                    .registerTypeAdapterFactory(new ClassTypeAdapterFactory())
                     .disableHtmlEscaping().create();
         }
         return gson;
@@ -224,6 +232,42 @@ public class ConvertionUtils {
 
         public JsonElement serialize(byte[] src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(toBase64String(src));
+        }
+    }
+    
+    private static class ClassTypeAdapter extends TypeAdapter<Class<?>> {
+        @Override
+        public void write(JsonWriter jsonWriter, Class<?> clazz) throws IOException {
+            if(clazz == null){
+                jsonWriter.nullValue();
+                return;
+            }
+            jsonWriter.value(clazz.getName());
+        }
+
+        @Override
+        public Class<?> read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                jsonReader.nextNull();
+                return null;
+            }
+            Class<?> clazz = null;
+            try {
+                clazz = Class.forName(jsonReader.nextString());
+            } catch (ClassNotFoundException exception) {
+                throw new IOException(exception);
+            }
+            return clazz;
+        }
+    }
+
+    private static class ClassTypeAdapterFactory implements TypeAdapterFactory {
+        @Override
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+            if(!Class.class.isAssignableFrom(typeToken.getRawType())) {
+                return null;
+            }
+            return (TypeAdapter<T>) new ClassTypeAdapter();
         }
     }
 }

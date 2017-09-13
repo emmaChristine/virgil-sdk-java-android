@@ -43,182 +43,6 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilHash extends VirgilAsn1Compatible implements java.lang.AutoCloseable {
-    private transient long swigCPtr;
-
-    protected VirgilHash(long cPtr, boolean cMemoryOwn) {
-        super(virgil_crypto_javaJNI.VirgilHash_SWIGUpcast(cPtr), cMemoryOwn);
-        swigCPtr = cPtr;
-    }
-
-    protected static long getCPtr(VirgilHash obj) {
-        return (obj == null) ? 0 : obj.swigCPtr;
-    }
-
-    protected void finalize() {
-        delete();
-    }
-
-    public synchronized void delete() {
-        if (swigCPtr != 0) {
-            if (swigCMemOwn) {
-                swigCMemOwn = false;
-                virgil_crypto_javaJNI.delete_VirgilHash(swigCPtr);
-            }
-            swigCPtr = 0;
-        }
-        super.delete();
-    }
-
-    @Override
-    public void close() {
-        delete();
-    }
-
-    /**
-     * Create a new instance of {@code VirgilHash}
-     *
-     */
-    public VirgilHash() {
-        this(virgil_crypto_javaJNI.new_VirgilHash__SWIG_0(), true);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilHash} with given algorithm.
-     *
-     * @param alg
-     *            The algorithm.
-     */
-    public VirgilHash(VirgilHash.Algorithm alg) {
-        this(virgil_crypto_javaJNI.new_VirgilHash__SWIG_1(alg.swigValue()), true);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilHash} with given algorithm name.
-     * 
-     * @param name
-     *            The algorithm name.
-     */
-    public VirgilHash(String name) {
-        this(virgil_crypto_javaJNI.new_VirgilHash__SWIG_2(name), true);
-    }
-
-    /**
-     * Returns name of the hash function.
-     * 
-     * @return Name of the hash function.
-     * 
-     */
-    public String name() {
-        return virgil_crypto_javaJNI.VirgilHash_name(swigCPtr, this);
-    }
-
-    /**
-     * Return underlying hash type. Used for internal purposes only.
-     * 
-     * @return the hash type.
-     */
-    public int type() {
-        return virgil_crypto_javaJNI.VirgilHash_type(swigCPtr, this);
-    }
-
-    /**
-     * Process the given data immediately and return it's hash.
-     * 
-     * @param data
-     *            Date to be hashed.
-     * @return Hash of the given data.
-     */
-    public byte[] hash(byte[] data) {
-        return virgil_crypto_javaJNI.VirgilHash_hash(swigCPtr, this, data);
-    }
-
-    /**
-     * Initialize hashing for the new data hash.
-     */
-    public void start() {
-        virgil_crypto_javaJNI.VirgilHash_start(swigCPtr, this);
-    }
-
-    /**
-     * <p>
-     * Update / process message hash.
-     * </p>
-     * <p>
-     * This method MUST be used after {@link #start()} method only. This method MAY be called multiple times to process
-     * long message splitted to a shorter chunks.
-     * </p>
-     * 
-     * @param data
-     *            The data to be hashed.
-     */
-    public void update(byte[] data) {
-        virgil_crypto_javaJNI.VirgilHash_update(swigCPtr, this, data);
-    }
-
-    /**
-     * Return final data hash.
-     * 
-     * @return Data hash processed by series of {@link #update(byte[])} method.
-     */
-    public byte[] finish() {
-        return virgil_crypto_javaJNI.VirgilHash_finish(swigCPtr, this);
-    }
-
-    /**
-     * Process the given message immediately and return it's HMAC hash.
-     * 
-     * @param key
-     *            Secret key.
-     * @param data
-     *            Data to be hashed.
-     * @return HMAC hash of the given data.
-     */
-    public byte[] hmac(byte[] key, byte[] data) {
-        return virgil_crypto_javaJNI.VirgilHash_hmac(swigCPtr, this, key, data);
-    }
-
-    /**
-     * Initialize HMAC hashing for the new data hash.
-     * 
-     * @param key
-     *            Secret key.
-     */
-    public void hmacStart(byte[] key) {
-        virgil_crypto_javaJNI.VirgilHash_hmacStart(swigCPtr, this, key);
-    }
-
-    /**
-     * Reset HMAC hashing for the new data hash.
-     */
-    public void hmacReset() {
-        virgil_crypto_javaJNI.VirgilHash_hmacReset(swigCPtr, this);
-    }
-
-    /**
-     * <p>
-     * Update / process message HMAC hash.
-     * </p>
-     * <p>
-     * This method MUST be used after {@link #hmacStart(byte[])} or {@link #hmacReset()} methods only. This method MAY
-     * be called multiple times to process long message splitted to a shorter chunks.
-     * </p>
-     * 
-     * @param data
-     *            Data to be hashed.
-     */
-    public void hmacUpdate(byte[] data) {
-        virgil_crypto_javaJNI.VirgilHash_hmacUpdate(swigCPtr, this, data);
-    }
-
-    /**
-     * Return final data HMAC hash.
-     * 
-     * @return Data HMAC hash processed by series of {@link #hmacUpdate(byte[])} method.
-     */
-    public byte[] hmacFinish() {
-        return virgil_crypto_javaJNI.VirgilHash_hmacFinish(swigCPtr, this);
-    }
-
     /**
      * Enumerates possible Hash algorithms.
      *
@@ -257,13 +81,9 @@ public class VirgilHash extends VirgilAsn1Compatible implements java.lang.AutoCl
          */
         public final static VirgilHash.Algorithm SHA512 = new VirgilHash.Algorithm("SHA512");
 
-        public final int swigValue() {
-            return swigValue;
-        }
+        private static Algorithm[] swigValues = { MD5, SHA1, SHA224, SHA256, SHA384, SHA512 };
 
-        public String toString() {
-            return swigName;
-        }
+        private static int swigNext = 0;
 
         public static Algorithm swigToEnum(int swigValue) {
             if (swigValue < swigValues.length && swigValue >= 0 && swigValues[swigValue].swigValue == swigValue)
@@ -274,15 +94,13 @@ public class VirgilHash extends VirgilAsn1Compatible implements java.lang.AutoCl
             throw new IllegalArgumentException("No enum " + Algorithm.class + " with value " + swigValue);
         }
 
+        private final int swigValue;
+
+        private final String swigName;
+
         private Algorithm(String swigName) {
             this.swigName = swigName;
             this.swigValue = swigNext++;
-        }
-
-        private Algorithm(String swigName, int swigValue) {
-            this.swigName = swigName;
-            this.swigValue = swigValue;
-            swigNext = swigValue + 1;
         }
 
         private Algorithm(String swigName, Algorithm swigEnum) {
@@ -290,11 +108,205 @@ public class VirgilHash extends VirgilAsn1Compatible implements java.lang.AutoCl
             this.swigValue = swigEnum.swigValue;
             swigNext = this.swigValue + 1;
         }
+        private Algorithm(String swigName, int swigValue) {
+            this.swigName = swigName;
+            this.swigValue = swigValue;
+            swigNext = swigValue + 1;
+        }
+        public final int swigValue() {
+            return swigValue;
+        }
+        public String toString() {
+            return swigName;
+        }
+    }
 
-        private static Algorithm[] swigValues = { MD5, SHA1, SHA224, SHA256, SHA384, SHA512 };
-        private static int swigNext = 0;
-        private final int swigValue;
-        private final String swigName;
+    protected static long getCPtr(VirgilHash obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
+
+    private transient long swigCPtr;
+
+    /**
+     * Create a new instance of {@code VirgilHash}
+     *
+     */
+    public VirgilHash() {
+        this(virgil_crypto_javaJNI.new_VirgilHash__SWIG_0(), true);
+    }
+
+    protected VirgilHash(long cPtr, boolean cMemoryOwn) {
+        super(virgil_crypto_javaJNI.VirgilHash_SWIGUpcast(cPtr), cMemoryOwn);
+        swigCPtr = cPtr;
+    }
+
+    /**
+     * Create a new instance of {@code VirgilHash} with given algorithm name.
+     * 
+     * @param name
+     *            The algorithm name.
+     */
+    public VirgilHash(String name) {
+        this(virgil_crypto_javaJNI.new_VirgilHash__SWIG_2(name), true);
+    }
+
+    public VirgilHash(VirgilHash rhs) {
+        this(virgil_crypto_javaJNI.new_VirgilHash__SWIG_3(VirgilHash.getCPtr(rhs), rhs), true);
+    }
+
+    /**
+     * Create a new instance of {@code VirgilHash} with given algorithm.
+     *
+     * @param alg
+     *            The algorithm.
+     */
+    public VirgilHash(VirgilHash.Algorithm alg) {
+        this(virgil_crypto_javaJNI.new_VirgilHash__SWIG_1(alg.swigValue()), true);
+    }
+
+    public VirgilHash.Algorithm algorithm() {
+        return VirgilHash.Algorithm.swigToEnum(virgil_crypto_javaJNI.VirgilHash_algorithm(swigCPtr, this));
+    }
+
+    @Override
+    public void close() {
+        delete();
+    }
+
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilHash(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+        super.delete();
+    }
+
+    protected void finalize() {
+        delete();
+    }
+
+    /**
+     * Return final data hash.
+     * 
+     * @return Data hash processed by series of {@link #update(byte[])} method.
+     */
+    public byte[] finish() {
+        return virgil_crypto_javaJNI.VirgilHash_finish(swigCPtr, this);
+    }
+
+    /**
+     * Process the given data immediately and return it's hash.
+     * 
+     * @param data
+     *            Date to be hashed.
+     * @return Hash of the given data.
+     */
+    public byte[] hash(byte[] data) {
+        return virgil_crypto_javaJNI.VirgilHash_hash(swigCPtr, this, data);
+    }
+
+    /**
+     * Process the given message immediately and return it's HMAC hash.
+     * 
+     * @param key
+     *            Secret key.
+     * @param data
+     *            Data to be hashed.
+     * @return HMAC hash of the given data.
+     */
+    public byte[] hmac(byte[] key, byte[] data) {
+        return virgil_crypto_javaJNI.VirgilHash_hmac(swigCPtr, this, key, data);
+    }
+
+    /**
+     * Return final data HMAC hash.
+     * 
+     * @return Data HMAC hash processed by series of {@link #hmacUpdate(byte[])} method.
+     */
+    public byte[] hmacFinish() {
+        return virgil_crypto_javaJNI.VirgilHash_hmacFinish(swigCPtr, this);
+    }
+
+    /**
+     * Reset HMAC hashing for the new data hash.
+     */
+    public void hmacReset() {
+        virgil_crypto_javaJNI.VirgilHash_hmacReset(swigCPtr, this);
+    }
+
+    /**
+     * Initialize HMAC hashing for the new data hash.
+     * 
+     * @param key
+     *            Secret key.
+     */
+    public void hmacStart(byte[] key) {
+        virgil_crypto_javaJNI.VirgilHash_hmacStart(swigCPtr, this, key);
+    }
+
+    /**
+     * <p>
+     * Update / process message HMAC hash.
+     * </p>
+     * <p>
+     * This method MUST be used after {@link #hmacStart(byte[])} or {@link #hmacReset()} methods only. This method MAY
+     * be called multiple times to process long message splitted to a shorter chunks.
+     * </p>
+     * 
+     * @param data
+     *            Data to be hashed.
+     */
+    public void hmacUpdate(byte[] data) {
+        virgil_crypto_javaJNI.VirgilHash_hmacUpdate(swigCPtr, this, data);
+    }
+
+    /**
+     * Returns name of the hash function.
+     * 
+     * @return Name of the hash function.
+     * 
+     */
+    public String name() {
+        return virgil_crypto_javaJNI.VirgilHash_name(swigCPtr, this);
+    }
+
+    public long size() {
+        return virgil_crypto_javaJNI.VirgilHash_size(swigCPtr, this);
+    }
+
+    /**
+     * Initialize hashing for the new data hash.
+     */
+    public void start() {
+        virgil_crypto_javaJNI.VirgilHash_start(swigCPtr, this);
+    }
+
+    /**
+     * Return underlying hash type. Used for internal purposes only.
+     * 
+     * @return the hash type.
+     */
+    public int type() {
+        return virgil_crypto_javaJNI.VirgilHash_type(swigCPtr, this);
+    }
+
+    /**
+     * <p>
+     * Update / process message hash.
+     * </p>
+     * <p>
+     * This method MUST be used after {@link #start()} method only. This method MAY be called multiple times to process
+     * long message splitted to a shorter chunks.
+     * </p>
+     * 
+     * @param data
+     *            The data to be hashed.
+     */
+    public void update(byte[] data) {
+        virgil_crypto_javaJNI.VirgilHash_update(swigCPtr, this, data);
     }
 
 }

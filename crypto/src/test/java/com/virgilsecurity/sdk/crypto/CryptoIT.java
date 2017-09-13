@@ -50,6 +50,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.virgilsecurity.crypto.VirgilBase64;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
  * Integration tests for Virgil Crypto.
@@ -74,7 +75,7 @@ public class CryptoIT {
     }
 
     @Test
-    public void encryptSingleRecipient() {
+    public void encryptSingleRecipient() throws VirgilException {
         JsonObject data = sampleJson.getAsJsonObject("encrypt_single_recipient");
         byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
         byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
@@ -94,7 +95,7 @@ public class CryptoIT {
     }
 
     @Test
-    public void encryptMultipleRecipient() {
+    public void encryptMultipleRecipient() throws VirgilException {
         JsonObject data = sampleJson.getAsJsonObject("encrypt_multiple_recipients");
 
         byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
@@ -130,7 +131,7 @@ public class CryptoIT {
     }
 
     @Test
-    public void signThenEncryptSingleRecipient() {
+    public void signThenEncryptSingleRecipient() throws VirgilException {
         JsonObject data = sampleJson.getAsJsonObject("sign_then_encrypt_single_recipient");
         byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
         byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
@@ -150,7 +151,7 @@ public class CryptoIT {
     }
 
     @Test
-    public void signThenEncryptMultipleRecipients() {
+    public void signThenEncryptMultipleRecipients() throws VirgilException {
         JsonObject data = sampleJson.getAsJsonObject("sign_then_encrypt_multiple_recipients");
 
         byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());
@@ -191,7 +192,7 @@ public class CryptoIT {
     }
 
     @Test
-    public void generateSignature() {
+    public void generateSignature() throws VirgilException {
         JsonObject data = sampleJson.getAsJsonObject("generate_signature");
         byte[] privateKeyData = VirgilBase64.decode(data.get("private_key").getAsString());
         byte[] originalData = VirgilBase64.decode(data.get("original_data").getAsString());

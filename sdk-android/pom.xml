@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.virgilsecurity.sdk</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.3.3</version>
+		<version>4.5.0</version>
 	</parent>
 	<artifactId>sdk-android</artifactId>
 	<packaging>aar</packaging>
@@ -21,6 +21,10 @@
 			<artifactId>sdk</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>

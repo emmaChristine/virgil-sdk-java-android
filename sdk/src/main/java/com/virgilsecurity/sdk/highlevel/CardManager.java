@@ -32,7 +32,10 @@ package com.virgilsecurity.sdk.highlevel;
 import java.util.Collection;
 import java.util.Map;
 
+import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
+import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**
  * The {@linkplain CardManager} interface defines a list of methods to manage the {@link VirgilCard}s.
@@ -119,8 +122,9 @@ public interface CardManager {
      * @param identities
      *            The list of identities.
      * @return A list of found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    VirgilCards find(String... identities);
+    VirgilCards find(String... identities) throws CardValidationException;
 
     /**
      * Finds a {@link VirgilCard}s by specified identities in application scope.
@@ -128,8 +132,9 @@ public interface CardManager {
      * @param identities
      *            The list of identities.
      * @return A list of found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    VirgilCards find(Collection<String> identities);
+    VirgilCards find(Collection<String> identities) throws CardValidationException;
 
     /**
      * Finds {@link VirgilCard}s by specified identities and type in application scope.
@@ -139,8 +144,9 @@ public interface CardManager {
      * @param identities
      *            The list of sought identities.
      * @return A list of found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    VirgilCards find(String identityType, Collection<String> identities);
+    VirgilCards find(String identityType, Collection<String> identities) throws CardValidationException;
 
     /**
      * Finds a {@link VirgilCard}s by by specified identities and type in global scope.
@@ -148,8 +154,9 @@ public interface CardManager {
      * @param identities
      *            The sought identities.
      * @return A list of found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    VirgilCards findGlobal(String identities);
+    VirgilCards findGlobal(String identities) throws CardValidationException;
 
     /**
      * Finds a {@link VirgilCard}s by by specified identities and type in global scope.
@@ -157,8 +164,9 @@ public interface CardManager {
      * @param identities
      *            The list of identities.
      * @return A list of found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    VirgilCards findGlobal(Collection<String> identities);
+    VirgilCards findGlobal(Collection<String> identities) throws CardValidationException;
 
     /**
      * Imports a {@link VirgilCard} from specified buffer.
@@ -168,6 +176,15 @@ public interface CardManager {
      * @return An instance of {@link VirgilCard}.
      */
     VirgilCard importCard(String exportedCard);
+
+    /**
+     * Imports a {@link VirgilCard} from specified buffer.
+     * 
+     * @param cardModel
+     *            The Card model.
+     * @return An instance of {@link VirgilCard}.
+     */
+    VirgilCard importCard(CardModel cardModel);
 
     /**
      * Publishes a {@link VirgilCard} into global Virgil Services scope.
@@ -184,16 +201,18 @@ public interface CardManager {
      * 
      * @param card
      *            The Card to be published.
+     * @throws CryptoException
      */
-    void publish(VirgilCard card);
+    void publish(VirgilCard card) throws CryptoException;
 
     /**
      * Revokes a {@link VirgilCard} from Virgil Services.
      * 
      * @param card
      *            The card to be revoked.
+     * @throws CryptoException
      */
-    void revoke(VirgilCard card);
+    void revoke(VirgilCard card) throws CryptoException;
 
     /**
      * Revokes a global {@link VirgilCard} from Virgil Security services.

@@ -32,6 +32,8 @@ package com.virgilsecurity.sdk.highlevel;
 import java.util.ArrayList;
 
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
@@ -49,7 +51,8 @@ public class VirgilCards extends ArrayList<VirgilCard> {
     /**
      * Create new instance of {@link VirgilCards}.
      * 
-     * @param context The context.
+     * @param context
+     *            The context.
      */
     public VirgilCards(VirgilApiContext context) {
         super();
@@ -64,8 +67,9 @@ public class VirgilCards extends ArrayList<VirgilCard> {
      * @param key
      *            The signer's {@link VirgilKey}.
      * @return A new {@link VirgilBuffer} with encrypted data.
+     * @throws CryptoException 
      */
-    public VirgilBuffer signThenEncrypt(VirgilBuffer buffer, VirgilKey key) {
+    public VirgilBuffer signThenEncrypt(VirgilBuffer buffer, VirgilKey key) throws CryptoException {
         return key.signThenEncrypt(buffer, this);
     }
 
@@ -77,8 +81,9 @@ public class VirgilCards extends ArrayList<VirgilCard> {
      * @param key
      *            The signer's {@link VirgilKey}.
      * @return A new {@link VirgilBuffer} with encrypted data.
+     * @throws CryptoException 
      */
-    public VirgilBuffer signThenEncrypt(String plaintext, VirgilKey key) {
+    public VirgilBuffer signThenEncrypt(String plaintext, VirgilKey key) throws CryptoException {
         return signThenEncrypt(VirgilBuffer.from(plaintext), key);
     }
 
@@ -90,8 +95,9 @@ public class VirgilCards extends ArrayList<VirgilCard> {
      * @param key
      *            The signer's {@link VirgilKey}.
      * @return A new {@link VirgilBuffer} with encrypted data.
+     * @throws CryptoException 
      */
-    public VirgilBuffer signThenEncrypt(byte[] data, VirgilKey key) {
+    public VirgilBuffer signThenEncrypt(byte[] data, VirgilKey key) throws CryptoException {
         return signThenEncrypt(VirgilBuffer.from(data), key);
     }
 
@@ -101,8 +107,9 @@ public class VirgilCards extends ArrayList<VirgilCard> {
      * @param buffer
      *            The buffer data to be encrypted.
      * @return A new {@link VirgilBuffer} with encrypted data.
+     * @throws EncryptionException
      */
-    public VirgilBuffer encrypt(VirgilBuffer buffer) {
+    public VirgilBuffer encrypt(VirgilBuffer buffer) throws EncryptionException {
         if (buffer == null) {
             throw new NullArgumentException("buffer");
         }
@@ -123,8 +130,9 @@ public class VirgilCards extends ArrayList<VirgilCard> {
      * @param plaintext
      *            The plaintext to be encrypted.
      * @return A new {@link VirgilBuffer} with encrypted data.
+     * @throws EncryptionException
      */
-    public VirgilBuffer encrypt(String plaintext) {
+    public VirgilBuffer encrypt(String plaintext) throws EncryptionException {
         return encrypt(VirgilBuffer.from(plaintext));
     }
 
@@ -134,8 +142,9 @@ public class VirgilCards extends ArrayList<VirgilCard> {
      * @param data
      *            The data to be encrypted.
      * @return A new {@link VirgilBuffer} with encrypted data.
+     * @throws EncryptionException
      */
-    public VirgilBuffer encrypt(byte[] data) {
+    public VirgilBuffer encrypt(byte[] data) throws EncryptionException {
         return encrypt(VirgilBuffer.from(data));
     }
 

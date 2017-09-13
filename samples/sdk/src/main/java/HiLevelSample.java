@@ -38,6 +38,7 @@ import com.virgilsecurity.sdk.client.model.IdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.highlevel.AppCredentials;
 import com.virgilsecurity.sdk.highlevel.EmailConfirmation;
 import com.virgilsecurity.sdk.highlevel.IdentityValidationToken;
@@ -50,6 +51,7 @@ import com.virgilsecurity.sdk.highlevel.VirgilBuffer;
 import com.virgilsecurity.sdk.highlevel.VirgilCard;
 import com.virgilsecurity.sdk.highlevel.VirgilCards;
 import com.virgilsecurity.sdk.highlevel.VirgilKey;
+import com.virgilsecurity.sdk.storage.DefaultKeyStorage;
 
 /**
  * @author Andrii Iakovenko
@@ -72,7 +74,7 @@ public class HiLevelSample {
     private static String aliceIdentity;
     private static String bobIdentity;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, VirgilException {
         clear();
         globalCards();
         localCards();
@@ -84,9 +86,11 @@ public class HiLevelSample {
         System.out.println("Done");
     }
 
-    private static void globalCards() throws IOException {
+    private static void globalCards() throws IOException, VirgilException {
         /** Initialize high-level SDK with only application access token */
-        VirgilApi virgil = new VirgilApiImpl(ACCESS_TOKEN);
+        VirgilApiContext ctx = new VirgilApiContext(ACCESS_TOKEN);
+        ctx.setKeyStorage(/* keystorage you set for secure chat context */ new DefaultKeyStorage());
+        VirgilApi virgil = new VirgilApiImpl(ctx);
 
         /** Register Global Virgil Card */
         VirgilKey aliceKey = virgil.getKeys().generate().save(ALICE_KEY_NAME, ALICE_KEY_PWD);
@@ -129,7 +133,7 @@ public class HiLevelSample {
         virgil.getCards().revokeGlobal(aliceCard, aliceKey, token);
     }
 
-    private static void localCards() {
+    private static void localCards() throws VirgilException {
         /** Register Local Virgil Card */
         // initialize Virgil SDK
         AppCredentials credentials = new AppCredentials();
@@ -174,7 +178,7 @@ public class HiLevelSample {
         virgil.getCards().revoke(aliceCard);
     }
 
-    public static void encryption() {
+    public static void encryption() throws VirgilException {
         /** Initialization */
         // initialize Virgil SDK
         AppCredentials credentials = new AppCredentials();
@@ -222,7 +226,7 @@ public class HiLevelSample {
         // var originalMessage = originalData.ToBytes(); }
     }
 
-    public static void authenticatedEncryption() {
+    public static void authenticatedEncryption() throws VirgilException {
         /** Initialization */
         // initialize Virgil SDK
         AppCredentials credentials = new AppCredentials();
@@ -269,7 +273,7 @@ public class HiLevelSample {
         String originalMessage = originalData.toString();
     }
 
-    private static void signatures() {
+    private static void signatures() throws VirgilException {
         /** Initialization */
         // initialize Virgil SDK high-level instance
         VirgilApi virgil = new VirgilApiImpl(ACCESS_TOKEN);
@@ -308,7 +312,7 @@ public class HiLevelSample {
         VirgilKey aliceKey = virgil.getKeys().generate();
     }
 
-    public void exportImportKey() {
+    public void exportImportKey() throws VirgilException {
         // initialize a High Level API class
         VirgilApi virgil = new VirgilApiImpl();
 
@@ -317,7 +321,7 @@ public class HiLevelSample {
 
         // export the Virgil Key to Base64 encoded string
         String exportedKey = aliceKey.export("[OPTIONAL_KEY_PASSWORD]").toString(StringEncoding.Base64);
-        
+
         VirgilBuffer keyBuffer = VirgilBuffer.from(exportedKey, StringEncoding.Base64);
 
         // import the Virgil Key from Base64 encoded string
