@@ -27,59 +27,44 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.storage;
-
-import java.util.List;
+package com.virgilsecurity.sdk.client.model;
 
 /**
- * This interface describes a storage facility for cryptographic keys.
+ * Global identity types supported by Virgil Services.
  *
  * @author Andrii Iakovenko
  *
  */
-public interface KeyStorage {
+public enum GlobalCardIdentityType {
+
+    APPLICATION("application"), EMAIL("email");
+
+    private final String value;
 
     /**
-     * Stores the private key (that has already been protected) to the given alias.
-     * 
-     * @param keyEntry
-     *            The key entry.
+     * Create a new instance of {@code GlobalIdentityType}
+     *
      */
-    void store(KeyEntry keyEntry);
+    private GlobalCardIdentityType(String value) {
+        this.value = value;
+    }
 
     /**
-     * Loads the private key associated with the given alias.
-     * 
-     * 
-     * @param keyName
-     *            The key name.
-     * @return The requested private key, or null if the given alias does not exist or does not identify a key-related
-     *         entry.
+     * @return the value
      */
-    KeyEntry load(String keyName);
+    public String getValue() {
+        return value;
+    }
 
-    /**
-     * Checks if the private key exists in this storage by given alias.
-     * 
-     * @param keyName
-     *            The key name.
-     * @return {@code true} if the private key exists, {@code false} otherwise.
-     */
-    boolean exists(String keyName);
-
-    /**
-     * Deletes the private key from key store by given Id.
-     * 
-     * @param keyName
-     *            The key name.
-     */
-    void delete(String keyName);
-
-    /**
-     * Get names of keys stored in key store.
-     * 
-     * @return the list of keynames.
-     */
-    List<String> names();
+    public static GlobalCardIdentityType fromString(String value) {
+        if (value != null) {
+            for (GlobalCardIdentityType type : GlobalCardIdentityType.values()) {
+                if (type.getValue().equalsIgnoreCase(value)) {
+                    return type;
+                }
+            }
+        }
+        return null;
+    }
 
 }

@@ -30,7 +30,7 @@
 package com.virgilsecurity.sdk.client.requests;
 
 import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.dto.RevokeCardSnapshotModel;
+import com.virgilsecurity.sdk.client.model.RevokeCardSnapshotModel;
 
 /**
  * Represents an information about revoking card request.
@@ -38,7 +38,7 @@ import com.virgilsecurity.sdk.client.model.dto.RevokeCardSnapshotModel;
  * @author Andrii Iakovenko
  *
  */
-public class RevokeGlobalCardRequest extends GenericSignableRequest<RevokeCardSnapshotModel> {
+public class RevokeGlobalCardRequest extends SignedRequest<RevokeCardSnapshotModel> {
 
     /**
      * Create new instance of {@link RevokeGlobalCardRequest}.

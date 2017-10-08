@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 
 /**
  * The criteria user for Virgil Cards searching.
@@ -70,7 +70,7 @@ public class SearchCriteria {
     public static SearchCriteria byAppBundle(String bundle) {
         SearchCriteria criteria = new SearchCriteria();
         criteria.identities = Arrays.asList(bundle);
-        criteria.identityType = IdentityType.APPLICATION.getValue();
+        criteria.identityType = GlobalCardIdentityType.APPLICATION.getValue();
         criteria.scope = CardScope.GLOBAL;
 
         return criteria;

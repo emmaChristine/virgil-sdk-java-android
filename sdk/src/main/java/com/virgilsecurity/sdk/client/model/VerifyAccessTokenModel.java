@@ -27,51 +27,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.model.dto;
+package com.virgilsecurity.sdk.client.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.virgilsecurity.sdk.client.model.RevocationReason;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class RevokeCardSnapshotModel {
+public class VerifyAccessTokenModel {
 
-    @SerializedName("card_id")
-    private String cardId;
-
-    @SerializedName("revocation_reason")
-    private RevocationReason reason;
+    @SerializedName("resource_owner_virgil_card_id")
+    public String rResourceOwnerVirgilCardId;
 
     /**
-     * @return the cardId
+     * @return the rResourceOwnerVirgilCardId
      */
-    public String getCardId() {
-        return cardId;
+    public String getrResourceOwnerVirgilCardId() {
+        return rResourceOwnerVirgilCardId;
     }
 
     /**
-     * @param cardId
-     *            the cardId to set
+     * @param rResourceOwnerVirgilCardId
+     *            the rResourceOwnerVirgilCardId to set
      */
-    public void setCardId(String cardId) {
-        this.cardId = cardId;
-    }
-
-    /**
-     * @return the reason
-     */
-    public RevocationReason getReason() {
-        return reason;
-    }
-
-    /**
-     * @param reason
-     *            the reason to set
-     */
-    public void setReason(RevocationReason reason) {
-        this.reason = reason;
+    public void setrResourceOwnerVirgilCardId(String rResourceOwnerVirgilCardId) {
+        this.rResourceOwnerVirgilCardId = rResourceOwnerVirgilCardId;
     }
 
 }

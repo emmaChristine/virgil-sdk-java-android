@@ -27,14 +27,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.model.dto;
+package com.virgilsecurity.sdk.client.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
-import com.virgilsecurity.sdk.client.model.CardInfoModel;
-import com.virgilsecurity.sdk.client.model.CardScope;
 
 /**
  * This class is DTO used for creating a new Virgil Card.
@@ -42,7 +40,7 @@ import com.virgilsecurity.sdk.client.model.CardScope;
  * @author Andrii Iakovenko
  *
  */
-public class PublishCardSnapshotModel {
+public class PublishCardSnapshotModel implements SnapshotModel {
 
     @SerializedName("identity")
     private String identity;
@@ -57,7 +55,7 @@ public class PublishCardSnapshotModel {
     private CardScope scope;
 
     @SerializedName("data")
-    private Map<String, String> data;
+    private Map<String, String> customFields;
 
     @SerializedName("info")
     private CardInfoModel info;
@@ -67,7 +65,7 @@ public class PublishCardSnapshotModel {
      *
      */
     public PublishCardSnapshotModel() {
-        this.data = new HashMap<>();
+        this.customFields = new HashMap<>();
     }
 
     /**
@@ -131,18 +129,18 @@ public class PublishCardSnapshotModel {
     }
 
     /**
-     * @return the data
+     * @return the customFields.
      */
-    public Map<String, String> getData() {
-        return data;
+    public Map<String, String> getCustomFields() {
+        return customFields;
     }
 
     /**
-     * @param data
-     *            the data to set
+     * @param customFields
+     *            the custom fields to set.
      */
-    public void setData(Map<String, String> data) {
-        this.data = data;
+    public void setCustomFields(Map<String, String> customFields) {
+        this.customFields = customFields;
     }
 
     /**

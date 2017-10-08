@@ -34,7 +34,7 @@ import java.util.Map;
 
 import com.virgilsecurity.sdk.client.model.CardInfoModel;
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.dto.PublishCardSnapshotModel;
+import com.virgilsecurity.sdk.client.model.PublishCardSnapshotModel;
 
 /**
  * Request used for creating a Virgil Card.
@@ -42,7 +42,7 @@ import com.virgilsecurity.sdk.client.model.dto.PublishCardSnapshotModel;
  * @author Andrii Iakovenko
  *
  */
-public class PublishCardRequest extends GenericSignableRequest<PublishCardSnapshotModel> {
+public class PublishCardRequest extends SignedRequest<PublishCardSnapshotModel> {
 
     /**
      * Create new instance of {@link PublishCardRequest} by specified snapshot and signatures.
@@ -53,8 +53,8 @@ public class PublishCardRequest extends GenericSignableRequest<PublishCardSnapsh
      *            The signatures.
      */
     public PublishCardRequest(byte[] snapshot, Map<String, byte[]> signatures) {
-        this.takenSnapshot = snapshot;
-        this.acceptedSignatures = new HashMap<>(signatures);
+        this.snapshot = snapshot;
+        this.signatures = new HashMap<>(signatures);
         this.type = PublishCardSnapshotModel.class;
     }
 
@@ -121,7 +121,7 @@ public class PublishCardRequest extends GenericSignableRequest<PublishCardSnapsh
         snapshotModel.setIdentityType(identityType);
         snapshotModel.setPublicKeyData(publicKeyData);
         snapshotModel.setInfo(info);
-        snapshotModel.setData(customFields);
+        snapshotModel.setCustomFields(customFields);
         snapshotModel.setScope(CardScope.APPLICATION);
 
         init(snapshotModel);

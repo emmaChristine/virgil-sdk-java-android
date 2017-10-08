@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,59 +27,62 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.storage;
+package com.virgilsecurity.sdk.client.requests;
 
-import java.util.List;
+import com.virgilsecurity.sdk.crypto.Crypto;
+import com.virgilsecurity.sdk.crypto.PrivateKey;
 
 /**
- * This interface describes a storage facility for cryptographic keys.
- *
  * @author Andrii Iakovenko
  *
  */
-public interface KeyStorage {
+public class CreateCardRelationRequest extends SignedRequest {
+
+    private String trustyCardId;
+    private byte[] trustyCardSnapshot;
+
+    public void ownerSign(Crypto crypto, String ownerCardId, PrivateKey ownerPrivateKey) {
+        this.sign(crypto, ownerCardId, ownerPrivateKey);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.requests.SignedRequest#createSnapshot()
+     */
+    @Override
+    protected byte[] createSnapshot() {
+        return this.trustyCardSnapshot;
+    }
 
     /**
-     * Stores the private key (that has already been protected) to the given alias.
-     * 
-     * @param keyEntry
-     *            The key entry.
+     * @return the trustyCardId
      */
-    void store(KeyEntry keyEntry);
+    public String getTrustyCardId() {
+        return trustyCardId;
+    }
 
     /**
-     * Loads the private key associated with the given alias.
-     * 
-     * 
-     * @param keyName
-     *            The key name.
-     * @return The requested private key, or null if the given alias does not exist or does not identify a key-related
-     *         entry.
+     * @param trustyCardId
+     *            the trustyCardId to set
      */
-    KeyEntry load(String keyName);
+    public void setTrustyCardId(String trustyCardId) {
+        this.trustyCardId = trustyCardId;
+    }
 
     /**
-     * Checks if the private key exists in this storage by given alias.
-     * 
-     * @param keyName
-     *            The key name.
-     * @return {@code true} if the private key exists, {@code false} otherwise.
+     * @return the trustyCardSnapshot
      */
-    boolean exists(String keyName);
+    public byte[] getTrustyCardSnapshot() {
+        return trustyCardSnapshot;
+    }
 
     /**
-     * Deletes the private key from key store by given Id.
-     * 
-     * @param keyName
-     *            The key name.
+     * @param trustyCardSnapshot
+     *            the trustyCardSnapshot to set
      */
-    void delete(String keyName);
-
-    /**
-     * Get names of keys stored in key store.
-     * 
-     * @return the list of keynames.
-     */
-    List<String> names();
+    public void setTrustyCardSnapshot(byte[] trustyCardSnapshot) {
+        this.trustyCardSnapshot = trustyCardSnapshot;
+    }
 
 }

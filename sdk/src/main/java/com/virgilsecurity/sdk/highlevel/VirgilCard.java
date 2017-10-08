@@ -118,7 +118,7 @@ public class VirgilCard {
      * @return Custom fields.
      */
     public Map<String, String> getCustomFields() {
-        return this.card.getSnapshotModel().getData();
+        return this.card.getSnapshotModel().getCustomFields();
     }
 
     /**

@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.client.model.SignableRequestValidationModel;
 
 /**
  * TODO: add type description

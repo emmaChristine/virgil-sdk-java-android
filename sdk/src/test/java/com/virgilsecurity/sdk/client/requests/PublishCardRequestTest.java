@@ -36,7 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.virgilsecurity.sdk.client.model.CardInfoModel;
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -50,7 +50,7 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 public class PublishCardRequestTest {
 
     private static final String IDENTITY = "test@mail.com";
-    private static final String IDENTITY_TYPE = IdentityType.APPLICATION.getValue();
+    private static final String IDENTITY_TYPE = GlobalCardIdentityType.APPLICATION.getValue();
 
     private Crypto crypto;
     private PublishCardRequest request;

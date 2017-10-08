@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -29,40 +29,61 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.RevokeCardSnapshotModel;
+import com.virgilsecurity.sdk.client.model.CardScope;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
+import com.virgilsecurity.sdk.client.model.SignableRequestModel;
+import com.virgilsecurity.sdk.client.model.SignableRequestValidationModel;
+import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
- * Request used for Virgil Card revocation.
- *
  * @author Andrii Iakovenko
  *
  */
-public class RevokeCardRequest extends SignedRequest<RevokeCardSnapshotModel> {
+public class CreateGlobalCardRequest extends CreateCardRequest {
+
+    private String validationToken;
 
     /**
-     * Create new instance of {@link RevokeCardRequest}.
-     * 
-     * @param stringifiedRequest
-     *            The stringified request.
+     * Create new instance of {@link CreateGlobalCardRequest}.
      */
-    public RevokeCardRequest(String stringifiedRequest) {
-        super(stringifiedRequest);
+    public CreateGlobalCardRequest() {
+        this.identityType = GlobalCardIdentityType.EMAIL.getValue();
+        this.scope = CardScope.GLOBAL;
+    }
+
+    @Override
+    SignableRequestModel getRequestModel() {
+        SignableRequestModel requestModel = this.takeSignableRequestModel();
+
+        if (!StringUtils.isBlank(this.validationToken)) {
+            requestModel.getMeta().setValidation(new SignableRequestValidationModel(this.validationToken));
+        }
+
+        return requestModel;
+    }
+
+    public GlobalCardIdentityType getIdentityType() {
+        return GlobalCardIdentityType.fromString(this.identityType);
+    }
+
+    public void setIdentityType(String value) {
+        checkNoSnapshot();
+        this.identityType = GlobalCardIdentityType.fromString(value).getValue();
     }
 
     /**
-     * Create new instance of {@link RevokeCardRequest}.
-     * 
-     * @param cardId
-     *            The card ID to be revoked.
-     * @param reason
-     *            The revocation reason.
+     * @return the validationToken
      */
-    public RevokeCardRequest(String cardId, RevocationReason reason) {
-
-        RevokeCardSnapshotModel snapshotModel = new RevokeCardSnapshotModel();
-        snapshotModel.setCardId(cardId);
-        snapshotModel.setReason(reason);
-        init(snapshotModel);
+    public String getValidationToken() {
+        return validationToken;
     }
+
+    /**
+     * @param validationToken
+     *            the validationToken to set
+     */
+    public void setValidationToken(String validationToken) {
+        this.validationToken = validationToken;
+    }
+
 }

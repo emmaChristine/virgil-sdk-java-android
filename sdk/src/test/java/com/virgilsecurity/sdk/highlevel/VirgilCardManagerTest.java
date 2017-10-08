@@ -51,7 +51,7 @@ import com.virgilsecurity.sdk.client.BaseIT;
 import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.client.VirgilClientContext;
 import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
@@ -153,7 +153,7 @@ public class VirgilCardManagerTest extends BaseIT {
 
     @Test
     public void createGlobal_identity_key_identityType() {
-        VirgilCard virgilCard = cardManager.createGlobal(aliceEmail, virgilKey, IdentityType.EMAIL);
+        VirgilCard virgilCard = cardManager.createGlobal(aliceEmail, virgilKey, GlobalCardIdentityType.EMAIL);
         assertNotNull(virgilCard);
         assertEquals(aliceEmail, virgilCard.getIdentity());
         assertEquals("email", virgilCard.getIdentityType());
@@ -165,7 +165,7 @@ public class VirgilCardManagerTest extends BaseIT {
         Map<String, String> customFields = new HashMap<>();
         customFields.put("field1", "value1");
         customFields.put("field2", "value2");
-        VirgilCard virgilCard = cardManager.createGlobal(aliceEmail, virgilKey, IdentityType.EMAIL, customFields);
+        VirgilCard virgilCard = cardManager.createGlobal(aliceEmail, virgilKey, GlobalCardIdentityType.EMAIL, customFields);
         assertNotNull(virgilCard);
         assertEquals(aliceEmail, virgilCard.getIdentity());
         assertEquals("email", virgilCard.getIdentityType());

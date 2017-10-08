@@ -33,11 +33,13 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -48,9 +50,6 @@ import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryAlreadyExistsException;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
-import com.virgilsecurity.sdk.storage.KeyEntry;
-import com.virgilsecurity.sdk.storage.VirgilKeyEntry;
-import com.virgilsecurity.sdk.storage.VirgilKeyStorage;
 
 /**
  * Unit tests for {@code VirgilKeyStorage}
@@ -61,98 +60,120 @@ import com.virgilsecurity.sdk.storage.VirgilKeyStorage;
  *
  */
 public class VirgilKeyStorageTest {
-	private Crypto crypto;
-	private VirgilKeyStorage storage;
+    private Crypto crypto;
+    private VirgilKeyStorage storage;
 
-	private String alias;
-	private KeyEntry entry;
+    private File tmpDir;
+    private String alias;
+    private KeyEntry entry;
 
-	private KeyPair keyPair;
+    private KeyPair keyPair;
 
-	@Before
-	public void setUp() {
-		crypto = new VirgilCrypto();
-		storage = new VirgilKeyStorage(System.getProperty("java.io.tmpdir"));
+    @Before
+    public void setUp() {
+        crypto = new VirgilCrypto();
 
-		keyPair = crypto.generateKeys();
+        tmpDir = new File(System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID().toString());
+        storage = new VirgilKeyStorage(tmpDir.getAbsolutePath());
 
-		alias = UUID.randomUUID().toString();
+        keyPair = crypto.generateKeys();
 
-		entry = new VirgilKeyEntry();
-		entry.setName(alias);
-		entry.setValue(crypto.exportPrivateKey(keyPair.getPrivateKey()));
-		entry.getMetadata().put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-	}
+        alias = UUID.randomUUID().toString();
 
-	@Test
-	public void exists_nullAlias() {
-		assertFalse(storage.exists(null));
-	}
+        entry = new VirgilKeyEntry();
+        entry.setName(alias);
+        entry.setValue(crypto.exportPrivateKey(keyPair.getPrivateKey()));
+        entry.getMetadata().put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+    }
 
-	@Test
-	public void exists_randomName() {
-		assertFalse(storage.exists(UUID.randomUUID().toString()));
-	}
+    @Test
+    public void exists_nullAlias() {
+        assertFalse(storage.exists(null));
+    }
 
-	@Test
-	public void exists() throws IOException {
-		File tmpFile = File.createTempFile(alias, "");
-		String name = tmpFile.getName();
+    @Test
+    public void exists_randomName() {
+        assertFalse(storage.exists(UUID.randomUUID().toString()));
+    }
 
-		assertTrue(storage.exists(name));
-	}
+    @Test
+    public void exists() throws IOException {
+        if (!tmpDir.exists()) {
+            tmpDir.mkdirs();
+        }
+        File tmpFile = File.createTempFile(alias, "", tmpDir);
+        String name = tmpFile.getName();
 
-	@Test
-	public void store() {
-		storage.store(entry);
+        assertTrue(storage.exists(name));
+    }
 
-		assertTrue(storage.exists(alias));
-	}
+    @Test
+    public void store() {
+        storage.store(entry);
 
-	@Test(expected = KeyEntryAlreadyExistsException.class)
-	public void store_duplicated() {
-		storage.store(entry);
-		storage.store(entry);
-	}
+        assertTrue(storage.exists(alias));
+    }
 
-	@Test
-	public void load() {
-		storage.store(entry);
+    @Test(expected = KeyEntryAlreadyExistsException.class)
+    public void store_duplicated() {
+        storage.store(entry);
+        storage.store(entry);
+    }
 
-		KeyEntry loadedEntry = storage.load(alias);
+    @Test
+    public void load() {
+        storage.store(entry);
 
-		assertThat(loadedEntry, instanceOf(VirgilKeyEntry.class));
-		assertEquals(entry.getName(), loadedEntry.getName());
-		assertArrayEquals(entry.getValue(), loadedEntry.getValue());
-		assertEquals(entry.getMetadata(), loadedEntry.getMetadata());
-	}
+        KeyEntry loadedEntry = storage.load(alias);
 
-	@Test(expected = KeyEntryNotFoundException.class)
-	public void load_nullName() {
-		storage.load(alias);
-	}
+        assertThat(loadedEntry, instanceOf(VirgilKeyEntry.class));
+        assertEquals(entry.getName(), loadedEntry.getName());
+        assertArrayEquals(entry.getValue(), loadedEntry.getValue());
+        assertEquals(entry.getMetadata(), loadedEntry.getMetadata());
+    }
 
-	@Test(expected = KeyEntryNotFoundException.class)
-	public void load_nonExisting() {
-		storage.load(alias);
-	}
+    @Test(expected = KeyEntryNotFoundException.class)
+    public void load_nullName() {
+        storage.load(alias);
+    }
 
-	@Test
-	public void delete() {
-		storage.store(entry);
-		storage.delete(alias);
+    @Test(expected = KeyEntryNotFoundException.class)
+    public void load_nonExisting() {
+        storage.load(alias);
+    }
 
-		assertFalse(storage.exists(alias));
-	}
+    @Test
+    public void delete() {
+        storage.store(entry);
+        storage.delete(alias);
 
-	@Test(expected = KeyEntryNotFoundException.class)
-	public void delete_nullName() {
-		storage.delete(null);
-	}
+        assertFalse(storage.exists(alias));
+    }
 
-	@Test(expected = KeyEntryNotFoundException.class)
-	public void delete_nonExisting() {
-		storage.delete(alias);
-	}
+    @Test(expected = KeyEntryNotFoundException.class)
+    public void delete_nullName() {
+        storage.delete(null);
+    }
+
+    @Test(expected = KeyEntryNotFoundException.class)
+    public void delete_nonExisting() {
+        storage.delete(alias);
+    }
+
+    @Test
+    public void names_empty() {
+        List<String> names = storage.names();
+        assertNotNull(names);
+        assertTrue(names.isEmpty());
+    }
+
+    @Test
+    public void names() {
+        storage.store(entry);
+        List<String> names = storage.names();
+        assertNotNull(names);
+        assertEquals(1, names.size());
+        assertEquals(entry.getName(), names.get(0));
+    }
 
 }

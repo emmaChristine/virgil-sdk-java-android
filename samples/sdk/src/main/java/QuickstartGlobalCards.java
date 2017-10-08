@@ -39,7 +39,7 @@ import com.virgilsecurity.sdk.client.VirgilClient;
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.client.model.RevocationReason;
 import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
 import com.virgilsecurity.sdk.client.model.dto.Token;
@@ -74,7 +74,7 @@ public class QuickstartGlobalCards {
 
         /** Confirm the identity */
         String identity = "[EMAIL_IDENTITY_HERE]";
-        String identityType = IdentityType.EMAIL.getValue();
+        String identityType = GlobalCardIdentityType.EMAIL.getValue();
         String actionId = client.verifyIdentity(identity, identityType);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

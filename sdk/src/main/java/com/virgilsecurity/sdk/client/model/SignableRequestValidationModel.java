@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,52 +27,48 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.model.dto;
+package com.virgilsecurity.sdk.client.model;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
- * TODO: add type description
- *
  * @author Andrii Iakovenko
  *
  */
-public class SignableRequestModel {
+public class SignableRequestValidationModel {
 
-    @SerializedName("content_snapshot")
-    private byte[] contentSnapshot;
-
-    @SerializedName("meta")
-    private SignableRequestMetaModel meta;
+    @SerializedName("token")
+    private String token;
 
     /**
-     * @return the contentSnapshot
+     * Create new instance of {@link SignableRequestValidationModel}.
      */
-    public byte[] getContentSnapshot() {
-        return contentSnapshot;
+    public SignableRequestValidationModel() {
     }
 
     /**
-     * @param contentSnapshot
-     *            the contentSnapshot to set
+     * Create new instance of {@link SignableRequestValidationModel}.
+     * 
+     * @param token The validation token.
      */
-    public void setContentSnapshot(byte[] contentSnapshot) {
-        this.contentSnapshot = contentSnapshot;
+    public SignableRequestValidationModel(String token) {
+        super();
+        this.token = token;
     }
 
     /**
-     * @return the meta
+     * @return the token
      */
-    public SignableRequestMetaModel getMeta() {
-        return meta;
+    public String getToken() {
+        return token;
     }
 
     /**
-     * @param meta
-     *            the meta to set
+     * @param token
+     *            the token to set
      */
-    public void setMeta(SignableRequestMetaModel meta) {
-        this.meta = meta;
+    public void setToken(String token) {
+        this.token = token;
     }
 
 }

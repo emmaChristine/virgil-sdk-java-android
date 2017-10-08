@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,59 +27,50 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.storage;
+package com.virgilsecurity.sdk.client.model;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * This interface describes a storage facility for cryptographic keys.
- *
  * @author Andrii Iakovenko
  *
  */
-public interface KeyStorage {
+public class RevokeCardSnapshotModel {
+
+    @SerializedName("card_id")
+    private String cardId;
+
+    @SerializedName("revocation_reason")
+    private RevocationReason reason;
 
     /**
-     * Stores the private key (that has already been protected) to the given alias.
-     * 
-     * @param keyEntry
-     *            The key entry.
+     * @return the cardId
      */
-    void store(KeyEntry keyEntry);
+    public String getCardId() {
+        return cardId;
+    }
 
     /**
-     * Loads the private key associated with the given alias.
-     * 
-     * 
-     * @param keyName
-     *            The key name.
-     * @return The requested private key, or null if the given alias does not exist or does not identify a key-related
-     *         entry.
+     * @param cardId
+     *            the cardId to set
      */
-    KeyEntry load(String keyName);
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
+    }
 
     /**
-     * Checks if the private key exists in this storage by given alias.
-     * 
-     * @param keyName
-     *            The key name.
-     * @return {@code true} if the private key exists, {@code false} otherwise.
+     * @return the reason
      */
-    boolean exists(String keyName);
+    public RevocationReason getReason() {
+        return reason;
+    }
 
     /**
-     * Deletes the private key from key store by given Id.
-     * 
-     * @param keyName
-     *            The key name.
+     * @param reason
+     *            the reason to set
      */
-    void delete(String keyName);
-
-    /**
-     * Get names of keys stored in key store.
-     * 
-     * @return the list of keynames.
-     */
-    List<String> names();
+    public void setReason(RevocationReason reason) {
+        this.reason = reason;
+    }
 
 }

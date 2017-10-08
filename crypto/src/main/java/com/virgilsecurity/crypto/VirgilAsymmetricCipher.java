@@ -131,8 +131,8 @@ public class VirgilAsymmetricCipher extends VirgilAsn1Compatible implements java
     delete();
   }
 
-  public void genKeyPair(SWIGTYPE_p_VirgilKeyPair__Type type) {
-    virgil_crypto_javaJNI.VirgilAsymmetricCipher_genKeyPair(swigCPtr, this, SWIGTYPE_p_VirgilKeyPair__Type.getCPtr(type));
+  public void genKeyPair(VirgilKeyPair.Type type) {
+      virgil_crypto_javaJNI.VirgilAsymmetricCipher_genKeyPair(swigCPtr, this, type.swigValue());
   }
 
   public void genKeyPairFrom(VirgilAsymmetricCipher other) {

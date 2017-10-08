@@ -30,101 +30,83 @@
 package com.virgilsecurity.sdk.client.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 /**
- * The {@linkplain CardModel} class represents an information about Virgil Card entity.
- * 
  * @author Andrii Iakovenko
  *
  */
-public class CardModel {
+public class AccessTokenModel {
 
-    @SerializedName("id")
-    private String id;
+    @SerializedName("access_token")
+    public String accessToken;
 
-    @SerializedName("content_snapshot")
-    private byte[] snapshot;
+    @SerializedName("refresh_token")
+    public String refreshToken;
 
-    @SerializedName("meta")
-    private CardMetaModel meta;
+    @SerializedName("expires_in")
+    public int expiresIn;
 
-    private transient PublishCardSnapshotModel snapshotModel;
+    @SerializedName("token_type")
+    public String tokenType;
 
     /**
-     * Create new instance of {@link CardModel}.
+     * @return the accessToken
      */
-    public CardModel() {
+    public String getAccessToken() {
+        return accessToken;
     }
 
     /**
-     * Create new instance of {@link CardModel}.
-     * 
-     * @param snapshotModel The snapshot model.
+     * @param accessToken
+     *            the accessToken to set
      */
-    public CardModel(PublishCardSnapshotModel snapshotModel) {
-        this.snapshotModel = snapshotModel;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     /**
-     * @return the id
+     * @return the refreshToken
      */
-    public String getId() {
-        return id;
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param refreshToken
+     *            the refreshToken to set
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     /**
-     * @return the snapshot
+     * @return the expiresIn
      */
-    public byte[] getSnapshot() {
-        return snapshot;
+    public int getExpiresIn() {
+        return expiresIn;
     }
 
     /**
-     * @param snapshot
-     *            the snapshot to set
+     * @param expiresIn
+     *            the expiresIn to set
      */
-    public void setSnapshot(byte[] snapshot) {
-        this.snapshot = snapshot;
+    public void setExpiresIn(int expiresIn) {
+        this.expiresIn = expiresIn;
     }
 
     /**
-     * @return the meta
+     * @return the tokenType
      */
-    public CardMetaModel getMeta() {
-        if (meta == null) {
-            meta = new CardMetaModel();
-        }
-        return meta;
+    public String getTokenType() {
+        return tokenType;
     }
 
     /**
-     * @param meta
-     *            the meta to set
+     * @param tokenType
+     *            the tokenType to set
      */
-    public void setMeta(CardMetaModel meta) {
-        this.meta = meta;
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
-    /**
-     * @return the snapshotModel
-     */
-    public PublishCardSnapshotModel getSnapshotModel() {
-        if (this.snapshotModel != null || this.snapshot == null) {
-            return this.snapshotModel;
-        }
-
-        String snapshotModelJson = ConvertionUtils.toString(this.snapshot);
-        this.snapshotModel = ConvertionUtils.getGson().fromJson(snapshotModelJson, PublishCardSnapshotModel.class);
-
-        return this.snapshotModel;
-    }
 }

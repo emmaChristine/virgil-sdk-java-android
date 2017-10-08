@@ -48,8 +48,8 @@ public class VirgilHKDF implements java.lang.AutoCloseable {
     swigCPtr = cPtr;
   }
 
-  public VirgilHKDF(SWIGTYPE_p_VirgilHash__Algorithm hashAlgorithm) {
-    this(virgil_crypto_javaJNI.new_VirgilHKDF(SWIGTYPE_p_VirgilHash__Algorithm.getCPtr(hashAlgorithm)), true);
+  public VirgilHKDF(VirgilHash.Algorithm hashAlgorithm) {
+    this(virgil_crypto_javaJNI.new_VirgilHKDF(hashAlgorithm.swigValue()), true);
   }
 
   @Override

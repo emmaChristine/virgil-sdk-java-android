@@ -39,6 +39,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -156,6 +157,22 @@ public class DefaultKeyStorageTest {
     @Test(expected = KeyEntryNotFoundException.class)
     public void delete_nonExisting() {
         storage.delete(alias);
+    }
+    
+    @Test
+    public void names_empty() {
+        List<String> names = storage.names();
+        assertNotNull(names);
+        assertTrue(names.isEmpty());
+    }
+    
+    @Test
+    public void names() {
+        storage.store(entry);
+        List<String> names = storage.names();
+        assertNotNull(names);
+        assertEquals(1, names.size());
+        assertEquals(entry.getName(), names.get(0));
     }
 
     @Test

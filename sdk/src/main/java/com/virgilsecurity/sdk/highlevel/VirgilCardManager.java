@@ -40,9 +40,9 @@ import com.virgilsecurity.sdk.client.model.CardInfoModel;
 import com.virgilsecurity.sdk.client.model.CardMetaModel;
 import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
+import com.virgilsecurity.sdk.client.model.PublishCardSnapshotModel;
 import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.dto.PublishCardSnapshotModel;
 import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
 import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeGlobalCardRequest;
@@ -136,7 +136,7 @@ public class VirgilCardManager implements CardManager {
      *            Type of the identity.
      * @return A new instance of {@link VirgilCard} class, that is representing user's Public key.
      */
-    public VirgilCard createGlobal(String identity, VirgilKey ownerKey, IdentityType identityType) {
+    public VirgilCard createGlobal(String identity, VirgilKey ownerKey, GlobalCardIdentityType identityType) {
         return createGlobal(identity, ownerKey, identityType, null);
     }
 
@@ -153,7 +153,7 @@ public class VirgilCardManager implements CardManager {
      *            The custom fields.
      * @return A new instance of {@link VirgilCard} class, that is representing user's Public key.
      */
-    public VirgilCard createGlobal(String identity, VirgilKey ownerKey, IdentityType identityType,
+    public VirgilCard createGlobal(String identity, VirgilKey ownerKey, GlobalCardIdentityType identityType,
             Map<String, String> customFields) {
 
         CardModel cardModel = this.buildCardModel(identity, ownerKey, identityType.getValue(), customFields,
@@ -259,7 +259,7 @@ public class VirgilCardManager implements CardManager {
      * @return A new collection with found {@link VirgilCard}s.
      * @throws CardValidationException
      */
-    public VirgilCards findGlobal(IdentityType identityType, Collection<String> identities)
+    public VirgilCards findGlobal(GlobalCardIdentityType identityType, Collection<String> identities)
             throws CardValidationException {
 
         if (identities == null || identities.isEmpty()) {
@@ -396,7 +396,7 @@ public class VirgilCardManager implements CardManager {
         cardSnapshotModel.setIdentityType(identityType);
         cardSnapshotModel.setPublicKeyData(ownerKey.exportPublicKey().getBytes());
         cardSnapshotModel.setScope(scope);
-        cardSnapshotModel.setData(customFields);
+        cardSnapshotModel.setCustomFields(customFields);
 
         CardInfoModel info = new CardInfoModel();
         info.setDevice(this.context.getDeviceManager().getSystemName());

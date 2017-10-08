@@ -42,11 +42,11 @@ import org.junit.Test;
  */
 public class GenericSignableRequestTest {
 
-	private GenericSignableRequest<String> request;
+	private SignedRequest<String> request;
 
 	@Before
 	public void setUp() {
-		request = new GenericSignableRequest<String>() {
+		request = new SignedRequest<String>() {
         };
 	}
 

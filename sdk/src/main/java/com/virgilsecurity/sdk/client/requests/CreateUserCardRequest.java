@@ -29,38 +29,36 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import java.util.Map;
+import com.virgilsecurity.sdk.client.model.CardScope;
+import com.virgilsecurity.sdk.crypto.Crypto;
+import com.virgilsecurity.sdk.crypto.PrivateKey;
 
 /**
- * Provides a mechanism for building signable requests.
- * 
  * @author Andrii Iakovenko
  *
  */
-public interface SignableRequest {
+public class CreateUserCardRequest extends CreateCardRequest {
 
     /**
-     * Gets the list of request signatures.
-     * 
-     * @return The signatures.
+     * Create new instance of {@link CreateUserCardRequest}.
      */
-    Map<String, byte[]> getSignatures();
+    public CreateUserCardRequest() {
+        this.identityType = "user";
+        this.scope = CardScope.APPLICATION;
+    }
 
     /**
-     * Gets the snapshot value, that has been taken from request model.
+     * Sign request with application card.
      * 
-     * @return The request snapshot.
+     * @param crypto
+     *            the {@link Crypto} used for signing.
+     * @param appId
+     *            the application identifier.
+     * @param appPrivateKey
+     *            the application private key.
      */
-    byte[] getSnapshot();
-
-    /**
-     * Appends the signature of request fingerprint.
-     * 
-     * @param cardId
-     *            The card identifier.
-     * @param signature
-     *            The signature.
-     */
-    void appendSignature(String cardId, byte[] signature);
+    public void applicationSign(Crypto crypto, String appId, PrivateKey appPrivateKey) {
+        this.sign(crypto, appId, appPrivateKey);
+    }
 
 }

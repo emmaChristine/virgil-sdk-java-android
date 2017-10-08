@@ -41,7 +41,7 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
@@ -139,7 +139,7 @@ public class VirgilKeyTest {
     public void signThenEncrypt_buffer() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
-        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, GlobalCardIdentityType.EMAIL);
 
         VirgilBuffer encrypted = virgilKey.signThenEncrypt(VirgilBuffer.from(PLAINTEXT), Arrays.asList(aliceCard));
 
@@ -151,7 +151,7 @@ public class VirgilKeyTest {
     public void signThenEncrypt_plaintext() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
-        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, GlobalCardIdentityType.EMAIL);
 
         VirgilBuffer encrypted = virgilKey.signThenEncrypt(PLAINTEXT, Arrays.asList(aliceCard));
 
@@ -163,7 +163,7 @@ public class VirgilKeyTest {
     public void signThenEncrypt_bytes() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
-        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, GlobalCardIdentityType.EMAIL);
 
         VirgilBuffer encrypted = virgilKey.signThenEncrypt(ConvertionUtils.toBytes(PLAINTEXT),
                 Arrays.asList(aliceCard));
@@ -176,7 +176,7 @@ public class VirgilKeyTest {
     public void decryptThenVerify_buffer() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
-        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, GlobalCardIdentityType.EMAIL);
 
         byte[] encrypted = context.getCrypto().signThenEncrypt(ConvertionUtils.toBytes(PLAINTEXT), alicePivateKey,
                 publicKey);
@@ -190,7 +190,7 @@ public class VirgilKeyTest {
     public void decryptThenVerify_base64String() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
-        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, GlobalCardIdentityType.EMAIL);
 
         byte[] encrypted = context.getCrypto().signThenEncrypt(ConvertionUtils.toBytes(PLAINTEXT), alicePivateKey,
                 publicKey);
@@ -205,7 +205,7 @@ public class VirgilKeyTest {
     public void decryptThenVerify_bytes() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
-        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, GlobalCardIdentityType.EMAIL);
 
         byte[] encrypted = context.getCrypto().signThenEncrypt(ConvertionUtils.toBytes(PLAINTEXT), alicePivateKey,
                 publicKey);

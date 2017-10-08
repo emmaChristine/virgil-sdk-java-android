@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -96,7 +96,7 @@ public class HiLevelSample {
         VirgilKey aliceKey = virgil.getKeys().generate().save(ALICE_KEY_NAME, ALICE_KEY_PWD);
 
         // create alice's Card using her newly generated Key.
-        VirgilCard aliceCard = virgil.getCards().createGlobal(ALICE_EMAIL_IDENTITY, aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal(ALICE_EMAIL_IDENTITY, aliceKey, GlobalCardIdentityType.EMAIL);
         String aliceCardId = aliceCard.getId();
 
         // initiate an identity verification process.

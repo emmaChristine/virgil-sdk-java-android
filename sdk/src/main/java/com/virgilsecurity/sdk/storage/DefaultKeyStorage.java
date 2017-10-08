@@ -35,7 +35,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.InvalidPathException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -210,6 +212,21 @@ public class DefaultKeyStorage implements KeyStorage {
     private static class Entries extends HashMap<String, VirgilKeyEntry> {
         private static final long serialVersionUID = 261773342073013945L;
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.storage.KeyStorage#names()
+     */
+    @Override
+    public List<String> names() {
+        Entries entries = load();
+        if (entries.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> names = new ArrayList<>(entries.keySet());
+        return names;
     }
 
 }

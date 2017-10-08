@@ -29,31 +29,51 @@
  */
 package com.virgilsecurity.sdk.client.model;
 
+import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.client.model.dto.SignableRequestMetaModel;
+
 /**
- * Global identity types supported by Virgil Services.
+ * TODO: add type description
  *
  * @author Andrii Iakovenko
  *
  */
-public enum IdentityType {
+public class SignableRequestModel {
 
-    APPLICATION("application"), EMAIL("email");
+    @SerializedName("content_snapshot")
+    private byte[] contentSnapshot;
 
-    private final String value;
+    @SerializedName("meta")
+    private SignableRequestMetaModel meta;
 
     /**
-     * Create a new instance of {@code GlobalIdentityType}
-     *
+     * @return the contentSnapshot
      */
-    private IdentityType(String value) {
-        this.value = value;
+    public byte[] getContentSnapshot() {
+        return contentSnapshot;
     }
 
     /**
-     * @return the value
+     * @param contentSnapshot
+     *            the contentSnapshot to set
      */
-    public String getValue() {
-        return value;
+    public void setContentSnapshot(byte[] contentSnapshot) {
+        this.contentSnapshot = contentSnapshot;
+    }
+
+    /**
+     * @return the meta
+     */
+    public SignableRequestMetaModel getMeta() {
+        return meta;
+    }
+
+    /**
+     * @param meta
+     *            the meta to set
+     */
+    public void setMeta(SignableRequestMetaModel meta) {
+        this.meta = meta;
     }
 
 }

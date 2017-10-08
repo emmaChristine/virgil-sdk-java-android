@@ -35,6 +35,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.InvalidPathException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -172,6 +174,23 @@ public class VirgilKeyStorage implements KeyStorage {
         Gson gson = builder.create();
 
         return gson;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.storage.KeyStorage#names()
+     */
+    @Override
+    public List<String> names() {
+        File dir = new File(keysPath);
+        List<String> names = new ArrayList<>();
+        if (dir.exists() && dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                names.add(file.getName());
+            }
+        }
+        return names;
     }
 
 }

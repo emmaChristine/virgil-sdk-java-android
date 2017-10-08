@@ -34,7 +34,7 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsAlreadyExistsException;
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -200,7 +200,7 @@ public class DocSnippets {
         aliceKey.save("[KEY_NAME]", "[KEY_PASSWORD]");
 
         // create a global Virgil Card
-        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
+        VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, GlobalCardIdentityType.EMAIL);
     }
 
     private void export_card() {

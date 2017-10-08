@@ -46,6 +46,9 @@ public class CardMetaModel {
     @SerializedName("signs")
     private Map<String, byte[]> signatures;
 
+    @SerializedName("relations")
+    private Map<String, byte[]> relations;
+
     @SerializedName("created_at")
     private Date createdAt;
 
@@ -68,6 +71,24 @@ public class CardMetaModel {
      */
     public void setSignatures(Map<String, byte[]> signatures) {
         this.signatures = signatures;
+    }
+
+    /**
+     * @return the relations
+     */
+    public Map<String, byte[]> getRelations() {
+        if (relations == null) {
+            relations = new HashMap<>();
+        }
+        return relations;
+    }
+
+    /**
+     * @param relations
+     *            the relations to set
+     */
+    public void setRelations(Map<String, byte[]> relations) {
+        this.relations = relations;
     }
 
     /**

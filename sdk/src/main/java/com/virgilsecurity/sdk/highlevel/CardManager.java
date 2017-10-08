@@ -34,7 +34,7 @@ import java.util.Map;
 
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.IdentityType;
+import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**
@@ -98,7 +98,7 @@ public interface CardManager {
      *            Type of the identity.
      * @return A new instance of {@link VirgilCard} class, that is representing user's Public key.
      */
-    VirgilCard createGlobal(String identity, VirgilKey ownerKey, IdentityType identityType);
+    VirgilCard createGlobal(String identity, VirgilKey ownerKey, GlobalCardIdentityType identityType);
 
     /**
      * Creates a new global {@link VirgilCard} that is representing user's Public key and information about identity.
@@ -113,7 +113,7 @@ public interface CardManager {
      *            The custom fields.
      * @return A new instance of {@link VirgilCard} class, that is representing user's Public key.
      */
-    VirgilCard createGlobal(String identity, VirgilKey ownerKey, IdentityType identityType,
+    VirgilCard createGlobal(String identity, VirgilKey ownerKey, GlobalCardIdentityType identityType,
             Map<String, String> customFields);
 
     /**

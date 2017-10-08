@@ -27,48 +27,52 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.model.dto;
+package com.virgilsecurity.sdk.client.model;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * Represents an confirmed identity information.
+ * 
  * @author Andrii Iakovenko
  *
  */
-public class SignableRequestValidationModel {
+public class ConfirmEmailModel {
 
-    @SerializedName("token")
-    private String token;
+    @SerializedName("value")
+    public String identity;
+
+    @SerializedName("validation_token")
+    public String validationToken;
 
     /**
-     * Create new instance of {@link SignableRequestValidationModel}.
+     * @return the identity
      */
-    public SignableRequestValidationModel() {
+    public String getIdentity() {
+        return identity;
     }
 
     /**
-     * Create new instance of {@link SignableRequestValidationModel}.
-     * 
-     * @param token The validation token.
+     * @param identity
+     *            the identity to set
      */
-    public SignableRequestValidationModel(String token) {
-        super();
-        this.token = token;
+    public void setIdentity(String identity) {
+        this.identity = identity;
     }
 
     /**
-     * @return the token
+     * @return the validationToken
      */
-    public String getToken() {
-        return token;
+    public String getValidationToken() {
+        return validationToken;
     }
 
     /**
-     * @param token
-     *            the token to set
+     * @param validationToken
+     *            the validationToken to set
      */
-    public void setToken(String token) {
-        this.token = token;
+    public void setValidationToken(String validationToken) {
+        this.validationToken = validationToken;
     }
 
 }
