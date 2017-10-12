@@ -33,8 +33,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
+import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**

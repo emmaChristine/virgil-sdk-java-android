@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.virgilsecurity.sdk.client.CardValidator;
-import com.virgilsecurity.sdk.client.model.CardModel;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.PublicKey;

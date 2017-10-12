@@ -38,7 +38,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.virgilsecurity.sdk.client.VirgilClient;
+import com.virgilsecurity.sdk.client.CardsClient;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.device.DeviceManager;
@@ -71,7 +71,7 @@ public class VirgilApiContextTest {
         assertThat(virgilApiContext.getCrypto(), instanceOf(VirgilCrypto.class));
         assertThat(virgilApiContext.getKeyStorage(), instanceOf(VirgilKeyStorage.class));
         assertThat(virgilApiContext.getDeviceManager(), instanceOf(DefaultDeviceManager.class));
-        assertThat(virgilApiContext.getClient(), instanceOf(VirgilClient.class));
+        assertThat(virgilApiContext.getClient(), instanceOf(CardsClient.class));
     }
 
     @Test

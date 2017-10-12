@@ -35,8 +35,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.virgilsecurity.sdk.client.model.SignableRequestMetaModel;
 import com.virgilsecurity.sdk.client.model.SignableRequestModel;
-import com.virgilsecurity.sdk.client.model.dto.SignableRequestMetaModel;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
@@ -73,7 +73,7 @@ public abstract class SignedRequest {
      *
      * @return the snapshot.
      */
-    protected byte[] getSnapshot() {
+    public byte[] getSnapshot() {
         if (!isSnapshotTaken()) {
             this.snapshot = this.createSnapshot();
         }
@@ -83,6 +83,13 @@ public abstract class SignedRequest {
 
     protected boolean isSnapshotTaken() {
         return this.snapshot != null && this.snapshot.length > 0;
+    }
+    
+    protected void checkNoSnapshot() {
+        if (isSnapshotTaken()) {
+            // FIXME
+            throw new IllegalArgumentException();
+        }
     }
 
     protected abstract byte[] createSnapshot();
@@ -100,7 +107,7 @@ public abstract class SignedRequest {
      * 
      * @return The request model.
      */
-    SignableRequestModel getRequestModel() {
+    public SignableRequestModel getRequestModel() {
         return this.takeSignableRequestModel();
     }
 

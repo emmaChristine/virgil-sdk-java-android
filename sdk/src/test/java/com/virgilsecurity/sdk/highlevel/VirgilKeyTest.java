@@ -29,32 +29,12 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
-import com.virgilsecurity.sdk.crypto.PrivateKey;
-import com.virgilsecurity.sdk.crypto.PublicKey;
-import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
-import com.virgilsecurity.sdk.storage.KeyEntry;
-import com.virgilsecurity.sdk.utils.ConvertionUtils;
-
 /**
  * @author Andrii Iakovenko
  *
  */
 public class VirgilKeyTest {
-
+/*
     private static final String PLAINTEXT = "This is just a text";
 
     private VirgilApiContext context;
@@ -240,4 +220,5 @@ public class VirgilKeyTest {
         byte[] exportedPublicKey = virgilKey.exportPublicKey().getBytes();
         assertArrayEquals(publicKey.getValue(), exportedPublicKey);
     }
+*/
 }

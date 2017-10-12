@@ -29,8 +29,8 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.RevokeCardSnapshotModel;
+import com.virgilsecurity.sdk.client.model.cards.RevocationReason;
+import com.virgilsecurity.sdk.client.model.cards.RevokeCardSnapshotModel;
 
 /**
  * Request used for Virgil Card revocation.
@@ -38,31 +38,63 @@ import com.virgilsecurity.sdk.client.model.RevokeCardSnapshotModel;
  * @author Andrii Iakovenko
  *
  */
-public class RevokeCardRequest extends SignedRequest<RevokeCardSnapshotModel> {
+public class RevokeCardRequest extends SignedRequest {
+
+    private String cardId;
+    private RevocationReason reason;
 
     /**
      * Create new instance of {@link RevokeCardRequest}.
      * 
-     * @param stringifiedRequest
-     *            The stringified request.
      */
-    public RevokeCardRequest(String stringifiedRequest) {
-        super(stringifiedRequest);
+    public RevokeCardRequest() {
+        this.reason = RevocationReason.UNSPECIFIED;
     }
 
     /**
-     * Create new instance of {@link RevokeCardRequest}.
-     * 
+     * @return the cardId
+     */
+    public String getCardId() {
+        return cardId;
+    }
+
+    /**
      * @param cardId
-     *            The card ID to be revoked.
-     * @param reason
-     *            The revocation reason.
+     *            the cardId to set
      */
-    public RevokeCardRequest(String cardId, RevocationReason reason) {
-
-        RevokeCardSnapshotModel snapshotModel = new RevokeCardSnapshotModel();
-        snapshotModel.setCardId(cardId);
-        snapshotModel.setReason(reason);
-        init(snapshotModel);
+    public void setCardId(String cardId) {
+        checkNoSnapshot();
+        this.cardId = cardId;
     }
+
+    /**
+     * @return the reason
+     */
+    public RevocationReason getReason() {
+        return reason;
+    }
+
+    /**
+     * @param reason
+     *            the reason to set
+     */
+    public void setReason(RevocationReason reason) {
+        checkNoSnapshot();
+        this.reason = reason;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.requests.SignedRequest#createSnapshot()
+     */
+    @Override
+    protected byte[] createSnapshot() {
+        RevokeCardSnapshotModel model = new RevokeCardSnapshotModel();
+        model.setCardId(this.cardId);
+        model.setReason(this.reason);
+
+        return SnapshotUtils.takeSnapshot(model);
+    }
+
 }

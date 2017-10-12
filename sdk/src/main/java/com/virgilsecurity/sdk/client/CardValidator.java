@@ -29,7 +29,7 @@
  */
 package com.virgilsecurity.sdk.client;
 
-import com.virgilsecurity.sdk.client.model.CardModel;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
 
 /**
  * @author Andrii Iakovenko

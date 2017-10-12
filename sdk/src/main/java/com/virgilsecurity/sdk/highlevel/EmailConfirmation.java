@@ -29,8 +29,9 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
-import com.virgilsecurity.sdk.client.VirgilClient;
-import com.virgilsecurity.sdk.client.model.dto.Token;
+import com.virgilsecurity.sdk.client.IdentityClient;
+import com.virgilsecurity.sdk.client.model.identity.ConfirmEmailModel;
+import com.virgilsecurity.sdk.client.model.identity.Token;
 
 /**
  * @author Andrii Iakovenko
@@ -43,25 +44,20 @@ public class EmailConfirmation extends IdentityConfirmation {
     /**
      * Create new instance of {@link EmailConfirmation}.
      * 
-     * @param confirmationCode The confirmation code from email.
+     * @param confirmationCode
+     *            The confirmation code from email.
      */
     public EmailConfirmation(String confirmationCode) {
         super();
         this.confirmationCode = confirmationCode;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.virgilsecurity.sdk.highlevel.IdentityConfirmation#confirmAndGrabValidationToken(com.virgilsecurity.sdk.
-     * highlevel.IdentityVerificationAttempt, com.virgilsecurity.sdk.client.VirgilClient)
-     */
     @Override
-    String confirmAndGrabValidationToken(IdentityVerificationAttempt attempt, VirgilClient client) {
+    String confirmAndGrabValidationToken(IdentityVerificationAttempt attempt, IdentityClient client) {
         Token token = new Token(attempt.getTimeToLive(), attempt.getCountToLive());
-        String confirmatonToken = client.confirmIdentity(attempt.getActionId(), this.confirmationCode, token);
+        ConfirmEmailModel confirmatonToken = client.confirmEmail(attempt.getActionId(), this.confirmationCode, token);
 
-        return confirmatonToken;
+        return confirmatonToken.getValidationToken();
     }
 
 }

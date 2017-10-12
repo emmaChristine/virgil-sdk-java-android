@@ -30,7 +30,6 @@
 package com.virgilsecurity.sdk.client.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.virgilsecurity.sdk.client.model.dto.SignableRequestMetaModel;
 
 /**
  * TODO: add type description

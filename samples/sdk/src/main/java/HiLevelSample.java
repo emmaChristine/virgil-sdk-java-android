@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
+import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -107,10 +107,10 @@ public class HiLevelSample {
         String confirmationCode = br.readLine();
 
         // confirm a Card's identity using confirmation code retrived on the email.
-        IdentityValidationToken token = attempt.confirm(new EmailConfirmation(confirmationCode));
+//        IdentityValidationToken token = attempt.confirm(new EmailConfirmation(confirmationCode));
 
         // publish a Card on the Virgil Security services.
-        virgil.getCards().publishGlobal(aliceCard, token);
+//        virgil.getCards().publishGlobal(aliceCard, token);
         // aliceCard.publishAsGlobal(token);
 
         /** Revoke Global Virgil Card */
@@ -127,10 +127,10 @@ public class HiLevelSample {
         confirmationCode = br.readLine();
 
         // confirm Card's identity using confirmation code and grub validation token.
-        token = attempt.confirm(new EmailConfirmation(confirmationCode));
+//        token = attempt.confirm(new EmailConfirmation(confirmationCode));
 
         // revoke Virgil Card from Virgil Security services.
-        virgil.getCards().revokeGlobal(aliceCard, aliceKey, token);
+//        virgil.getCards().revokeGlobal(aliceCard, aliceKey, token);
     }
 
     private static void localCards() throws VirgilException {

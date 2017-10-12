@@ -29,14 +29,12 @@
  */
 package com.virgilsecurity.sdk.client;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 
 import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
- * Virgil Client Context contains common configuration parameters of Virgil Client.
+ * This class contains common configuration parameters of Virgil services clients.
  *
  * @author Andrii Iakovenko
  *
@@ -45,54 +43,19 @@ public class VirgilClientContext {
 
     private String accessToken;
 
-    private URL cardsServiceURL;
-
-    private URL readOnlyCardsServiceURL;
-
-    private URL identityServiceURL;
-
-    private URL raServiceURL;
-    
     /**
      * Create new instance of {@link VirgilClientContext}.
      */
     public VirgilClientContext() {
-        try {
-            this.cardsServiceURL = new URL("https://cards.virgilsecurity.com");
-
-            this.readOnlyCardsServiceURL = new URL("https://cards-ro.virgilsecurity.com");
-            this.identityServiceURL = new URL("https://identity.virgilsecurity.com");
-            this.raServiceURL = new URL("https://ra.virgilsecurity.com");
-        } catch (MalformedURLException e) {
-            // This should never happen
-        }
     }
 
     /**
-     * Create a new instance of {@code VirgilClientContext}
-     *
+     * Create new instance of {@link VirgilClientContext}.
+     * 
      * @param accessToken
-     *            The application access token.
      */
     public VirgilClientContext(String accessToken) {
-        this();
-        this.accessToken = accessToken;
-    }
-
-    /**
-     * Gets the access token.
-     * 
-     * @return the accessToken
-     */
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    /**
-     * @param accessToken
-     *            the accessToken to set
-     */
-    public void setAccessToken(String accessToken) {
+        super();
         this.accessToken = accessToken;
     }
 
@@ -116,63 +79,20 @@ public class VirgilClientContext {
     }
 
     /**
-     * @return the readOnlyCardsServiceURL
+     * Gets the access token.
+     * 
+     * @return the accessToken
      */
-    public URL getReadOnlyCardsServiceURL() {
-        return readOnlyCardsServiceURL;
+    public String getAccessToken() {
+        return accessToken;
     }
 
     /**
-     * @param readOnlyCardsServiceURL
-     *            the readOnlyCardsServiceURL to set
+     * @param accessToken
+     *            the accessToken to set
      */
-    public void setReadOnlyCardsServiceURL(URL readOnlyCardsServiceURL) {
-        this.readOnlyCardsServiceURL = readOnlyCardsServiceURL;
-    }
-
-    /**
-     * @return the cardsServiceURL
-     */
-    public URL getCardsServiceURL() {
-        return cardsServiceURL;
-    }
-
-    /**
-     * @param cardsServiceURL
-     *            the cardsServiceURL to set
-     */
-    public void setCardsServiceURL(URL cardsServiceURL) {
-        this.cardsServiceURL = cardsServiceURL;
-    }
-
-    /**
-     * @return the identityServiceURL
-     */
-    public URL getIdentityServiceURL() {
-        return identityServiceURL;
-    }
-
-    /**
-     * @param identityServiceURL
-     *            the identityServiceURL to set
-     */
-    public void setIdentityServiceURL(URL identityServiceURL) {
-        this.identityServiceURL = identityServiceURL;
-    }
-
-    /**
-     * @return the raServiceURL
-     */
-    public URL getRaServiceURL() {
-        return raServiceURL;
-    }
-
-    /**
-     * @param raServiceURL
-     *            the raServiceURL to set
-     */
-    public void setRaServiceURL(URL raServiceURL) {
-        this.raServiceURL = raServiceURL;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
 }

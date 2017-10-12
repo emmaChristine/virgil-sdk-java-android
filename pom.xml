@@ -58,7 +58,6 @@
 		<module>crypto-android</module>
 		<module>crypto</module>
 		<module>sdk</module>
-		<module>sdk-android</module>
 		<module>samples</module>
 	</modules>
 

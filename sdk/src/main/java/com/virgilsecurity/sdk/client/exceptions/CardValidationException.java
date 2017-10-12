@@ -32,7 +32,7 @@ package com.virgilsecurity.sdk.client.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.virgilsecurity.sdk.client.model.CardModel;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
 
 /**
  * This exception occurred when card validation failed.

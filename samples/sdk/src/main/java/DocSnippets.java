@@ -34,7 +34,7 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsAlreadyExistsException;
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
+import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -281,10 +281,10 @@ public class DocSnippets {
         IdentityVerificationAttempt attempt = aliceCard.checkIdentity();
 
         // grab a validation token
-        IdentityValidationToken token = attempt.confirm(new EmailConfirmation("[CONFIRMATION_CODE]"));
+//        IdentityValidationToken token = attempt.confirm(new EmailConfirmation("[CONFIRMATION_CODE]"));
 
         // revoke a global Virgil Card
-        virgil.getCards().revokeGlobal(aliceCard, aliceKey, token);
+//        virgil.getCards().revokeGlobal(aliceCard, aliceKey, token);
     }
 
     private void validating_cards() throws VirgilException {
@@ -311,10 +311,10 @@ public class DocSnippets {
         IdentityVerificationAttempt attempt = aliceCard.checkIdentity();
 
         // confirm an identity and grab the validation token
-        IdentityValidationToken token = attempt.confirm(new EmailConfirmation("[CONFIRMATION_CODE]"));
+//        IdentityValidationToken token = attempt.confirm(new EmailConfirmation("[CONFIRMATION_CODE]"));
 
         // publish the Virgil Card
-        virgil.getCards().publishGlobal(aliceCard, token);
+//        virgil.getCards().publishGlobal(aliceCard, token);
     }
 
     private void export_key() {

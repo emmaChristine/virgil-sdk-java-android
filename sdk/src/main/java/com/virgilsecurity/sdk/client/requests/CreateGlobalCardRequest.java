@@ -29,10 +29,10 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.client.model.SignableRequestModel;
 import com.virgilsecurity.sdk.client.model.SignableRequestValidationModel;
+import com.virgilsecurity.sdk.client.model.cards.CardScope;
+import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
@@ -52,7 +52,7 @@ public class CreateGlobalCardRequest extends CreateCardRequest {
     }
 
     @Override
-    SignableRequestModel getRequestModel() {
+    public SignableRequestModel getRequestModel() {
         SignableRequestModel requestModel = this.takeSignableRequestModel();
 
         if (!StringUtils.isBlank(this.validationToken)) {

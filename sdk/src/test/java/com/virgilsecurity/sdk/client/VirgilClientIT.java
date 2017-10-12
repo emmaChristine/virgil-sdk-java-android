@@ -29,35 +29,6 @@
  */
 package com.virgilsecurity.sdk.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
-import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
-import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
-import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.KeyPair;
-import com.virgilsecurity.sdk.crypto.PrivateKey;
-import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
-
 /**
  * Test cases for Virgil Client.
  *
@@ -65,9 +36,9 @@ import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
  *
  */
 public class VirgilClientIT extends BaseIT {
-
+/*
     private Crypto crypto;
-    private VirgilClient client;
+    private CardsClient client;
     private RequestSigner requestSigner;
     private PrivateKey appKey;
 
@@ -90,7 +61,7 @@ public class VirgilClientIT extends BaseIT {
             ctx.setIdentityServiceURL(new URL(url));
         }
 
-        client = new VirgilClient(ctx);
+        client = new CardsClient(ctx);
         requestSigner = new RequestSigner(crypto);
 
         appKey = crypto.importPrivateKey(APP_PRIVATE_KEY.getBytes(), APP_PRIVATE_KEY_PASSWORD);
@@ -205,5 +176,5 @@ public class VirgilClientIT extends BaseIT {
             fail(e.getMessage());
         }
     }
-
+*/
 }

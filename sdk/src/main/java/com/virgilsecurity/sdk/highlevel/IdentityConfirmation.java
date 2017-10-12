@@ -29,7 +29,7 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
-import com.virgilsecurity.sdk.client.VirgilClient;
+import com.virgilsecurity.sdk.client.IdentityClient;
 
 /**
  * This class is a base class for all identity confirmation types.
@@ -45,8 +45,8 @@ public abstract class IdentityConfirmation {
      * @param attempt
      *            The attempt.
      * @param client
-     *            The Virgil API client.
+     *            The Virgil identity service client.
      * @return A string that represents identity validation token.
      */
-    abstract String confirmAndGrabValidationToken(IdentityVerificationAttempt attempt, VirgilClient client);
+    abstract String confirmAndGrabValidationToken(IdentityVerificationAttempt attempt, IdentityClient client);
 }

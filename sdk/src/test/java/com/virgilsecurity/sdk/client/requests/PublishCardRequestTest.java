@@ -29,18 +29,6 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.virgilsecurity.sdk.client.model.CardInfoModel;
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
-import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.KeyPair;
-import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-
 /**
  * Unit tests for {@linkplain PublishCardRequest}
  *
@@ -48,7 +36,7 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
  *
  */
 public class PublishCardRequestTest {
-
+/*
     private static final String IDENTITY = "test@mail.com";
     private static final String IDENTITY_TYPE = GlobalCardIdentityType.APPLICATION.getValue();
 
@@ -79,5 +67,5 @@ public class PublishCardRequestTest {
         assertEquals(request.getRequestModel().getMeta().getValidation(), request.getRequestModel().getMeta().getValidation());
         assertEquals(request.getSignatures(), importedRequest.getSignatures());
     }
-
+*/
 }

@@ -31,10 +31,10 @@ package com.virgilsecurity.sdk.client.requests;
 
 import java.util.Map;
 
-import com.virgilsecurity.sdk.client.model.CardInfoModel;
-import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.PublishCardSnapshotModel;
 import com.virgilsecurity.sdk.client.model.SignableRequestModel;
+import com.virgilsecurity.sdk.client.model.cards.CardInfoModel;
+import com.virgilsecurity.sdk.client.model.cards.CardScope;
+import com.virgilsecurity.sdk.client.model.cards.PublishCardSnapshotModel;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
@@ -130,13 +130,6 @@ public class CreateCardRequest extends SignedRequest {
      */
     public void setScope(CardScope scope) {
         this.scope = scope;
-    }
-
-    protected void checkNoSnapshot() {
-        if (isSnapshotTaken()) {
-            // FIXME
-            throw new IllegalArgumentException();
-        }
     }
 
     void restoreFromSnapshot(byte[] snapshot) {

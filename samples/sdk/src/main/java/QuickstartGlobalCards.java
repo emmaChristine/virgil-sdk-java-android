@@ -34,19 +34,13 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import com.virgilsecurity.sdk.client.CardValidator;
-import com.virgilsecurity.sdk.client.RequestSigner;
-import com.virgilsecurity.sdk.client.VirgilClient;
+import com.virgilsecurity.sdk.client.CardsClient;
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
-import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
-import com.virgilsecurity.sdk.client.model.dto.Token;
-import com.virgilsecurity.sdk.client.requests.PublishGlobalCardRequest;
-import com.virgilsecurity.sdk.client.requests.RevokeGlobalCardRequest;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
+import com.virgilsecurity.sdk.client.model.cards.CardScope;
+import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
+import com.virgilsecurity.sdk.client.model.cards.SearchCriteria;
 import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.utils.VirgilCardValidator;
@@ -63,7 +57,7 @@ public class QuickstartGlobalCards {
     public static void main(String[] args) throws Exception {
 
         // Initializing an API Client
-        VirgilClient client = new VirgilClient("[YOUR_APP_ACCESS_TOKEN_HERE]");
+        CardsClient client = new CardsClient("[YOUR_APP_ACCESS_TOKEN_HERE]");
 
         // Initializing Crypto
         Crypto crypto = new VirgilCrypto();
@@ -75,29 +69,29 @@ public class QuickstartGlobalCards {
         /** Confirm the identity */
         String identity = "[EMAIL_IDENTITY_HERE]";
         String identityType = GlobalCardIdentityType.EMAIL.getValue();
-        String actionId = client.verifyIdentity(identity, identityType);
+//        String actionId = client.verifyIdentity(identity, identityType);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter confirmation code");
         String confirmationCode = br.readLine();
-        String validationToken = client.confirmIdentity(actionId, confirmationCode, new Token(3600, 2));
+//        String validationToken = client.confirmIdentity(actionId, confirmationCode, new Token(3600, 2));
 
         /** Prepare request */
         byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
-        PublishGlobalCardRequest createCardRequest = new PublishGlobalCardRequest(identity, identityType,
-                exportedPublicKey, validationToken);
+//        PublishGlobalCardRequest createCardRequest = new PublishGlobalCardRequest(identity, identityType,
+//                exportedPublicKey, validationToken);
 
         /**
          * then, use RequestSigner class to sign request with owner and app keys.
          */
-        RequestSigner requestSigner = new RequestSigner(crypto);
-        requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
-
-        /** Publish a Virgil Card */
-        CardModel aliceCard = client.publishGlobalCard(createCardRequest);
-
-        // Get Virgil Card
-        CardModel foundCard = client.getCard(aliceCard.getId());
+//        RequestSigner requestSigner = new RequestSigner(crypto);
+//        requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
+//
+//        /** Publish a Virgil Card */
+//        CardModel aliceCard = client.publishGlobalCard(createCardRequest);
+//
+//        // Get Virgil Card
+//        CardModel foundCard = client.getCard(aliceCard.getId());
 
         // Search for Virgil Cards
         SearchCriteria criteria = SearchCriteria.byIdentity(identity);
@@ -115,18 +109,18 @@ public class QuickstartGlobalCards {
         }
 
         // Revoking a Virgil Card
-        /** Use your card ID */
-        String cardId = aliceCard.getId();
-
-        RevokeGlobalCardRequest revokeRequest = new RevokeGlobalCardRequest(cardId, RevocationReason.UNSPECIFIED,
-                validationToken);
-
-        Fingerprint fingerprint = crypto.calculateFingerprint(revokeRequest.getSnapshot());
-        byte[] signature = crypto.sign(fingerprint.getValue(), aliceKeys.getPrivateKey());
-
-        revokeRequest.appendSignature(cardId, signature);
-
-        client.revokeGlobalCard(revokeRequest);
+//        /** Use your card ID */
+//        String cardId = aliceCard.getId();
+//
+//        RevokeGlobalCardRequest revokeRequest = new RevokeGlobalCardRequest(cardId, RevocationReason.UNSPECIFIED,
+//                validationToken);
+//
+//        Fingerprint fingerprint = crypto.calculateFingerprint(revokeRequest.getSnapshot());
+//        byte[] signature = crypto.sign(fingerprint.getValue(), aliceKeys.getPrivateKey());
+//
+//        revokeRequest.appendSignature(cardId, signature);
+//
+//        client.revokeGlobalCard(revokeRequest);
 
         System.out.println("Done");
     }

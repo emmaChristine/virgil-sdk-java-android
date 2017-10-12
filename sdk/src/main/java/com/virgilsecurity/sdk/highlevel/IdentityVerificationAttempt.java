@@ -168,13 +168,13 @@ public class IdentityVerificationAttempt {
      * @return A new instance of {@link IdentityValidationToken} class.
      * @throws VirgilClientException 
      */
-    public IdentityValidationToken confirm(IdentityConfirmation confirmation) throws VirgilClientException {
-        if (confirmation == null) {
-            throw new VirgilClientException("Not supported");
-        }
-
-        String validationToken = confirmation.confirmAndGrabValidationToken(this, this.context.getClient());
-        return new IdentityValidationToken(validationToken);
-    }
+//    public IdentityValidationToken confirm(IdentityConfirmation confirmation) throws VirgilClientException {
+//        if (confirmation == null) {
+//            throw new VirgilClientException("Not supported");
+//        }
+//
+//        String validationToken = confirmation.confirmAndGrabValidationToken(this, this.context.getClient());
+//        return new IdentityValidationToken(validationToken);
+//    }
 
 }

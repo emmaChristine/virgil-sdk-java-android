@@ -32,14 +32,10 @@
 import java.util.List;
 
 import com.virgilsecurity.sdk.client.CardValidator;
-import com.virgilsecurity.sdk.client.RequestSigner;
-import com.virgilsecurity.sdk.client.VirgilClient;
+import com.virgilsecurity.sdk.client.CardsClient;
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
-import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
-import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
+import com.virgilsecurity.sdk.client.model.cards.SearchCriteria;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
@@ -59,7 +55,7 @@ public class Quickstart {
     public static void main(String[] args) throws Exception, VirgilException {
 
         // Initializing an API Client
-        VirgilClient client = new VirgilClient("[YOUR_APP_ACCESS_TOKEN_HERE]");
+        CardsClient client = new CardsClient("[YOUR_APP_ACCESS_TOKEN_HERE]");
 
         // Initializing Crypto
         Crypto crypto = new VirgilCrypto();
@@ -76,21 +72,21 @@ public class Quickstart {
 
         /** Prepare request */
         byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
-        PublishCardRequest createCardRequest = new PublishCardRequest("alice", "username", exportedPublicKey);
-
-        /**
-         * then, use RequestSigner class to sign request with owner and app keys.
-         */
-        RequestSigner requestSigner = new RequestSigner(crypto);
-
-        requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
-        requestSigner.authoritySign(createCardRequest, appID, appKey);
-
-        /** Publish a Virgil Card */
-        CardModel aliceCard = client.publishCard(createCardRequest);
-
-        // Get Virgil Card
-        CardModel foundCard = client.getCard(aliceCard.getId());
+//        PublishCardRequest createCardRequest = new PublishCardRequest("alice", "username", exportedPublicKey);
+//
+//        /**
+//         * then, use RequestSigner class to sign request with owner and app keys.
+//         */
+//        RequestSigner requestSigner = new RequestSigner(crypto);
+//
+//        requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
+//        requestSigner.authoritySign(createCardRequest, appID, appKey);
+//
+//        /** Publish a Virgil Card */
+//        CardModel aliceCard = client.publishCard(createCardRequest);
+//
+//        // Get Virgil Card
+//        CardModel foundCard = client.getCard(aliceCard.getId());
 
         // Search for Virgil Cards
         SearchCriteria criteria = SearchCriteria.byIdentity("alice");
@@ -108,14 +104,14 @@ public class Quickstart {
 
         // Revoking a Virgil Card
         /** Use your card ID */
-        String cardId = aliceCard.getId();
-
-        RevokeCardRequest revokeRequest = new RevokeCardRequest(cardId, RevocationReason.UNSPECIFIED);
-
-        requestSigner.selfSign(revokeRequest, aliceKeys.getPrivateKey());
-        requestSigner.authoritySign(revokeRequest, appID, appKey);
-
-        client.revokeCard(revokeRequest);
+//        String cardId = aliceCard.getId();
+//
+//        RevokeCardRequest revokeRequest = new RevokeCardRequest(cardId, RevocationReason.UNSPECIFIED);
+//
+//        requestSigner.selfSign(revokeRequest, aliceKeys.getPrivateKey());
+//        requestSigner.authoritySign(revokeRequest, appID, appKey);
+//
+//        client.revokeCard(revokeRequest);
     }
 
 }

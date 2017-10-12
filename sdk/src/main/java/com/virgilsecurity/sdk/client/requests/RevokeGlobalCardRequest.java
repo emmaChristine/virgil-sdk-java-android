@@ -29,8 +29,11 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.RevokeCardSnapshotModel;
+import com.virgilsecurity.sdk.client.model.SignableRequestModel;
+import com.virgilsecurity.sdk.client.model.SignableRequestValidationModel;
+import com.virgilsecurity.sdk.crypto.Crypto;
+import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
  * Represents an information about revoking card request.
@@ -38,35 +41,42 @@ import com.virgilsecurity.sdk.client.model.RevokeCardSnapshotModel;
  * @author Andrii Iakovenko
  *
  */
-public class RevokeGlobalCardRequest extends SignedRequest<RevokeCardSnapshotModel> {
+public class RevokeGlobalCardRequest extends RevokeCardRequest {
 
-    /**
-     * Create new instance of {@link RevokeGlobalCardRequest}.
+    public String validationToken;
+
+    public void selfSign(Crypto crypto, String cardId, PrivateKey privateKey) {
+        this.sign(crypto, cardId, privateKey);
+    }
+
+    /*
+     * (non-Javadoc)
      * 
-     * @param stringifiedRequest
-     *            The stringified request.
+     * @see com.virgilsecurity.sdk.client.requests.SignedRequest#getRequestModel()
      */
-    public RevokeGlobalCardRequest(String stringifiedRequest) {
-        super(stringifiedRequest);
+    @Override
+    public SignableRequestModel getRequestModel() {
+        SignableRequestModel requestModel = this.takeSignableRequestModel();
+
+        if (!StringUtils.isBlank(this.validationToken)) {
+            requestModel.getMeta().setValidation(new SignableRequestValidationModel(this.validationToken));
+        }
+
+        return requestModel;
     }
 
     /**
-     * Create new instance of {@link RevokeGlobalCardRequest}.
-     * 
-     * @param cardId
-     *            The card ID to be revoked.
-     * @param reason
-     *            The revocation reason.
-     * @param validationToken
-     *            The validation token.
+     * @return the validationToken
      */
-    public RevokeGlobalCardRequest(String cardId, RevocationReason reason, String validationToken) {
-        RevokeCardSnapshotModel snapshotModel = new RevokeCardSnapshotModel();
-        snapshotModel.setCardId(cardId);
-        snapshotModel.setReason(reason);
+    public String getValidationToken() {
+        return validationToken;
+    }
 
-        init(snapshotModel);
-
+    /**
+     * @param validationToken
+     *            the validationToken to set
+     */
+    public void setValidationToken(String validationToken) {
         this.validationToken = validationToken;
     }
 

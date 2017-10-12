@@ -36,14 +36,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
-import com.virgilsecurity.sdk.client.model.CardInfoModel;
-import com.virgilsecurity.sdk.client.model.CardMetaModel;
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.model.GlobalCardIdentityType;
-import com.virgilsecurity.sdk.client.model.PublishCardSnapshotModel;
-import com.virgilsecurity.sdk.client.model.RevocationReason;
-import com.virgilsecurity.sdk.client.model.dto.SearchCriteria;
+import com.virgilsecurity.sdk.client.model.cards.CardInfoModel;
+import com.virgilsecurity.sdk.client.model.cards.CardMetaModel;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
+import com.virgilsecurity.sdk.client.model.cards.CardScope;
+import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
+import com.virgilsecurity.sdk.client.model.cards.PublishCardSnapshotModel;
+import com.virgilsecurity.sdk.client.model.cards.RevocationReason;
+import com.virgilsecurity.sdk.client.model.cards.SearchCriteria;
 import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeGlobalCardRequest;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
@@ -328,17 +328,17 @@ public class VirgilCardManager implements CardManager {
      * @throws CryptoException
      */
     public void revoke(VirgilCard card) throws CryptoException {
-        RevokeCardRequest revokeRequest = new RevokeCardRequest(card.getId(), RevocationReason.UNSPECIFIED);
-
-        String appId = this.context.getCredentials().getAppId();
-        PrivateKey appKey = this.context.getCredentials().getAppKey(this.context.getCrypto());
-
-        Fingerprint fingerprint = this.context.getCrypto().calculateFingerprint(revokeRequest.getSnapshot());
-        byte[] signature = this.context.getCrypto().sign(fingerprint.getValue(), appKey);
-
-        revokeRequest.appendSignature(appId, signature);
-
-        this.context.getClient().revokeCard(revokeRequest);
+//        RevokeCardRequest revokeRequest = new RevokeCardRequest(card.getId(), RevocationReason.UNSPECIFIED);
+//
+//        String appId = this.context.getCredentials().getAppId();
+//        PrivateKey appKey = this.context.getCredentials().getAppKey(this.context.getCrypto());
+//
+//        Fingerprint fingerprint = this.context.getCrypto().calculateFingerprint(revokeRequest.getSnapshot());
+//        byte[] signature = this.context.getCrypto().sign(fingerprint.getValue(), appKey);
+//
+//        revokeRequest.appendSignature(appId, signature);
+//
+//        this.context.getClient().revokeCard(revokeRequest);
     }
 
     /**
@@ -352,15 +352,15 @@ public class VirgilCardManager implements CardManager {
      *            The identity token.
      */
     public void revokeGlobal(VirgilCard card, VirgilKey key, IdentityValidationToken identityToken) {
-        RevokeGlobalCardRequest revokeRequest = new RevokeGlobalCardRequest(card.getId(), RevocationReason.UNSPECIFIED,
-                identityToken.getValue());
-
-        Fingerprint fingerprint = this.context.getCrypto().calculateFingerprint(revokeRequest.getSnapshot());
-        VirgilBuffer signature = key.sign(VirgilBuffer.from(fingerprint.getValue()));
-
-        revokeRequest.appendSignature(card.getId(), signature.getBytes());
-
-        this.context.getClient().revokeGlobalCard(revokeRequest);
+//        RevokeGlobalCardRequest revokeRequest = new RevokeGlobalCardRequest(card.getId(), RevocationReason.UNSPECIFIED,
+//                identityToken.getValue());
+//
+//        Fingerprint fingerprint = this.context.getCrypto().calculateFingerprint(revokeRequest.getSnapshot());
+//        VirgilBuffer signature = key.sign(VirgilBuffer.from(fingerprint.getValue()));
+//
+//        revokeRequest.appendSignature(card.getId(), signature.getBytes());
+//
+//        this.context.getClient().revokeGlobalCard(revokeRequest);
     }
 
     /**

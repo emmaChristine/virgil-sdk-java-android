@@ -29,7 +29,7 @@
  */
 package com.virgilsecurity.sdk.client.requests;
 
-import com.virgilsecurity.sdk.client.model.CardScope;
+import com.virgilsecurity.sdk.client.model.cards.CardScope;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 

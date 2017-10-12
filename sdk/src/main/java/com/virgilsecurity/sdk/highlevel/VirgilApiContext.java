@@ -31,7 +31,7 @@ package com.virgilsecurity.sdk.highlevel;
 
 import java.util.Collection;
 
-import com.virgilsecurity.sdk.client.VirgilClient;
+import com.virgilsecurity.sdk.client.CardsClient;
 import com.virgilsecurity.sdk.client.VirgilClientContext;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -51,7 +51,7 @@ public class VirgilApiContext {
     private Crypto crypto;
     private KeyStorage keyStorage;
     private DeviceManager deviceManager;
-    private VirgilClient virgilClient;
+    private CardsClient virgilClient;
 
     private String accessToken;
     private Credentials credentials;
@@ -163,12 +163,12 @@ public class VirgilApiContext {
      * 
      * @return the client
      */
-    public VirgilClient getClient() {
+    public CardsClient getClient() {
         if (this.virgilClient == null) {
             if (this.clientContext == null) {
-                this.virgilClient = new VirgilClient(this.accessToken);
+                this.virgilClient = new CardsClient(this.accessToken);
             } else {
-                this.virgilClient = new VirgilClient(this.clientContext);
+//                this.virgilClient = new CardsClient(this.clientContext);
             }
             initClient();
         }

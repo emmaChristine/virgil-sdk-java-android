@@ -34,13 +34,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.virgilsecurity.sdk.client.RequestSigner;
-import com.virgilsecurity.sdk.client.exceptions.NotSupportedException;
-import com.virgilsecurity.sdk.client.model.CardModel;
-import com.virgilsecurity.sdk.client.model.CardScope;
-import com.virgilsecurity.sdk.client.requests.PublishCardRequest;
-import com.virgilsecurity.sdk.client.requests.PublishGlobalCardRequest;
-import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.client.model.cards.CardModel;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
@@ -276,11 +270,11 @@ public class VirgilCard {
         if (options != null) {
             extraFields = options.getExtraFields();
         }
-        String actionId = this.context.getClient().verifyIdentity(this.getIdentity(), this.getIdentityType(),
-                extraFields);
+//        String actionId = this.context.getClient().verifyIdentity(this.getIdentity(), this.getIdentityType(),
+//                extraFields);
 
         IdentityVerificationAttempt attempt = new IdentityVerificationAttempt(this.context);
-        attempt.setActionId(actionId);
+//        attempt.setActionId(actionId);
         attempt.setIdentity(this.getIdentity());
         attempt.setIdentityType(this.getIdentityType());
         if (options != null) {
@@ -298,18 +292,18 @@ public class VirgilCard {
      * @throws CryptoException
      */
     public VirgilCard publish() throws CryptoException {
-        PublishCardRequest publishCardRequest = new PublishCardRequest(this.card.getSnapshot(),
-                this.card.getMeta().getSignatures());
-
-        String appId = this.context.getCredentials().getAppId();
-        PrivateKey appKey = this.context.getCredentials().getAppKey(this.context.getCrypto());
-
-        RequestSigner requestSigner = new RequestSigner(this.context.getCrypto());
-        requestSigner.authoritySign(publishCardRequest, appId, appKey);
-
-        CardModel updatedModel = this.context.getClient().publishCard(publishCardRequest);
-
-        this.card.setMeta(updatedModel.getMeta());
+//        PublishCardRequest publishCardRequest = new PublishCardRequest(this.card.getSnapshot(),
+//                this.card.getMeta().getSignatures());
+//
+//        String appId = this.context.getCredentials().getAppId();
+//        PrivateKey appKey = this.context.getCredentials().getAppKey(this.context.getCrypto());
+//
+//        RequestSigner requestSigner = new RequestSigner(this.context.getCrypto());
+//        requestSigner.authoritySign(publishCardRequest, appId, appKey);
+//
+//        CardModel updatedModel = this.context.getClient().publishCard(publishCardRequest);
+//
+//        this.card.setMeta(updatedModel.getMeta());
 
         return this;
     }
@@ -322,20 +316,20 @@ public class VirgilCard {
      * @return This card.
      */
     public VirgilCard publishAsGlobal(IdentityValidationToken identityToken) {
-        if (identityToken == null) {
-            throw new NullArgumentException("identityToken");
-        }
-
-        if (!CardScope.GLOBAL.equals(this.card.getSnapshotModel().getScope())) {
-            throw new NotSupportedException();
-        }
-
-        PublishGlobalCardRequest publishCardRequest = new PublishGlobalCardRequest(this.card.getSnapshot(),
-                identityToken.getValue(), this.card.getMeta().getSignatures());
-
-        CardModel updatedModel = this.context.getClient().publishGlobalCard(publishCardRequest);
-
-        this.card.setMeta(updatedModel.getMeta());
+//        if (identityToken == null) {
+//            throw new NullArgumentException("identityToken");
+//        }
+//
+//        if (!CardScope.GLOBAL.equals(this.card.getSnapshotModel().getScope())) {
+//            throw new NotSupportedException();
+//        }
+//
+//        PublishGlobalCardRequest publishCardRequest = new PublishGlobalCardRequest(this.card.getSnapshot(),
+//                identityToken.getValue(), this.card.getMeta().getSignatures());
+//
+//        CardModel updatedModel = this.context.getClient().publishGlobalCard(publishCardRequest);
+//
+//        this.card.setMeta(updatedModel.getMeta());
 
         return this;
     }
