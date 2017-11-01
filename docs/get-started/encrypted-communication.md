@@ -64,7 +64,7 @@ String exportedCard = aliceCard.export();
 transmitToServer(exportedCard);
 ```
 
-Use the [approve & publish users guide](/docs/guides/configuration/server.md#-approve--publish-cards) to publish users Virgil Cards on Virgil Services.
+Use the [approve & publish users guide](/docs/guides/configuration/server-configuration.md#-approve--publish-cards) to publish users Virgil Cards on Virgil Services.
 
 
 ## <a name="head4"></a> Sign & Encrypt a Message
