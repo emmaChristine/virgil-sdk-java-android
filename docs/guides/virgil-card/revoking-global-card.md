@@ -19,7 +19,7 @@ PrivateKey appKey = crypto.importPrivateKey(APP_PRIVATE_KEY.getBytes(),
     APP_PRIVATE_KEY_PASSWORD);
 ```
 
-- Load Alice's **Virgil Key** from the secure storage provided by default
+- Load Alice's Virgil Key from the secure storage provided by default
 - Load Alice's Virgil Card from **Virgil Services**
 - Initiate the Card identity verification process
 - Confirm the Card identity using a **confirmation code**

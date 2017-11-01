@@ -3,7 +3,7 @@
 This guide is a short tutorial on how to create a **Digital Signature** with Virgil Security.
 With valid digital signature, recipient is sure that the message was created by a known sender, that the sender cannot deny sending the message, and that the message was not altered in transit. It can be used with any kind of message – whether it is encrypted or not.
 
-See our [Use Cases](https://github.com/VirgilSecurity/virgil-sdk-java-android/tree/docs-review/documentation) to find out what you can do with Digital Signature.
+See our [Use Cases](https://github.com/VirgilSecurity/virgil-sdk-java-android/tree/docs-review/docs) to find out what you can do with Digital Signature.
 
 Set up your project environment before starting to create a Digital Signature, with the [getting started](/docs/guides/configuration/client-configuration.md) guide.
 
