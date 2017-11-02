@@ -111,7 +111,7 @@ VirgilBuffer originalData = aliceKey.decrypt(encryptedData);
 String originalMessage = originalData.toString();
 ```
 
-__Next:__ On the page below you can find configuration documentation and the list of our guides and use cases where you can see appliance of Virgil Java SDK.
+__Next:__ On the page below you can find configuration documentation and the list of our guides and use cases where you can see appliance of Virgil Java/Android SDK.
 
 
 ## Documentation
