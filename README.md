@@ -2,7 +2,7 @@
 
 [Installation](#installation) | [Initialization](#initialization) | [Encryption / Decryption Example](#encryption-example) | [Documentation](#documentation) | [Support](#support)
 
-[[Virgil Security](https://virgilsecurity.com) provides a set of APIs for adding security to any application. In a few steps, you can encrypt communication, securely store data, provide passwordless authentication, and ensure data integrity.
+[Virgil Security](https://virgilsecurity.com) provides a set of APIs for adding security to any application. In a few steps, you can encrypt communication, securely store data, provide passwordless authentication, and ensure data integrity.
 
 To initialize and use Virgil SDK, you need to have [Developer Account](https://developer.virgilsecurity.com/account/signin).
 
@@ -13,8 +13,8 @@ The Virgil SDK is provided as set of packages named *com.virgilsecurity.sdk*. Pa
 
 ### Target
 
-* Java 7+.
-* Android API 16+.
+* Java 7+
+* Android API 16+
 
 ### Prerequisites
 
@@ -86,10 +86,10 @@ Next: [Learn more about our the different ways of initializing the Java/Android 
 Virgil Security simplifies adding encryption to any application. With our SDK you may create unique Virgil Cards for your all users and devices. With users' Virgil Cards, you can easily encrypt any data at Client Side.
 
 ```java
-// find Alice's card(s) at Virgil Services
+// find Alice's Virgil Card(s) at Virgil Services
 VirgilCards aliceCards = virgil.getCards().find("alice");
 
-// encrypt the message using Alice's Virgil cards
+// encrypt the message using Alice's Virgil Cards
 String message = "Hello Alice!";
 VirgilBuffer cipherData = aliceCards.encrypt(message);
 
@@ -103,10 +103,10 @@ String transferData = encryptedMessage.toString(StringEncoding.Base64);
 Alice uses her Virgil Private Key to decrypt the encrypted message.
 
 ```java
-// load Alice's Key from local storage.
+// load Alice's Private Virgil Key from local storage.
 VirgilKey aliceKey = virgil.getKeys().load("alice_key_1", "mypassword");
 
-// decrypt the message using the Alice Virgil key
+// decrypt the message using the Alice's Private Virgil Key
 VirgilBuffer originalData = aliceKey.decrypt(encryptedData);
 String originalMessage = originalData.toString();
 ```
@@ -131,7 +131,7 @@ Virgil Security has a powerful set of APIs and the documentation to help you get
   * [Set Up Client Side](/docs/guides/configuration/client-configuration.md)
   * [Set Up Server Side](/docs/guides/configuration/server-configuration.md)
 
-__Next__ Also, see our Virgil [.NET/C# SDK for PFS](https://github.com/VirgilSecurity/virgil-pfs-net) Encrypted Communication to protect previously intercepted traffic from being decrypted even if the main Private Key is compromised.
+__Next__ Also, see our Virgil [JAVA SDK for PFS](https://github.com/VirgilSecurity/virgil-java-pfs) Encrypted Communication to protect previously intercepted traffic from being decrypted even if the main Private Key is compromised.
 
 ## License
 
