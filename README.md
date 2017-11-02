@@ -131,7 +131,7 @@ Virgil Security has a powerful set of APIs and the documentation to help you get
   * [Set Up Client Side](/docs/guides/configuration/client-configuration.md)
   * [Set Up Server Side](/docs/guides/configuration/server-configuration.md)
 
-__Next__ Also, see our Virgil [JAVA SDK for PFS](https://github.com/VirgilSecurity/virgil-java-pfs) Encrypted Communication to protect previously intercepted traffic from being decrypted even if the main Private Key is compromised.
+__Next__ Also, see our Virgil [Java/Android SDK for PFS](https://github.com/VirgilSecurity/virgil-java-pfs) Encrypted Communication to protect previously intercepted traffic from being decrypted even if the main Private Key is compromised.
 
 ## License
 
