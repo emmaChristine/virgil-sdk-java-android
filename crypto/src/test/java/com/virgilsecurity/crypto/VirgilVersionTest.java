@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2017, Virgil Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,36 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.client.exceptions;
+package com.virgilsecurity.crypto;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
- * Represents errors occurred during interaction with SDK components.
- *
  * @author Andrii Iakovenko
  *
  */
-public class VirgilException extends RuntimeException {
+public class VirgilVersionTest {
 
-    private static final long serialVersionUID = -8369792754821656857L;
-
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     */
-    public VirgilException() {
+    @Test
+    public void asString() {
+        assertEquals("2.2.3", VirgilVersion.asString());
     }
 
-    /**
-     * Create a new instance of {@code VirgilException}
-     *
-     * @param string
-     *            the detail message.
-     */
-    public VirgilException(String string) {
-        super(string);
+    @Test
+    public void majorVersion() {
+        assertEquals(2, VirgilVersion.majorVersion());
+    }
+
+    @Test
+    public void minorVersion() {
+        assertEquals(2, VirgilVersion.minorVersion());
+    }
+
+    @Test
+    public void patchVersion() {
+        assertEquals(3, VirgilVersion.patchVersion());
     }
 
 }

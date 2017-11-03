@@ -33,7 +33,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
-import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
@@ -65,7 +64,7 @@ public class VirgilClientContext {
             this.identityServiceURL = new URL("https://identity.virgilsecurity.com");
             this.raServiceURL = new URL("https://ra.virgilsecurity.com");
         } catch (MalformedURLException e) {
-            throw new VirgilException(e.getMessage());
+            // This should never happen
         }
     }
 

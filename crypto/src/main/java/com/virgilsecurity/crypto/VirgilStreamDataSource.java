@@ -37,9 +37,9 @@
 package com.virgilsecurity.crypto;
 
 public class VirgilStreamDataSource extends VirgilDataSource implements java.io.Closeable {
+    private static int CHUNK_SIZE_DEFAULT = 1024 * 1024;
     private java.io.InputStream stream;
     private int chunkSize;
-    private static int CHUNK_SIZE_DEFAULT = 1024 * 1024;
 
     public VirgilStreamDataSource(java.io.InputStream stream) {
         this.stream = stream;
@@ -49,6 +49,12 @@ public class VirgilStreamDataSource extends VirgilDataSource implements java.io.
     public VirgilStreamDataSource(java.io.InputStream stream, int chunkSize) {
         this.stream = stream;
         this.chunkSize = chunkSize;
+    }
+
+    @Override
+    public void close() throws java.io.IOException {
+        this.stream.close();
+        this.delete();
     }
 
     @Override
@@ -62,11 +68,5 @@ public class VirgilStreamDataSource extends VirgilDataSource implements java.io.
         byte[] result = new byte[bytesToReadNum];
         this.stream.read(result, 0, bytesToReadNum);
         return result;
-    }
-
-    @Override
-    public void close() throws java.io.IOException {
-        this.stream.close();
-        this.delete();
     }
 }

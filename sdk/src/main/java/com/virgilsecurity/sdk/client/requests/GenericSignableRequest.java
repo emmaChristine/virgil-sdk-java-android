@@ -51,7 +51,7 @@ import com.virgilsecurity.sdk.utils.StringUtils;
  */
 public abstract class GenericSignableRequest<T> implements SignableRequest {
 
-    private final Type type;
+    protected Type type;
     protected Map<String, byte[]> acceptedSignatures;
     protected byte[] takenSnapshot;
     protected T snapshotModel;
@@ -62,14 +62,17 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
      *
      */
     GenericSignableRequest() {
-        this.type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
+            this.type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        }
         this.acceptedSignatures = new HashMap<>();
     }
 
     /**
      * Create new instance of {@link GenericSignableRequest}.
      * 
-     * @param stringifiedRequest The request as a string.
+     * @param stringifiedRequest
+     *            The request as a string.
      */
     GenericSignableRequest(String stringifiedRequest) {
         this();
@@ -79,7 +82,8 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
     /**
      * Initialize request with snapshot.
      * 
-     * @param snapshotModel The model of snapshot.
+     * @param snapshotModel
+     *            The model of snapshot.
      */
     protected void init(T snapshotModel) {
         this.snapshotModel = snapshotModel;
@@ -179,7 +183,7 @@ public abstract class GenericSignableRequest<T> implements SignableRequest {
         this.takenSnapshot = requestModel.getContentSnapshot();
 
         if (requestModel.getMeta() != null) {
-            this.acceptedSignatures = requestModel.getMeta().getSignatures();
+            this.acceptedSignatures = new HashMap<>(requestModel.getMeta().getSignatures());
 
             if (requestModel.getMeta().getValidation() != null) {
                 this.validationToken = requestModel.getMeta().getValidation().getToken();

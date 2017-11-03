@@ -35,7 +35,7 @@ package com.virgilsecurity.sdk.client.exceptions;
  * @author Andrii Iyakovenko
  *
  */
-public class VirgilKeyIsAlreadyExistsException extends VirgilException {
+public class VirgilKeyIsAlreadyExistsException extends VirgilClientException {
 
     private static final long serialVersionUID = 6008287628148423605L;
 

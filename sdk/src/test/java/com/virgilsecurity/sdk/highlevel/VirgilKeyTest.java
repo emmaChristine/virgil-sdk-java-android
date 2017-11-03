@@ -44,6 +44,8 @@ import org.junit.Test;
 import com.virgilsecurity.sdk.client.model.IdentityType;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.storage.KeyEntry;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
@@ -82,7 +84,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void sign_buffer() {
+    public void sign_buffer() throws CryptoException {
         VirgilBuffer signature = virgilKey.sign(VirgilBuffer.from(PLAINTEXT));
         assertNotNull(signature);
 
@@ -92,7 +94,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void sign_plaintext() {
+    public void sign_plaintext() throws CryptoException {
         VirgilBuffer signature = virgilKey.sign(PLAINTEXT);
         assertNotNull(signature);
 
@@ -101,7 +103,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void sign_bytes() {
+    public void sign_bytes() throws CryptoException {
         VirgilBuffer signature = virgilKey.sign(ConvertionUtils.toBytes(PLAINTEXT));
         assertNotNull(signature);
 
@@ -110,7 +112,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void decrypt_buffer() {
+    public void decrypt_buffer() throws CryptoException {
         byte[] encrypted = context.getCrypto().encrypt(ConvertionUtils.toBytes(PLAINTEXT), publicKey);
 
         VirgilBuffer decrypted = virgilKey.decrypt(VirgilBuffer.from(encrypted));
@@ -118,7 +120,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void decrypt_base64String() {
+    public void decrypt_base64String() throws CryptoException {
         byte[] encrypted = context.getCrypto().encrypt(ConvertionUtils.toBytes(PLAINTEXT), publicKey);
 
         VirgilBuffer decrypted = virgilKey.decrypt(ConvertionUtils.toBase64String(encrypted));
@@ -126,7 +128,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void decrypt_bytes() {
+    public void decrypt_bytes() throws CryptoException {
         byte[] encrypted = context.getCrypto().encrypt(ConvertionUtils.toBytes(PLAINTEXT), publicKey);
 
         VirgilBuffer decrypted = virgilKey.decrypt(encrypted);
@@ -134,7 +136,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void signThenEncrypt_buffer() {
+    public void signThenEncrypt_buffer() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
         VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
@@ -146,7 +148,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void signThenEncrypt_plaintext() {
+    public void signThenEncrypt_plaintext() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
         VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
@@ -158,7 +160,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void signThenEncrypt_bytes() {
+    public void signThenEncrypt_bytes() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
         VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
@@ -171,7 +173,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void decryptThenVerify_buffer() {
+    public void decryptThenVerify_buffer() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
         VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
@@ -185,7 +187,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void decryptThenVerify_base64String() {
+    public void decryptThenVerify_base64String() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
         VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
@@ -200,7 +202,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void decryptThenVerify_bytes() {
+    public void decryptThenVerify_bytes() throws CryptoException {
         VirgilKey aliceKey = virgil.getKeys().generate();
         PrivateKey alicePivateKey = context.getCrypto().importPrivateKey(aliceKey.export().getBytes());
         VirgilCard aliceCard = virgil.getCards().createGlobal("alice@virgilsecurity.com", aliceKey, IdentityType.EMAIL);
@@ -214,7 +216,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void save() {
+    public void save() throws VirgilException {
         String keyName = "key" + new Date().getTime();
         virgilKey.save(keyName);
 
@@ -223,7 +225,7 @@ public class VirgilKeyTest {
     }
 
     @Test
-    public void save_with_password() {
+    public void save_with_password() throws VirgilException {
         String keyName = "key" + new Date().getTime();
         String pwd = UUID.randomUUID().toString();
         virgilKey.save(keyName, pwd);

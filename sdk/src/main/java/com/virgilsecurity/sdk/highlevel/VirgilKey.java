@@ -36,6 +36,8 @@ import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsAlreadyExistsExceptio
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.storage.KeyEntry;
 import com.virgilsecurity.sdk.storage.VirgilKeyEntry;
@@ -83,6 +85,13 @@ public class VirgilKey {
     public VirgilBuffer export(String password) {
         byte[] exportedPrivateKey = this.context.getCrypto().exportPrivateKey(this.privateKey, password);
         return VirgilBuffer.from(exportedPrivateKey);
+    }
+
+    /**
+     * @return the private key.
+     */
+    public PrivateKey getPrivateKey() {
+        return this.privateKey;
     }
 
     /**
@@ -143,11 +152,12 @@ public class VirgilKey {
      * @param cipherData
      *            The encrypted data.
      * @return A byte array containing the result from performing the operation.
+     * @throws DecryptionException
      * 
      * @throws NullArgumentException
      *             if cipherData is null.
      */
-    public VirgilBuffer decrypt(VirgilBuffer cipherData) {
+    public VirgilBuffer decrypt(VirgilBuffer cipherData) throws DecryptionException {
         if (cipherData == null) {
             throw new NullArgumentException("cipherData");
         }
@@ -162,11 +172,12 @@ public class VirgilKey {
      * @param base64String
      *            The encrypted Base64-encoded string.
      * @return A byte array containing the result from performing the operation.
+     * @throws DecryptionException
      * 
      * @throws NullArgumentException
      *             if base64String is null.
      */
-    public VirgilBuffer decrypt(String base64String) {
+    public VirgilBuffer decrypt(String base64String) throws DecryptionException {
         if (base64String == null) {
             throw new NullArgumentException("base64String");
         }
@@ -179,11 +190,12 @@ public class VirgilKey {
      * @param data
      *            The encrypted data.
      * @return A byte array containing the result from performing the operation.
+     * @throws DecryptionException
      * 
      * @throws NullArgumentException
      *             if base64String is null.
      */
-    public VirgilBuffer decrypt(byte[] data) {
+    public VirgilBuffer decrypt(byte[] data) throws DecryptionException {
         if (data == null) {
             throw new NullArgumentException("data");
         }
@@ -200,11 +212,12 @@ public class VirgilKey {
      * @param recipients
      *            The list of {@linkplain VirgilCard} recipients.
      * @return The encrypted data.
+     * @throws CryptoException
      * 
      * @throws NullArgumentException
      *             if recipients list is null.
      */
-    public VirgilBuffer signThenEncrypt(VirgilBuffer buffer, List<VirgilCard> recipients) {
+    public VirgilBuffer signThenEncrypt(VirgilBuffer buffer, List<VirgilCard> recipients) throws CryptoException {
         if (buffer == null) {
             throw new NullArgumentException("buffer");
         }
@@ -219,11 +232,12 @@ public class VirgilKey {
      * @param recipients
      *            The list of {@linkplain VirgilCard} recipients.
      * @return The encrypted data.
+     * @throws CryptoException
      * 
      * @throws NullArgumentException
      *             if recipients list is null.
      */
-    public VirgilBuffer signThenEncrypt(String plaintext, List<VirgilCard> recipients) {
+    public VirgilBuffer signThenEncrypt(String plaintext, List<VirgilCard> recipients) throws CryptoException {
         if (plaintext == null) {
             throw new NullArgumentException("plaintext");
         }
@@ -238,11 +252,12 @@ public class VirgilKey {
      * @param recipients
      *            The list of {@linkplain VirgilCard} recipients.
      * @return The encrypted data.
+     * @throws CryptoException
      * 
      * @throws NullArgumentException
      *             if recipients list is null.
      */
-    public VirgilBuffer signThenEncrypt(byte[] data, List<VirgilCard> recipients) {
+    public VirgilBuffer signThenEncrypt(byte[] data, List<VirgilCard> recipients) throws CryptoException {
         if (data == null) {
             throw new NullArgumentException("data");
         }
@@ -269,8 +284,9 @@ public class VirgilKey {
      * @param card
      *            The signer's {@link VirgilCard}.
      * @return The decrypted data, which is the original plain text before encryption.
+     * @throws CryptoException
      */
-    public VirgilBuffer decryptThenVerify(VirgilBuffer cipherbuffer, VirgilCard card) {
+    public VirgilBuffer decryptThenVerify(VirgilBuffer cipherbuffer, VirgilCard card) throws CryptoException {
         byte[] plaitext = this.context.getCrypto().decryptThenVerify(cipherbuffer.getBytes(), this.privateKey,
                 card.getPublicKey());
 
@@ -285,8 +301,9 @@ public class VirgilKey {
      * @param card
      *            The signer's {@link VirgilCard}.
      * @return The decrypted data, which is the original plain text before encryption.
+     * @throws CryptoException
      */
-    public VirgilBuffer decryptThenVerify(String base64String, VirgilCard card) {
+    public VirgilBuffer decryptThenVerify(String base64String, VirgilCard card) throws CryptoException {
         if (base64String == null) {
             throw new NullArgumentException("base64String");
         }
@@ -301,8 +318,9 @@ public class VirgilKey {
      * @param card
      *            The signer's {@link VirgilCard}.
      * @return The decrypted data, which is the original plain text before encryption.
+     * @throws CryptoException
      */
-    public VirgilBuffer decryptThenVerify(byte[] data, VirgilCard card) {
+    public VirgilBuffer decryptThenVerify(byte[] data, VirgilCard card) throws CryptoException {
         if (data == null) {
             throw new NullArgumentException("data");
         }
@@ -316,8 +334,9 @@ public class VirgilKey {
      * @param keyName
      *            The name of the key.
      * @return This key.
+     * @throws VirgilKeyIsAlreadyExistsException
      */
-    public VirgilKey save(String keyName) {
+    public VirgilKey save(String keyName) throws VirgilKeyIsAlreadyExistsException {
         return save(keyName, null);
     }
 
@@ -329,8 +348,9 @@ public class VirgilKey {
      * @param password
      *            The password.
      * @return This key.
+     * @throws VirgilKeyIsAlreadyExistsException
      */
-    public VirgilKey save(String keyName, String password) {
+    public VirgilKey save(String keyName, String password) throws VirgilKeyIsAlreadyExistsException {
         byte[] exportedPrivateKey = this.context.getCrypto().exportPrivateKey(this.privateKey, password);
         KeyEntry keyEntry = new VirgilKeyEntry(keyName, exportedPrivateKey);
 

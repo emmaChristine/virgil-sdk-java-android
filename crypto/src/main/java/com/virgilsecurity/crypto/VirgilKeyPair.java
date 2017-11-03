@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Virgil Security Inc.
+ * Copyright (C) 2017 Virgil Security Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -33,7 +33,6 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.virgilsecurity.crypto;
 
 /**
@@ -43,364 +42,6 @@ package com.virgilsecurity.crypto;
  *
  */
 public class VirgilKeyPair implements java.lang.AutoCloseable {
-    private transient long swigCPtr;
-    protected transient boolean swigCMemOwn;
-
-    protected VirgilKeyPair(long cPtr, boolean cMemoryOwn) {
-        swigCMemOwn = cMemoryOwn;
-        swigCPtr = cPtr;
-    }
-
-    protected static long getCPtr(VirgilKeyPair obj) {
-        return (obj == null) ? 0 : obj.swigCPtr;
-    }
-
-    protected void finalize() {
-        delete();
-    }
-
-    public synchronized void delete() {
-        if (swigCPtr != 0) {
-            if (swigCMemOwn) {
-                swigCMemOwn = false;
-                virgil_crypto_javaJNI.delete_VirgilKeyPair(swigCPtr);
-            }
-            swigCPtr = 0;
-        }
-    }
-
-    @Override
-    public void close() {
-        delete();
-    }
-
-    /**
-     * Generate new key pair given type.
-     * 
-     * @param type
-     *            the private key type to be generated.
-     * @param pwd
-     *            the private key password.
-     * @return generated key pair.
-     */
-    public static VirgilKeyPair generate(VirgilKeyPair.Type type, byte[] pwd) {
-        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generate__SWIG_0(type.swigValue(), pwd), true);
-    }
-
-    /**
-     * Generate new key pair given type.
-     * 
-     * @param type
-     *            the private key type to be generated.
-     * @return generated key pair.
-     */
-    public static VirgilKeyPair generate(VirgilKeyPair.Type type) {
-        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generate__SWIG_1(type.swigValue()), true);
-    }
-
-    /**
-     * Generate new key pair with recommended most safe type.
-     * 
-     * @param pwd
-     *            Private key password.
-     * @return generated key pair.
-     */
-    public static VirgilKeyPair generateRecommended(byte[] pwd) {
-        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateRecommended__SWIG_0(pwd), true);
-    }
-
-    /**
-     * Generate new key pair with recommended most safe type.
-     * 
-     * @return generated key pair.
-     */
-    public static VirgilKeyPair generateRecommended() {
-        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateRecommended__SWIG_1(), true);
-    }
-
-    /**
-     * Generate new key pair of the same type based on the donor key pair.
-     * 
-     * 
-     * @param donorKeyPair
-     *            Public key or private key is used to determine the new key pair type.
-     * @param donorPrivateKeyPassword
-     *            Donor private key password, optional if public key is defined.
-     * @param newKeyPairPassword
-     *            Private key password of the new key pair.
-     * @return generated key pair.
-     */
-    public static VirgilKeyPair generateFrom(VirgilKeyPair donorKeyPair, byte[] donorPrivateKeyPassword,
-            byte[] newKeyPairPassword) {
-        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateFrom__SWIG_0(
-                VirgilKeyPair.getCPtr(donorKeyPair), donorKeyPair, donorPrivateKeyPassword, newKeyPairPassword), true);
-    }
-
-    /**
-     * Generate new key pair of the same type based on the donor key pair.
-     * 
-     * 
-     * @param donorKeyPair
-     *            Public key or private key is used to determine the new key pair type.
-     * @param donorPrivateKeyPassword
-     *            Donor private key password, optional if public key is defined.
-     * @return generated key pair.
-     */
-    public static VirgilKeyPair generateFrom(VirgilKeyPair donorKeyPair, byte[] donorPrivateKeyPassword) {
-        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateFrom__SWIG_1(
-                VirgilKeyPair.getCPtr(donorKeyPair), donorKeyPair, donorPrivateKeyPassword), true);
-    }
-
-    /**
-     * Generate new key pair of the same type based on the donor key pair.
-     * 
-     * 
-     * @param donorKeyPair
-     *            Public key or private key is used to determine the new key pair type.
-     * @return generated key pair.
-     */
-    public static VirgilKeyPair generateFrom(VirgilKeyPair donorKeyPair) {
-        return new VirgilKeyPair(virgil_crypto_javaJNI
-                .VirgilKeyPair_generateFrom__SWIG_2(VirgilKeyPair.getCPtr(donorKeyPair), donorKeyPair), true);
-    }
-
-    /**
-     * Check if a public-private pair of keys matches.
-     * 
-     * 
-     * @param publicKey
-     *            Public key in DER or PEM format.
-     * @param privateKey
-     *            Private key in DER or PEM format.
-     * @param privateKeyPassword
-     *            Private key password if exists.
-     * @return {@code true} if keys matche.
-     */
-    public static boolean isKeyPairMatch(byte[] publicKey, byte[] privateKey, byte[] privateKeyPassword) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_isKeyPairMatch__SWIG_0(publicKey, privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Check if a public-private pair of keys matches.
-     * 
-     * 
-     * @param publicKey
-     *            Public key in DER or PEM format.
-     * @param privateKey
-     *            Private key in DER or PEM format.
-     * @return {@code true} if keys matche.
-     */
-    public static boolean isKeyPairMatch(byte[] publicKey, byte[] privateKey) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_isKeyPairMatch__SWIG_1(publicKey, privateKey);
-    }
-
-    /**
-     * Check if given private key and it's password matches.
-     * 
-     * @param key
-     *            Private key in DER or PEM format.
-     * @param pwd
-     *            Private key password.
-     * @return {@code true} if private key and it's password matches.
-     */
-    public static boolean checkPrivateKeyPassword(byte[] key, byte[] pwd) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_checkPrivateKeyPassword(key, pwd);
-    }
-
-    /**
-     * Check if given private key is encrypted.
-     * 
-     * 
-     * @param privateKey
-     *            Private key in DER or PEM format.
-     * 
-     * @return {@code true} - if private key is encrypted.
-     */
-    public static boolean isPrivateKeyEncrypted(byte[] privateKey) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_isPrivateKeyEncrypted(privateKey);
-    }
-
-    /**
-     * <p>
-     * Reset password for the given private key.
-     * </p>
-     * <p>
-     * Re-encrypt given Private Key with a new password.
-     * </p>
-     * 
-     * @param privateKey
-     *            Private key that is encrypted with old password.
-     * @param oldPassword
-     *            Current Private Key password.
-     * @param newPassword
-     *            New Private Key password.
-     * @return Private key that is encrypted with the new password.
-     */
-    public static byte[] resetPrivateKeyPassword(byte[] privateKey, byte[] oldPassword, byte[] newPassword) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_resetPrivateKeyPassword(privateKey, oldPassword, newPassword);
-    }
-
-    /**
-     * 
-     * Encrypt the given private key and return result.
-     * 
-     * @param privateKey
-     *            Private key in the plain text.
-     * @param privateKeyPassword
-     *            New Private Key password.
-     * @return Encrypted private key in PKCS#8 format.
-     */
-    public static byte[] encryptPrivateKey(byte[] privateKey, byte[] privateKeyPassword) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_encryptPrivateKey(privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Decrypt the given private key and return result.
-     * 
-     * @param privateKey
-     *            Encrypted Private Key.
-     * @param privateKeyPassword
-     *            Current Private Key password.
-     * 
-     * @return Plain (non encrypted) private key.
-     */
-    public static byte[] decryptPrivateKey(byte[] privateKey, byte[] privateKeyPassword) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_decryptPrivateKey(privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Extract public key from the private key.
-     * 
-     * 
-     * @param privateKey
-     *            Private key.
-     * @param privateKeyPassword
-     *            Private key password.
-     * 
-     * @return Public key.
-     */
-    public static byte[] extractPublicKey(byte[] privateKey, byte[] privateKeyPassword) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_extractPublicKey(privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Convert given public key to the PEM format.
-     * 
-     * @param publicKey
-     *            Public key to be converted.
-     * @return Public key in the PEM format.
-     */
-    public static byte[] publicKeyToPEM(byte[] publicKey) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_publicKeyToPEM(publicKey);
-    }
-
-    /**
-     * Convert given public key to the DER format.
-     * 
-     * 
-     * @param publicKey
-     *            Public key to be converted.
-     * 
-     * @return Public key in the DER format.
-     */
-    public static byte[] publicKeyToDER(byte[] publicKey) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_publicKeyToDER(publicKey);
-    }
-
-    /**
-     * Convert given private key to the PEM format.
-     * 
-     * 
-     * @param privateKey
-     *            Private key to be converted.
-     * 
-     * @param privateKeyPassword
-     *            Private key password.
-     * @return Private key in the PEM format.
-     */
-    public static byte[] privateKeyToPEM(byte[] privateKey, byte[] privateKeyPassword) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToPEM__SWIG_0(privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Convert given private key to the PEM format.
-     * 
-     * 
-     * @param privateKey
-     *            Private key to be converted.
-     * 
-     * @return Private key in the PEM format.
-     */
-    public static byte[] privateKeyToPEM(byte[] privateKey) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToPEM__SWIG_1(privateKey);
-    }
-
-    /**
-     * Convert given private key to the DER format.
-     * 
-     * 
-     * @param privateKey
-     *            Private key to be converted.
-     * 
-     * @param privateKeyPassword
-     *            Private key password.
-     * @return Private key in the DER format.
-     */
-    public static byte[] privateKeyToDER(byte[] privateKey, byte[] privateKeyPassword) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToDER__SWIG_0(privateKey, privateKeyPassword);
-    }
-
-    /**
-     * Convert given private key to the DER format.
-     * 
-     * 
-     * @param privateKey
-     *            Private key to be converted.
-     * 
-     * @return Private key in the DER format.
-     */
-    public static byte[] privateKeyToDER(byte[] privateKey) {
-        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToDER__SWIG_1(privateKey);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilKeyPair}
-     *
-     * @param publicKey
-     * @param privateKey
-     */
-    public VirgilKeyPair(byte[] publicKey, byte[] privateKey) {
-        this(virgil_crypto_javaJNI.new_VirgilKeyPair__SWIG_0(publicKey, privateKey), true);
-    }
-
-    /**
-     * Provide access to the public key.
-     * 
-     * @return the public key.
-     */
-    public byte[] publicKey() {
-        return virgil_crypto_javaJNI.VirgilKeyPair_publicKey(swigCPtr, this);
-    }
-
-    /**
-     * Provide access to the private key.
-     * 
-     * @return the private key.
-     */
-    public byte[] privateKey() {
-        return virgil_crypto_javaJNI.VirgilKeyPair_privateKey(swigCPtr, this);
-    }
-
-    /**
-     * Create a new instance of {@code VirgilKeyPair}
-     *
-     * @param other
-     *            the source key pair.
-     */
-    public VirgilKeyPair(VirgilKeyPair other) {
-        this(virgil_crypto_javaJNI.new_VirgilKeyPair__SWIG_1(VirgilKeyPair.getCPtr(other), other), true);
-    }
-
     /**
      * Type of the keypair.
      *
@@ -514,13 +155,11 @@ public class VirgilKeyPair implements java.lang.AutoCloseable {
          */
         public final static VirgilKeyPair.Type FAST_EC_ED25519 = new VirgilKeyPair.Type("FAST_EC_ED25519");
 
-        public final int swigValue() {
-            return swigValue;
-        }
+        private static Type[] swigValues = { RSA_256, RSA_512, RSA_1024, RSA_2048, RSA_3072, RSA_4096, RSA_8192,
+                EC_SECP192R1, EC_SECP224R1, EC_SECP256R1, EC_SECP384R1, EC_SECP521R1, EC_BP256R1, EC_BP384R1,
+                EC_BP512R1, EC_SECP192K1, EC_SECP224K1, EC_SECP256K1, EC_CURVE25519, FAST_EC_X25519, FAST_EC_ED25519 };
 
-        public String toString() {
-            return swigName;
-        }
+        private static int swigNext = 0;
 
         public static Type swigToEnum(int swigValue) {
             if (swigValue < swigValues.length && swigValue >= 0 && swigValues[swigValue].swigValue == swigValue)
@@ -530,6 +169,10 @@ public class VirgilKeyPair implements java.lang.AutoCloseable {
                     return swigValues[i];
             throw new IllegalArgumentException("No enum " + Type.class + " with value " + swigValue);
         }
+
+        private final int swigValue;
+
+        private final String swigName;
 
         private Type(String swigName) {
             this.swigName = swigName;
@@ -541,19 +184,375 @@ public class VirgilKeyPair implements java.lang.AutoCloseable {
             this.swigValue = swigValue;
             swigNext = swigValue + 1;
         }
-
         private Type(String swigName, Type swigEnum) {
             this.swigName = swigName;
             this.swigValue = swigEnum.swigValue;
             swigNext = this.swigValue + 1;
         }
+        public final int swigValue() {
+            return swigValue;
+        }
+        public String toString() {
+            return swigName;
+        }
+    }
+    /**
+     * Check if given private key and it's password matches.
+     * 
+     * @param key
+     *            Private key in DER or PEM format.
+     * @param pwd
+     *            Private key password.
+     * @return {@code true} if private key and it's password matches.
+     */
+    public static boolean checkPrivateKeyPassword(byte[] key, byte[] pwd) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_checkPrivateKeyPassword(key, pwd);
+    }
 
-        private static Type[] swigValues = { RSA_256, RSA_512, RSA_1024, RSA_2048, RSA_3072, RSA_4096, RSA_8192,
-                EC_SECP192R1, EC_SECP224R1, EC_SECP256R1, EC_SECP384R1, EC_SECP521R1, EC_BP256R1, EC_BP384R1,
-                EC_BP512R1, EC_SECP192K1, EC_SECP224K1, EC_SECP256K1, EC_CURVE25519, FAST_EC_X25519, FAST_EC_ED25519 };
-        private static int swigNext = 0;
-        private final int swigValue;
-        private final String swigName;
+    /**
+     * Decrypt the given private key and return result.
+     * 
+     * @param privateKey
+     *            Encrypted Private Key.
+     * @param privateKeyPassword
+     *            Current Private Key password.
+     * 
+     * @return Plain (non encrypted) private key.
+     */
+    public static byte[] decryptPrivateKey(byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_decryptPrivateKey(privateKey, privateKeyPassword);
+    }
+
+    /**
+     * 
+     * Encrypt the given private key and return result.
+     * 
+     * @param privateKey
+     *            Private key in the plain text.
+     * @param privateKeyPassword
+     *            New Private Key password.
+     * @return Encrypted private key in PKCS#8 format.
+     */
+    public static byte[] encryptPrivateKey(byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_encryptPrivateKey(privateKey, privateKeyPassword);
+    }
+
+    /**
+     * Extract public key from the private key.
+     * 
+     * 
+     * @param privateKey
+     *            Private key.
+     * @param privateKeyPassword
+     *            Private key password.
+     * 
+     * @return Public key.
+     */
+    public static byte[] extractPublicKey(byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_extractPublicKey(privateKey, privateKeyPassword);
+    }
+
+    /**
+     * Generate new key pair given type.
+     * 
+     * @param type
+     *            the private key type to be generated.
+     * @return generated key pair.
+     */
+    public static VirgilKeyPair generate(VirgilKeyPair.Type type) {
+        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generate__SWIG_1(type.swigValue()), true);
+    }
+
+    /**
+     * Generate new key pair given type.
+     * 
+     * @param type
+     *            the private key type to be generated.
+     * @param pwd
+     *            the private key password.
+     * @return generated key pair.
+     */
+    public static VirgilKeyPair generate(VirgilKeyPair.Type type, byte[] pwd) {
+        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generate__SWIG_0(type.swigValue(), pwd), true);
+    }
+
+    /**
+     * Generate new key pair of the same type based on the donor key pair.
+     * 
+     * 
+     * @param donorKeyPair
+     *            Public key or private key is used to determine the new key pair type.
+     * @return generated key pair.
+     */
+    public static VirgilKeyPair generateFrom(VirgilKeyPair donorKeyPair) {
+        return new VirgilKeyPair(virgil_crypto_javaJNI
+                .VirgilKeyPair_generateFrom__SWIG_2(VirgilKeyPair.getCPtr(donorKeyPair), donorKeyPair), true);
+    }
+
+    /**
+     * Generate new key pair of the same type based on the donor key pair.
+     * 
+     * 
+     * @param donorKeyPair
+     *            Public key or private key is used to determine the new key pair type.
+     * @param donorPrivateKeyPassword
+     *            Donor private key password, optional if public key is defined.
+     * @return generated key pair.
+     */
+    public static VirgilKeyPair generateFrom(VirgilKeyPair donorKeyPair, byte[] donorPrivateKeyPassword) {
+        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateFrom__SWIG_1(
+                VirgilKeyPair.getCPtr(donorKeyPair), donorKeyPair, donorPrivateKeyPassword), true);
+    }
+
+    /**
+     * Generate new key pair of the same type based on the donor key pair.
+     * 
+     * 
+     * @param donorKeyPair
+     *            Public key or private key is used to determine the new key pair type.
+     * @param donorPrivateKeyPassword
+     *            Donor private key password, optional if public key is defined.
+     * @param newKeyPairPassword
+     *            Private key password of the new key pair.
+     * @return generated key pair.
+     */
+    public static VirgilKeyPair generateFrom(VirgilKeyPair donorKeyPair, byte[] donorPrivateKeyPassword,
+            byte[] newKeyPairPassword) {
+        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateFrom__SWIG_0(
+                VirgilKeyPair.getCPtr(donorKeyPair), donorKeyPair, donorPrivateKeyPassword, newKeyPairPassword), true);
+    }
+
+    /**
+     * Generate new key pair with recommended most safe type.
+     * 
+     * @return generated key pair.
+     */
+    public static VirgilKeyPair generateRecommended() {
+        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateRecommended__SWIG_1(), true);
+    }
+
+    /**
+     * Generate new key pair with recommended most safe type.
+     * 
+     * @param pwd
+     *            Private key password.
+     * @return generated key pair.
+     */
+    public static VirgilKeyPair generateRecommended(byte[] pwd) {
+        return new VirgilKeyPair(virgil_crypto_javaJNI.VirgilKeyPair_generateRecommended__SWIG_0(pwd), true);
+    }
+
+    protected static long getCPtr(VirgilKeyPair obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
+
+    /**
+     * Check if a public-private pair of keys matches.
+     * 
+     * 
+     * @param publicKey
+     *            Public key in DER or PEM format.
+     * @param privateKey
+     *            Private key in DER or PEM format.
+     * @return {@code true} if keys matche.
+     */
+    public static boolean isKeyPairMatch(byte[] publicKey, byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_isKeyPairMatch__SWIG_1(publicKey, privateKey);
+    }
+
+    /**
+     * Check if a public-private pair of keys matches.
+     * 
+     * 
+     * @param publicKey
+     *            Public key in DER or PEM format.
+     * @param privateKey
+     *            Private key in DER or PEM format.
+     * @param privateKeyPassword
+     *            Private key password if exists.
+     * @return {@code true} if keys matche.
+     */
+    public static boolean isKeyPairMatch(byte[] publicKey, byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_isKeyPairMatch__SWIG_0(publicKey, privateKey, privateKeyPassword);
+    }
+
+    /**
+     * Check if given private key is encrypted.
+     * 
+     * 
+     * @param privateKey
+     *            Private key in DER or PEM format.
+     * 
+     * @return {@code true} - if private key is encrypted.
+     */
+    public static boolean isPrivateKeyEncrypted(byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_isPrivateKeyEncrypted(privateKey);
+    }
+
+    /**
+     * Convert given private key to the DER format.
+     * 
+     * 
+     * @param privateKey
+     *            Private key to be converted.
+     * 
+     * @return Private key in the DER format.
+     */
+    public static byte[] privateKeyToDER(byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToDER__SWIG_1(privateKey);
+    }
+
+    /**
+     * Convert given private key to the DER format.
+     * 
+     * 
+     * @param privateKey
+     *            Private key to be converted.
+     * 
+     * @param privateKeyPassword
+     *            Private key password.
+     * @return Private key in the DER format.
+     */
+    public static byte[] privateKeyToDER(byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToDER__SWIG_0(privateKey, privateKeyPassword);
+    }
+
+    /**
+     * Convert given private key to the PEM format.
+     * 
+     * 
+     * @param privateKey
+     *            Private key to be converted.
+     * 
+     * @return Private key in the PEM format.
+     */
+    public static byte[] privateKeyToPEM(byte[] privateKey) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToPEM__SWIG_1(privateKey);
+    }
+
+    /**
+     * Convert given private key to the PEM format.
+     * 
+     * 
+     * @param privateKey
+     *            Private key to be converted.
+     * 
+     * @param privateKeyPassword
+     *            Private key password.
+     * @return Private key in the PEM format.
+     */
+    public static byte[] privateKeyToPEM(byte[] privateKey, byte[] privateKeyPassword) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_privateKeyToPEM__SWIG_0(privateKey, privateKeyPassword);
+    }
+
+    /**
+     * Convert given public key to the DER format.
+     * 
+     * 
+     * @param publicKey
+     *            Public key to be converted.
+     * 
+     * @return Public key in the DER format.
+     */
+    public static byte[] publicKeyToDER(byte[] publicKey) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_publicKeyToDER(publicKey);
+    }
+
+    /**
+     * Convert given public key to the PEM format.
+     * 
+     * @param publicKey
+     *            Public key to be converted.
+     * @return Public key in the PEM format.
+     */
+    public static byte[] publicKeyToPEM(byte[] publicKey) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_publicKeyToPEM(publicKey);
+    }
+
+    /**
+     * <p>
+     * Reset password for the given private key.
+     * </p>
+     * <p>
+     * Re-encrypt given Private Key with a new password.
+     * </p>
+     * 
+     * @param privateKey
+     *            Private key that is encrypted with old password.
+     * @param oldPassword
+     *            Current Private Key password.
+     * @param newPassword
+     *            New Private Key password.
+     * @return Private key that is encrypted with the new password.
+     */
+    public static byte[] resetPrivateKeyPassword(byte[] privateKey, byte[] oldPassword, byte[] newPassword) {
+        return virgil_crypto_javaJNI.VirgilKeyPair_resetPrivateKeyPassword(privateKey, oldPassword, newPassword);
+    }
+
+    private transient long swigCPtr;
+
+    protected transient boolean swigCMemOwn;
+
+    /**
+     * Create a new instance of {@code VirgilKeyPair}
+     *
+     * @param publicKey
+     * @param privateKey
+     */
+    public VirgilKeyPair(byte[] publicKey, byte[] privateKey) {
+        this(virgil_crypto_javaJNI.new_VirgilKeyPair__SWIG_0(publicKey, privateKey), true);
+    }
+
+    protected VirgilKeyPair(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
+    }
+
+    /**
+     * Create a new instance of {@code VirgilKeyPair}
+     *
+     * @param other
+     *            the source key pair.
+     */
+    public VirgilKeyPair(VirgilKeyPair other) {
+        this(virgil_crypto_javaJNI.new_VirgilKeyPair__SWIG_1(VirgilKeyPair.getCPtr(other), other), true);
+    }
+
+    @Override
+    public void close() {
+        delete();
+    }
+
+    public synchronized void delete() {
+        if (swigCPtr != 0) {
+            if (swigCMemOwn) {
+                swigCMemOwn = false;
+                virgil_crypto_javaJNI.delete_VirgilKeyPair(swigCPtr);
+            }
+            swigCPtr = 0;
+        }
+    }
+
+    protected void finalize() {
+        delete();
+    }
+
+    /**
+     * Provide access to the private key.
+     * 
+     * @return the private key.
+     */
+    public byte[] privateKey() {
+        return virgil_crypto_javaJNI.VirgilKeyPair_privateKey(swigCPtr, this);
+    }
+
+    /**
+     * Provide access to the public key.
+     * 
+     * @return the public key.
+     */
+    public byte[] publicKey() {
+        return virgil_crypto_javaJNI.VirgilKeyPair_publicKey(swigCPtr, this);
     }
 
 }

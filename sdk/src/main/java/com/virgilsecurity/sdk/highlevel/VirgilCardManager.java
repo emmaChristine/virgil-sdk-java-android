@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.model.CardInfoModel;
 import com.virgilsecurity.sdk.client.model.CardMetaModel;
 import com.virgilsecurity.sdk.client.model.CardModel;
@@ -47,6 +48,7 @@ import com.virgilsecurity.sdk.client.requests.RevokeCardRequest;
 import com.virgilsecurity.sdk.client.requests.RevokeGlobalCardRequest;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.exception.EmptyArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
@@ -166,8 +168,9 @@ public class VirgilCardManager implements CardManager {
      * @param identities
      *            The list of identities.
      * @return A collection of found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    public VirgilCards find(String... identities) {
+    public VirgilCards find(String... identities) throws CardValidationException {
         if (identities == null || identities.length == 0) {
             throw new EmptyArgumentException("identities");
         }
@@ -181,8 +184,9 @@ public class VirgilCardManager implements CardManager {
      * @param identities
      *            The list of identities.
      * @return A collection of found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    public VirgilCards find(Collection<String> identities) {
+    public VirgilCards find(Collection<String> identities) throws CardValidationException {
         if (identities == null || identities.isEmpty()) {
             throw new EmptyArgumentException("identities");
         }
@@ -198,8 +202,9 @@ public class VirgilCardManager implements CardManager {
      * @param identities
      *            The list of sought identities.
      * @return A new collection with found {@link VirgilCard}.
+     * @throws CardValidationException
      */
-    public VirgilCards find(String identityType, Collection<String> identities) {
+    public VirgilCards find(String identityType, Collection<String> identities) throws CardValidationException {
         if (identities == null || identities.isEmpty()) {
             throw new EmptyArgumentException("identities");
         }
@@ -218,8 +223,9 @@ public class VirgilCardManager implements CardManager {
      * @param identities
      *            The sought identities.
      * @return A new collection with found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    public VirgilCards findGlobal(String identities) {
+    public VirgilCards findGlobal(String identities) throws CardValidationException {
         return this.findGlobal(Arrays.asList(identities));
     }
 
@@ -229,8 +235,9 @@ public class VirgilCardManager implements CardManager {
      * @param identities
      *            The list of sought identities.
      * @return A new collection with found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    public VirgilCards findGlobal(Collection<String> identities) {
+    public VirgilCards findGlobal(Collection<String> identities) throws CardValidationException {
         if (identities == null || identities.isEmpty()) {
             throw new EmptyArgumentException("identities");
         }
@@ -250,8 +257,10 @@ public class VirgilCardManager implements CardManager {
      * @param identities
      *            The list of sought identities.
      * @return A new collection with found {@link VirgilCard}s.
+     * @throws CardValidationException
      */
-    public VirgilCards findGlobal(IdentityType identityType, Collection<String> identities) {
+    public VirgilCards findGlobal(IdentityType identityType, Collection<String> identities)
+            throws CardValidationException {
 
         if (identities == null || identities.isEmpty()) {
             throw new EmptyArgumentException("identities");
@@ -279,13 +288,23 @@ public class VirgilCardManager implements CardManager {
         return new VirgilCard(this.context, importedCardModel);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.highlevel.CardManager#importCard(com.virgilsecurity.sdk.client.model.CardModel)
+     */
+    public VirgilCard importCard(CardModel cardModel) {
+        return new VirgilCard(this.context, cardModel);
+    }
+
     /**
      * Publishes a {@link VirgilCard} into application Virgil Services scope.
      * 
      * @param card
      *            The Card to be published.
+     * @throws CryptoException
      */
-    public void publish(VirgilCard card) {
+    public void publish(VirgilCard card) throws CryptoException {
         card.publish();
     }
 
@@ -306,8 +325,9 @@ public class VirgilCardManager implements CardManager {
      * 
      * @param card
      *            The card to be revoked.
+     * @throws CryptoException
      */
-    public void revoke(VirgilCard card) {
+    public void revoke(VirgilCard card) throws CryptoException {
         RevokeCardRequest revokeRequest = new RevokeCardRequest(card.getId(), RevocationReason.UNSPECIFIED);
 
         String appId = this.context.getCredentials().getAppId();
@@ -360,7 +380,7 @@ public class VirgilCardManager implements CardManager {
         return card;
     }
 
-    private VirgilCards searchByCriteria(SearchCriteria criteria) {
+    private VirgilCards searchByCriteria(SearchCriteria criteria) throws CardValidationException {
         List<CardModel> cardModels = this.context.getClient().searchCards(criteria);
         VirgilCards cards = new VirgilCards(this.context);
         for (CardModel cardModel : cardModels) {

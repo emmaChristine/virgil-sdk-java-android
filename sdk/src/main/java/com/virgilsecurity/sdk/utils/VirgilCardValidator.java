@@ -38,6 +38,7 @@ import com.virgilsecurity.sdk.client.model.CardModel;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.Fingerprint;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.exception.EmptyArgumentException;
 
 /**
@@ -120,10 +121,14 @@ public class VirgilCardValidator implements CardValidator {
                 return false;
             }
 
-            boolean isValid = this.crypto.verify(fingerprint.getValue(),
-                    card.getMeta().getSignatures().get(verifier.getKey()), verifier.getValue());
+            try {
+                boolean isValid = this.crypto.verify(fingerprint.getValue(),
+                        card.getMeta().getSignatures().get(verifier.getKey()), verifier.getValue());
 
-            if (!isValid) {
+                if (!isValid) {
+                    return false;
+                }
+            } catch (CryptoException e) {
                 return false;
             }
         }

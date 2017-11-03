@@ -29,7 +29,7 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
-import com.virgilsecurity.sdk.client.exceptions.VirgilException;
+import com.virgilsecurity.sdk.client.exceptions.VirgilClientException;
 
 /**
  * 
@@ -166,10 +166,11 @@ public class IdentityVerificationAttempt {
      * @param confirmation
      *            The confirmation.
      * @return A new instance of {@link IdentityValidationToken} class.
+     * @throws VirgilClientException 
      */
-    public IdentityValidationToken confirm(IdentityConfirmation confirmation) {
+    public IdentityValidationToken confirm(IdentityConfirmation confirmation) throws VirgilClientException {
         if (confirmation == null) {
-            throw new VirgilException("Not supported");
+            throw new VirgilClientException("Not supported");
         }
 
         String validationToken = confirmation.confirmAndGrabValidationToken(this, this.context.getClient());

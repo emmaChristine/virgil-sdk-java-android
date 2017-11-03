@@ -35,7 +35,7 @@ package com.virgilsecurity.sdk.client.exceptions;
  * @author Andrii Iakovenko
  *
  */
-public class VirgilCardIsNotFoundException extends VirgilException {
+public class VirgilCardIsNotFoundException extends VirgilClientException {
 
     private static final long serialVersionUID = -6014876811363283060L;
 

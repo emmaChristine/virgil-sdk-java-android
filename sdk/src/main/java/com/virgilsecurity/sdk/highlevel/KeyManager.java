@@ -30,6 +30,8 @@
 package com.virgilsecurity.sdk.highlevel;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsNotFoundException;
+import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**
  * The {@linkplain KeyManager} interface defines a list of methods to generate the {@link VirgilKey} and further them
@@ -53,9 +55,11 @@ public interface KeyManager {
      * @param keyName
      *            The name of the Key.
      * @return An instance of {@link VirgilKey} class.
-     * @throws VirgilKeyIsNotFoundException If key not exists.
+     * @throws CryptoException 
+     * @throws VirgilKeyIsNotFoundException
+     *             If key not exists.
      */
-    VirgilKey load(String keyName);
+    VirgilKey load(String keyName) throws VirgilKeyIsNotFoundException, CryptoException;
 
     /**
      * Loads the {@link VirgilKey} from current storage by specified key name.
@@ -65,9 +69,11 @@ public interface KeyManager {
      * @param keyPassword
      *            The Key password.
      * @return An instance of {@link VirgilKey} class.
-     * @throws VirgilKeyIsNotFoundException If key not exists.
+     * @throws VirgilKeyIsNotFoundException
+     *             If key not exists.
+     * @throws CryptoException 
      */
-    VirgilKey load(String keyName, String keyPassword) throws VirgilKeyIsNotFoundException;
+    VirgilKey load(String keyName, String keyPassword) throws VirgilKeyIsNotFoundException, CryptoException;
 
     /**
      * Removes the @ {@link VirgilKey} from the storage.
@@ -84,8 +90,9 @@ public interface KeyManager {
      * @param keyBuffer
      *            The buffer with Key.
      * @return An instance of {@link VirgilKey} class.
+     * @throws CryptoException 
      */
-    VirgilKey importKey(VirgilBuffer keyBuffer);
+    VirgilKey importKey(VirgilBuffer keyBuffer) throws CryptoException;
 
     /**
      * Imports the {@linkplain VirgilKey} from buffer.
@@ -95,6 +102,17 @@ public interface KeyManager {
      * @param keyPassword
      *            The Key password.
      * @return An instance of {@link VirgilKey} class.
+     * @throws CryptoException 
      */
-    VirgilKey importKey(VirgilBuffer keyBuffer, String keyPassword);
+    VirgilKey importKey(VirgilBuffer keyBuffer, String keyPassword) throws CryptoException;
+
+    /**
+     * Imports the {@linkplain VirgilKey}.
+     * 
+     * @param privateKey
+     *            The private key.
+     * @return An instance of {@link VirgilKey} class.
+     */
+    VirgilKey importKey(PrivateKey privateKey);
+
 }

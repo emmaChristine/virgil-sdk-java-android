@@ -190,10 +190,12 @@ public class VirgilCrypto implements Crypto {
      * @see com.virgilsecurity.sdk.crypto.Crypto#decrypt(byte[], com.virgilsecurity.sdk.crypto.PrivateKey)
      */
     @Override
-    public byte[] decrypt(byte[] cipherData, PrivateKey privateKey) {
+    public byte[] decrypt(byte[] cipherData, PrivateKey privateKey) throws DecryptionException {
         try (VirgilCipher cipher = new VirgilCipher()) {
             byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
             return decryptedData;
+        } catch (Exception e) {
+            throw new DecryptionException(e);
         }
     }
 
@@ -223,7 +225,8 @@ public class VirgilCrypto implements Crypto {
      * com.virgilsecurity.sdk.crypto.PublicKey)
      */
     @Override
-    public byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey) {
+    public byte[] decryptThenVerify(byte[] cipherData, PrivateKey privateKey, PublicKey publicKey)
+            throws CryptoException {
         try (VirgilSigner signer = new VirgilSigner(); VirgilCipher cipher = new VirgilCipher()) {
             byte[] decryptedData = cipher.decryptWithKey(cipherData, privateKey.getId(), privateKey.getValue());
             byte[] signature = cipher.customParams().getData(CUSTOM_PARAM_SIGNATURE);
@@ -245,12 +248,14 @@ public class VirgilCrypto implements Crypto {
      * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(byte[], com.virgilsecurity.sdk.crypto.PublicKey)
      */
     @Override
-    public byte[] encrypt(byte[] data, PublicKey recipient) {
+    public byte[] encrypt(byte[] data, PublicKey recipient) throws EncryptionException {
         try (VirgilCipher cipher = new VirgilCipher()) {
             cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
 
             byte[] encryptedData = cipher.encrypt(data, true);
             return encryptedData;
+        } catch (Exception e) {
+            throw new EncryptionException(e);
         }
     }
 
@@ -260,7 +265,7 @@ public class VirgilCrypto implements Crypto {
      * @see com.virgilsecurity.sdk.crypto.Crypto#encrypt(byte[], com.virgilsecurity.sdk.crypto.PublicKey[])
      */
     @Override
-    public byte[] encrypt(byte[] data, PublicKey[] recipients) {
+    public byte[] encrypt(byte[] data, PublicKey[] recipients) throws EncryptionException {
         try (VirgilCipher cipher = new VirgilCipher()) {
             for (PublicKey recipient : recipients) {
                 cipher.addKeyRecipient(recipient.getId(), recipient.getValue());
@@ -268,6 +273,8 @@ public class VirgilCrypto implements Crypto {
 
             byte[] encryptedData = cipher.encrypt(data, true);
             return encryptedData;
+        } catch (Exception e) {
+            throw new EncryptionException(e);
         }
     }
 
@@ -475,7 +482,7 @@ public class VirgilCrypto implements Crypto {
      * @see com.virgilsecurity.sdk.crypto.Crypto#sign(java.io.InputStream, com.virgilsecurity.sdk.crypto.PrivateKey)
      */
     @Override
-    public byte[] sign(InputStream inputStream, PrivateKey privateKey) {
+    public byte[] sign(InputStream inputStream, PrivateKey privateKey) throws SigningException {
         if (inputStream == null) {
             throw new NullArgumentException("inputStream");
         }
@@ -500,7 +507,7 @@ public class VirgilCrypto implements Crypto {
      * com.virgilsecurity.sdk.crypto.PublicKey)
      */
     @Override
-    public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient) {
+    public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey recipient) throws CryptoException {
         return signThenEncrypt(data, privateKey, new PublicKey[] { recipient });
     }
 
@@ -511,7 +518,7 @@ public class VirgilCrypto implements Crypto {
      * com.virgilsecurity.sdk.crypto.PublicKey[])
      */
     @Override
-    public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients) {
+    public byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients) throws CryptoException {
         try (VirgilSigner signer = new VirgilSigner(); VirgilCipher cipher = new VirgilCipher()) {
 
             byte[] signature = signer.sign(data, privateKey.getValue());
@@ -535,7 +542,7 @@ public class VirgilCrypto implements Crypto {
      * @see com.virgilsecurity.sdk.crypto.Crypto#verify(byte[], byte[], com.virgilsecurity.sdk.crypto.PublicKey)
      */
     @Override
-    public boolean verify(byte[] data, byte[] signature, PublicKey signer) {
+    public boolean verify(byte[] data, byte[] signature, PublicKey signer) throws VerificationException {
         if (data == null) {
             throw new NullArgumentException("data");
         }
@@ -561,7 +568,7 @@ public class VirgilCrypto implements Crypto {
      * com.virgilsecurity.sdk.crypto.PublicKey)
      */
     @Override
-    public boolean verify(InputStream inputStream, byte[] signature, PublicKey signer) {
+    public boolean verify(InputStream inputStream, byte[] signature, PublicKey signer) throws VerificationException {
         if (inputStream == null) {
             throw new NullArgumentException("inputStream");
         }
