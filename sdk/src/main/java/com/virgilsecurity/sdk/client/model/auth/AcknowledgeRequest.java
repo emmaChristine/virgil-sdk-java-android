@@ -27,38 +27,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.highlevel;
+package com.virgilsecurity.sdk.client.model.auth;
 
-import com.virgilsecurity.sdk.client.VirgilAuthClient;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@linkplain VirgilApi} interface defines a high-level API that provides easy access to Virgil Security services
- * and allows to perform cryptographic operations by using two domain entities {@linkplain VirgilKey} and
- * {@linkplain VirgilCard}. Where the {@linkplain VirgilKey} is an entity that represents a user's Private key, and the
- * {@linkplain VirgilCard} is the entity that represents user's identity and a Public key.
- * 
  * @author Andrii Iakovenko
  *
  */
-public interface VirgilApi {
+public class AcknowledgeRequest {
+
+    @SerializedName("encrypted_message")
+    private String encryptedMessage;
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilKey} entities.
+     * Create new instance of {@link AcknowledgeRequest}.
      * 
-     * @return The key manager.
+     * @param encryptedMessage
      */
-    KeyManager getKeys();
+    public AcknowledgeRequest(String encryptedMessage) {
+        this.encryptedMessage = encryptedMessage;
+    }
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilCard} entities.
-     * 
-     * @return The card manager.
+     * @return the encryptedMessage
      */
-    CardManager getCards();
+    public String getEncryptedMessage() {
+        return encryptedMessage;
+    }
 
     /**
-     * @return The Virgil authentication service client.
+     * @param encryptedMessage
+     *            the encryptedMessage to set
      */
-    VirgilAuthClient getAuth();
+    public void setEncryptedMessage(String encryptedMessage) {
+        this.encryptedMessage = encryptedMessage;
+    }
 
 }

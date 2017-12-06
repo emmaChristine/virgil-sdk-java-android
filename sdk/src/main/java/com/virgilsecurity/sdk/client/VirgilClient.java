@@ -369,11 +369,14 @@ public class VirgilClient extends ClientBase {
             CardModel[] cardModels = execute(url, "POST", new ByteArrayInputStream(ConvertionUtils.toBytes(body)),
                     CardModel[].class);
 
-            List<CardModel> cards = Arrays.asList(cardModels);
-            validateCards(cards);
+            if (cardModels != null) {
+                List<CardModel> cards = Arrays.asList(cardModels);
+                validateCards(cards);
 
-            return cards;
-
+                return cards;
+            } else {
+                return new ArrayList<>();
+            }
         } catch (VirgilServiceException e) {
             throw e;
         } catch (CardValidationException e) {

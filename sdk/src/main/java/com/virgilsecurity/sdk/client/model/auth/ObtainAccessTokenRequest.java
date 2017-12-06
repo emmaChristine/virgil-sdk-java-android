@@ -27,38 +27,45 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.highlevel;
+package com.virgilsecurity.sdk.client.model.auth;
 
-import com.virgilsecurity.sdk.client.VirgilAuthClient;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@linkplain VirgilApi} interface defines a high-level API that provides easy access to Virgil Security services
- * and allows to perform cryptographic operations by using two domain entities {@linkplain VirgilKey} and
- * {@linkplain VirgilCard}. Where the {@linkplain VirgilKey} is an entity that represents a user's Private key, and the
- * {@linkplain VirgilCard} is the entity that represents user's identity and a Public key.
- * 
  * @author Andrii Iakovenko
  *
  */
-public interface VirgilApi {
+public class ObtainAccessTokenRequest {
+
+    @SerializedName("grant_type")
+    private String grantType;
+
+    @SerializedName("code")
+    private String code;
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilKey} entities.
+     * Create new instance of {@link ObtainAccessTokenRequest}.
      * 
-     * @return The key manager.
+     * @param code
      */
-    KeyManager getKeys();
+    public ObtainAccessTokenRequest(String code) {
+        super();
+        this.grantType = "access_code";
+        this.code = code;
+    }
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilCard} entities.
-     * 
-     * @return The card manager.
+     * @return the grantType
      */
-    CardManager getCards();
+    public String getGrantType() {
+        return grantType;
+    }
 
     /**
-     * @return The Virgil authentication service client.
+     * @return the code
      */
-    VirgilAuthClient getAuth();
+    public String getCode() {
+        return code;
+    }
 
 }

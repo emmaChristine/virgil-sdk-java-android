@@ -27,38 +27,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.highlevel;
+package com.virgilsecurity.sdk.client.model.auth;
 
-import com.virgilsecurity.sdk.client.VirgilAuthClient;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@linkplain VirgilApi} interface defines a high-level API that provides easy access to Virgil Security services
- * and allows to perform cryptographic operations by using two domain entities {@linkplain VirgilKey} and
- * {@linkplain VirgilCard}. Where the {@linkplain VirgilKey} is an entity that represents a user's Private key, and the
- * {@linkplain VirgilCard} is the entity that represents user's identity and a Public key.
- * 
  * @author Andrii Iakovenko
  *
  */
-public interface VirgilApi {
+public class VerifyResponse {
+
+    @SerializedName("resource_owner_virgil_card_id")
+    private String virgilCardId;
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilKey} entities.
-     * 
-     * @return The key manager.
+     * @return the virgilCardId
      */
-    KeyManager getKeys();
+    public String getVirgilCardId() {
+        return virgilCardId;
+    }
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilCard} entities.
-     * 
-     * @return The card manager.
+     * @param virgilCardId
+     *            the virgilCardId to set
      */
-    CardManager getCards();
-
-    /**
-     * @return The Virgil authentication service client.
-     */
-    VirgilAuthClient getAuth();
+    public void setVirgilCardId(String virgilCardId) {
+        this.virgilCardId = virgilCardId;
+    }
 
 }

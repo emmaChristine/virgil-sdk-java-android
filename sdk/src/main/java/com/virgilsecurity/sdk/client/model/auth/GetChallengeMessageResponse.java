@@ -27,38 +27,50 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.highlevel;
+package com.virgilsecurity.sdk.client.model.auth;
 
-import com.virgilsecurity.sdk.client.VirgilAuthClient;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@linkplain VirgilApi} interface defines a high-level API that provides easy access to Virgil Security services
- * and allows to perform cryptographic operations by using two domain entities {@linkplain VirgilKey} and
- * {@linkplain VirgilCard}. Where the {@linkplain VirgilKey} is an entity that represents a user's Private key, and the
- * {@linkplain VirgilCard} is the entity that represents user's identity and a Public key.
- * 
  * @author Andrii Iakovenko
  *
  */
-public interface VirgilApi {
+public class GetChallengeMessageResponse {
+
+    @SerializedName("authorization_grant_id")
+    private String authorizationGrantId;
+
+    @SerializedName("encrypted_message")
+    private String encryptedMessage;
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilKey} entities.
-     * 
-     * @return The key manager.
+     * @return the authorizationGrantId
      */
-    KeyManager getKeys();
+    public String getAuthorizationGrantId() {
+        return authorizationGrantId;
+    }
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilCard} entities.
-     * 
-     * @return The card manager.
+     * @param authorizationGrantId
+     *            the authorizationGrantId to set
      */
-    CardManager getCards();
+    public void setAuthorizationGrantId(String authorizationGrantId) {
+        this.authorizationGrantId = authorizationGrantId;
+    }
 
     /**
-     * @return The Virgil authentication service client.
+     * @return the encryptedMessage
      */
-    VirgilAuthClient getAuth();
+    public String getEncryptedMessage() {
+        return encryptedMessage;
+    }
+
+    /**
+     * @param encryptedMessage
+     *            the encryptedMessage to set
+     */
+    public void setEncryptedMessage(String encryptedMessage) {
+        this.encryptedMessage = encryptedMessage;
+    }
 
 }

@@ -27,38 +27,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.highlevel;
+package com.virgilsecurity.sdk.client.model.auth;
 
-import com.virgilsecurity.sdk.client.VirgilAuthClient;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@linkplain VirgilApi} interface defines a high-level API that provides easy access to Virgil Security services
- * and allows to perform cryptographic operations by using two domain entities {@linkplain VirgilKey} and
- * {@linkplain VirgilCard}. Where the {@linkplain VirgilKey} is an entity that represents a user's Private key, and the
- * {@linkplain VirgilCard} is the entity that represents user's identity and a Public key.
- * 
  * @author Andrii Iakovenko
  *
  */
-public interface VirgilApi {
+public class VerifyRequest {
+
+    @SerializedName("access_token")
+    private String accessToken;
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilKey} entities.
+     * Create new instance of {@link VerifyRequest}.
      * 
-     * @return The key manager.
+     * @param accessToken
      */
-    KeyManager getKeys();
+    public VerifyRequest(String accessToken) {
+        super();
+        this.accessToken = accessToken;
+    }
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilCard} entities.
-     * 
-     * @return The card manager.
+     * @return the accessToken
      */
-    CardManager getCards();
+    public String getAccessToken() {
+        return accessToken;
+    }
 
     /**
-     * @return The Virgil authentication service client.
+     * @param accessToken
+     *            the accessToken to set
      */
-    VirgilAuthClient getAuth();
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
 }

@@ -30,12 +30,14 @@
 package com.virgilsecurity.sdk.client;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
+import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
 import com.virgilsecurity.sdk.client.model.dto.ErrorResponse;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.utils.StreamUtils;
@@ -52,7 +54,8 @@ public class ClientBase {
     /**
      * Create new instance of {@link ClientBase}.
      * 
-     * @param context the VirgilClient context.
+     * @param context
+     *            the VirgilClient context.
      */
     public ClientBase(VirgilClientContext context) {
         super();
@@ -69,7 +72,7 @@ public class ClientBase {
      * @return The connection.
      * @throws IOException
      */
-    private HttpURLConnection createConnection(URL url, String method) throws IOException {
+    protected HttpURLConnection createConnection(URL url, String method) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod(method);
         urlConnection.setUseCaches(false);

@@ -43,6 +43,8 @@ import com.virgilsecurity.sdk.utils.StringUtils;
  */
 public class VirgilClientContext {
 
+    private static final String AUTH_SERVICE_PUBLIC_KEY = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZzd0ZRWUhLb1pJemowQ0FRWUtLd1lCQkFHWFZRRUZBUU5DQUFRRGNONFR4endIV0VOR00zQmJxb1VuTWFVdQpLbTc4Sk9DWFhKN3I1ejdOalFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUEKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==";
+
     private String accessToken;
 
     private URL cardsServiceURL;
@@ -52,17 +54,19 @@ public class VirgilClientContext {
     private URL identityServiceURL;
 
     private URL raServiceURL;
-    
+
+    private URL authServiceURL;
+
     /**
      * Create new instance of {@link VirgilClientContext}.
      */
     public VirgilClientContext() {
         try {
             this.cardsServiceURL = new URL("https://cards.virgilsecurity.com");
-
             this.readOnlyCardsServiceURL = new URL("https://cards-ro.virgilsecurity.com");
             this.identityServiceURL = new URL("https://identity.virgilsecurity.com");
             this.raServiceURL = new URL("https://ra.virgilsecurity.com");
+            this.authServiceURL = new URL("https://auth.virgilsecurity.com");
         } catch (MalformedURLException e) {
             // This should never happen
         }
@@ -173,6 +177,21 @@ public class VirgilClientContext {
      */
     public void setRaServiceURL(URL raServiceURL) {
         this.raServiceURL = raServiceURL;
+    }
+
+    /**
+     * @return the authServiceURL
+     */
+    public URL getAuthServiceURL() {
+        return authServiceURL;
+    }
+
+    /**
+     * @param authServiceURL
+     *            the authServiceURL to set
+     */
+    public void setAuthServiceURL(URL authServiceURL) {
+        this.authServiceURL = authServiceURL;
     }
 
 }

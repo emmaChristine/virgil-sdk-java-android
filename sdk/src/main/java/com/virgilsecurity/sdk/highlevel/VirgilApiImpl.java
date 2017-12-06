@@ -29,6 +29,7 @@
  */
 package com.virgilsecurity.sdk.highlevel;
 
+import com.virgilsecurity.sdk.client.VirgilAuthClient;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
@@ -46,6 +47,7 @@ public class VirgilApiImpl implements VirgilApi {
 
     private KeyManager keyManager;
     private CardManager cardManager;
+    private VirgilAuthClient authClient;
 
     /**
      * Create new instance of {@link VirgilApiImpl}.
@@ -103,6 +105,19 @@ public class VirgilApiImpl implements VirgilApi {
     @Override
     public CardManager getCards() {
         return cardManager;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.highlevel.VirgilApi#getAuth()
+     */
+    @Override
+    public VirgilAuthClient getAuth() {
+        if (this.authClient == null) {
+            authClient = new VirgilAuthClient(context.getClientContext());
+        }
+        return this.authClient;
     }
 
 }

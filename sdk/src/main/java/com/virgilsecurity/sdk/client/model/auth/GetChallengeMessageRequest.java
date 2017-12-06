@@ -27,38 +27,47 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.virgilsecurity.sdk.highlevel;
+package com.virgilsecurity.sdk.client.model.auth;
 
-import com.virgilsecurity.sdk.client.VirgilAuthClient;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@linkplain VirgilApi} interface defines a high-level API that provides easy access to Virgil Security services
- * and allows to perform cryptographic operations by using two domain entities {@linkplain VirgilKey} and
- * {@linkplain VirgilCard}. Where the {@linkplain VirgilKey} is an entity that represents a user's Private key, and the
- * {@linkplain VirgilCard} is the entity that represents user's identity and a Public key.
- * 
  * @author Andrii Iakovenko
  *
  */
-public interface VirgilApi {
+public class GetChallengeMessageRequest {
+
+    @SerializedName("resource_owner_virgil_card_id")
+    private String virgilCardId;
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilKey} entities.
+     * Create new instance of {@link GetChallengeMessageRequest}.
+     */
+    public GetChallengeMessageRequest() {
+    }
+
+    /**
+     * Create new instance of {@link GetChallengeMessageRequest}.
      * 
-     * @return The key manager.
+     * @param virgilCardId
      */
-    KeyManager getKeys();
+    public GetChallengeMessageRequest(String virgilCardId) {
+        this.virgilCardId = virgilCardId;
+    }
 
     /**
-     * Gets an instances of the class that provides a work with {@link VirgilCard} entities.
-     * 
-     * @return The card manager.
+     * @return the virgilCardId
      */
-    CardManager getCards();
+    public String getVirgilCardId() {
+        return virgilCardId;
+    }
 
     /**
-     * @return The Virgil authentication service client.
+     * @param virgilCardId
+     *            the virgilCardId to set
      */
-    VirgilAuthClient getAuth();
+    public void setVirgilCardId(String virgilCardId) {
+        this.virgilCardId = virgilCardId;
+    }
 
 }
