@@ -82,7 +82,7 @@ public class Mailinator {
 																	// array
 
 		if (jsonMessages != null) {
-			// Parse the messages, make the POJOs and add them to our custom
+			// parse the messages, make the POJOs and add them to our custom
 			// list.
 			for (Object jsonMsg : jsonMessages) {
 				InboxMessage message = createInboxMessageFrom((JSONObject) jsonMsg);

@@ -29,11 +29,12 @@
  */
 package com.virgilsecurity.sdk.utils;
 
+import com.virgilsecurity.sdk.common.SignerType;
+
 /**
  * Operations on {@link java.lang.String} that are {@code null} safe.
  *
  * @author Andrii Iakovenko
- *
  */
 public class StringUtils {
 
@@ -41,8 +42,7 @@ public class StringUtils {
      * <p>
      * Checks if a CharSequence is whitespace, empty ("") or null.
      *
-     * @param cs
-     *            the CharSequence to check, may be null
+     * @param cs the CharSequence to check, may be null
      * @return {@code true} if the CharSequence is null, empty or whitespace
      */
     public static boolean isBlank(final CharSequence cs) {
@@ -51,11 +51,32 @@ public class StringUtils {
             return true;
         }
         for (int i = 0; i < strLen; i++) {
-            if (Character.isWhitespace(cs.charAt(i)) == false) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * Converts string representation of signer type to {@link SignerType}
+     *
+     * @param signer string representation of signer type
+     * @return {@link SignerType} type corresponding to input string signer type
+     */
+    public static SignerType fromStringSignerType(String signer) {
+        switch (signer) {
+            case "self":
+                return SignerType.Self;
+            case "app":
+                return SignerType.App;
+            case "extra":
+                return SignerType.Extra;
+            case "virgil":
+                return SignerType.Virgil;
+            default:
+                return null;
+        }
     }
 
 }

@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.xml.bind.DatatypeConverter;
@@ -53,6 +54,8 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.virgilsecurity.crypto.VirgilBase64;
+import com.virgilsecurity.sdk.highlevel.StringEncoding;
+import jdk.internal.jline.internal.Nullable;
 
 /**
  * Utilities class for data conversion.
@@ -222,6 +225,18 @@ public class ConvertionUtils {
         byte[] takenSnapshot = ConvertionUtils.toBytes(snapshotModelJson);
 
         return takenSnapshot;
+    }
+
+    public static <T> T parseSnapshot(byte[] snapshot, Charset stringEncoding, Class<T> objectType) {
+        return getGson().fromJson(new String(snapshot, stringEncoding), objectType);
+    }
+
+    public static <T> T parseSnapshot(byte[] snapshot, Class<T> objectType) {
+        return getGson().fromJson(new String(snapshot, Charset.forName("UTF-8")), objectType);
+    }
+
+    public static <T> T parseSnapshot(byte[] snapshot, TypeToken<T> objectType) {
+        return getGson().fromJson(new String(snapshot, Charset.forName("UTF-8")), objectType.getType());
     }
 
     private static class ByteArrayToBase64TypeAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
