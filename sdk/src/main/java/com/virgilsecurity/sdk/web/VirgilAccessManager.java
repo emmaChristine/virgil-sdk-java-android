@@ -1,9 +1,10 @@
 package com.virgilsecurity.sdk.web;
 
 import com.virgilsecurity.sdk.exception.NullArgumentException;
+import com.virgilsecurity.sdk.web.contract.AccessManager;
+import com.virgilsecurity.sdk.web.model.jwt.JsonWebToken;
 import jdk.internal.jline.internal.Nullable;
 
-import java.io.InputStream;
 import java.util.concurrent.*;
 
 public class VirgilAccessManager implements AccessManager {

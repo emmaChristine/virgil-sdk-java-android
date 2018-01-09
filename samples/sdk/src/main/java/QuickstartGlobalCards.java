@@ -34,7 +34,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import com.virgilsecurity.sdk.client.CardValidator;
-import com.virgilsecurity.sdk.client.CardsClient;
+import com.virgilsecurity.sdk.client.CardClient;
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.model.cards.CardModel;
 import com.virgilsecurity.sdk.client.model.cards.CardScope;
@@ -57,7 +57,7 @@ public class QuickstartGlobalCards {
     public static void main(String[] args) throws Exception {
 
         // Initializing an API Client
-        CardsClient client = new CardsClient("[YOUR_APP_ACCESS_TOKEN_HERE]");
+        CardClient client = new CardClient("[YOUR_APP_ACCESS_TOKEN_HERE]");
 
         // Initializing Crypto
         Crypto crypto = new VirgilCrypto();

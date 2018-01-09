@@ -2,7 +2,7 @@ package com.virgilsecurity.sdk.common;
 
 import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.web.AccessManager;
+import com.virgilsecurity.sdk.web.contract.AccessManager;
 
 import java.util.concurrent.Callable;
 

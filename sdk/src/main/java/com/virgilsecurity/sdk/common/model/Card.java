@@ -1,32 +1,24 @@
 package com.virgilsecurity.sdk.common.model;
 
 import com.google.gson.reflect.TypeToken;
-import com.virgilsecurity.sdk.common.SignerType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.utils.StringUtils;
-import com.virgilsecurity.sdk.web.model.card.RawCard;
-import com.virgilsecurity.sdk.web.model.card.RawCardInfo;
-import com.virgilsecurity.sdk.web.model.card.RawCardSignature;
-import oracle.jvm.hotspot.jfr.StringEncoding;
 
-import java.security.Signer;
 import java.util.*;
 
 public class Card {
 
-    private List<CardSignature> signatures;
-    private String id;
+    private String identifier;
     private String identity;
-    private byte[] fingerprint;
     private PublicKey publicKey;
     private String version;
     private Date createdAt;
-    private Card previousCard;
     private String previousCardId;
+    private List<CardSignature> signatures;
 
     public Card(String cardId,
                 String identity,
@@ -158,21 +150,21 @@ public class Card {
         this.previousCard = previousCard;
     }
 
-    public static Card parse(Crypto crypto, RawCard request) {
+    public static Card parse(Crypto crypto, RawSignedModel request) {
         if (request == null) {
             throw new NullArgumentException("request should not be null");
         }
 
-        RawCardInfo requestInfo = ConvertionUtils.parseSnapshot(request.getContentSnapshot(), RawCardInfo.class);
+        RawCard requestInfo = ConvertionUtils.parseSnapshot(request.getContentSnapshot(), RawCard.class);
         byte[] fingerprint = crypto.computeHash(request.getContentSnapshot(), HashAlgorithm.SHA256);
         String cardId = ConvertionUtils.toHex(fingerprint);
 
         List<CardSignature> signatures = new ArrayList<>();
         if (request.getSignatures() != null) {
 
-            for (RawCardSignature rawSignature : request.getSignatures()) {
+            for (RawSignature rawSignature : request.getSignatures()) {
                 CardSignature cardSignature = new CardSignature.CardSignatureBuilder()
-                        .signerCardId(rawSignature.getSignerCardId())
+                        .signerCardId(rawSignature.getSignerId())
                         .signerType(StringUtils.fromStringSignerType(rawSignature.getSignerType()))
                         .signature(rawSignature.getSignature())
                         .extraFields(ConvertionUtils.parseSnapshot(rawSignature.getExtraData(),
@@ -195,14 +187,14 @@ public class Card {
         return card;
     }
 
-    public static List<Card> parse(Crypto crypto, List<RawCard> requests) {
+    public static List<Card> parse(Crypto crypto, List<RawSignedModel> requests) {
         if (requests == null) {
             throw new NullArgumentException(nameof(requests));
         }
 
-        List<RawCard> cards = new ArrayList<>();
-        for (RawCard rawCard : requests) {
-            cards.add(rawCard);
+        List<RawSignedModel> cards = new ArrayList<>();
+        for (RawSignedModel rawSignedModel : requests) {
+            cards.add(rawSignedModel);
         }
 
         return requests.Select(r = > parse(crypto, r)).ToList();

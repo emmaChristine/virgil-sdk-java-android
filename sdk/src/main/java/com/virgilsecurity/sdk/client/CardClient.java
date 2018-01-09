@@ -61,27 +61,27 @@ import com.virgilsecurity.sdk.utils.StringUtils;
  * @author Andrii Iakovenko
  *
  */
-public class CardsClient extends VirgilClient {
+public class CardClient extends VirgilClient {
 
     private CardValidator cardValidator;
 
     /**
-     * Create a new instance of {@code CardsClient}
+     * Create a new instance of {@code CardClient}
      *
      * @param accessToken
      *            the access token.
      */
-    public CardsClient(String accessToken) {
+    public CardClient(String accessToken) {
         super(new CardsClientContext(accessToken));
     }
 
     /**
-     * Create a new instance of {@code CardsClient}
+     * Create a new instance of {@code CardClient}
      *
      * @param context
      *            the cards client context.
      */
-    public CardsClient(CardsClientContext context) {
+    public CardClient(CardsClientContext context) {
         super(context);
     }
 

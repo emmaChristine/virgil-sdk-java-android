@@ -33,7 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * This class contains common configuration parameters of {@link CardsClient}.
+ * This class contains common configuration parameters of {@link CardClient}.
  * 
  * @author Andrii Iakovenko
  *

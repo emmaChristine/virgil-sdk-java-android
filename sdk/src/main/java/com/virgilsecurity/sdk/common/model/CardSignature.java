@@ -9,7 +9,7 @@ public class CardSignature {
     /**
      * The card ID.
      */
-    private String signerCardId;
+    private String signerId;
 
     /**
      * Gets the type of signer signature.
@@ -26,8 +26,8 @@ public class CardSignature {
      */
     private Map<String, String> extraFields;
 
-    public String getSignerCardId() {
-        return signerCardId;
+    public String getSignerId() {
+        return signerId;
     }
 
     public SignerType getSignerType() {
@@ -42,8 +42,8 @@ public class CardSignature {
         return extraFields;
     }
 
-    void setSignerCardId(String signerCardId) {
-        this.signerCardId = signerCardId;
+    void setSignerId(String signerId) {
+        this.signerId = signerId;
     }
 
     void setSignerType(SignerType signerType) {
@@ -89,7 +89,7 @@ public class CardSignature {
 
         public CardSignature build() {
             CardSignature cardSignature = new CardSignature();
-            cardSignature.setSignerCardId(signerCardId);
+            cardSignature.setSignerId(signerCardId);
             cardSignature.setSignerType(signerType);
             cardSignature.setSignature(signature);
             cardSignature.setExtraFields(extraFields);

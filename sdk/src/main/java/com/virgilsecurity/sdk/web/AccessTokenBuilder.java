@@ -2,6 +2,7 @@ package com.virgilsecurity.sdk.web;
 
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.web.model.jwt.JsonWebToken;
 import com.virgilsecurity.sdk.web.model.jwt.JsonWebTokenBody;
 
 import java.util.HashMap;

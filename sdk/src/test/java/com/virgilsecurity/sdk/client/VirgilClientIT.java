@@ -38,7 +38,7 @@ package com.virgilsecurity.sdk.client;
 public class VirgilClientIT extends BaseIT {
 /*
     private Crypto crypto;
-    private CardsClient client;
+    private CardClient client;
     private RequestSigner requestSigner;
     private PrivateKey appKey;
 
@@ -61,7 +61,7 @@ public class VirgilClientIT extends BaseIT {
             ctx.setIdentityServiceURL(new URL(url));
         }
 
-        client = new CardsClient(ctx);
+        client = new CardClient(ctx);
         requestSigner = new RequestSigner(crypto);
 
         appKey = crypto.importPrivateKey(APP_PRIVATE_KEY.getBytes(), APP_PRIVATE_KEY_PASSWORD);
