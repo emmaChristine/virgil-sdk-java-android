@@ -31,24 +31,7 @@ package com.virgilsecurity.sdk.crypto;
 
 /**
  * A public key.
- *
- * @author Andrii Iakovenko
- *
  */
 public interface PublicKey {
-
-    /**
-     * Get the receiver identifier.
-     * 
-     * @return the receiver identifier.
-     */
-    byte[] getId();
-
-    /**
-     * Get the Public key value.
-     * 
-     * @return the value
-     */
-    byte[] getValue();
 
 }

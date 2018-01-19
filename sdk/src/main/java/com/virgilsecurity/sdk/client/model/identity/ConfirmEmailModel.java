@@ -32,7 +32,7 @@ package com.virgilsecurity.sdk.client.model.identity;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents an confirmed identity information.
+ * Represents an confirmed getIdentity information.
  * 
  * @author Andrii Iakovenko
  *
@@ -46,7 +46,7 @@ public class ConfirmEmailModel {
     public String validationToken;
 
     /**
-     * @return the identity
+     * @return the getIdentity
      */
     public String getIdentity() {
         return identity;
@@ -54,7 +54,7 @@ public class ConfirmEmailModel {
 
     /**
      * @param identity
-     *            the identity to set
+     *            the getIdentity to set
      */
     public void setIdentity(String identity) {
         this.identity = identity;

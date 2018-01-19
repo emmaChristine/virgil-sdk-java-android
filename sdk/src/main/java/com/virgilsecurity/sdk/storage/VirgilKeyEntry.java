@@ -96,7 +96,7 @@ public class VirgilKeyEntry implements KeyEntry {
     /*
      * (non-Javadoc)
      * 
-     * @see com.virgilsecurity.sdk.crypto.KeyEntry#getValue()
+     * @see com.virgilsecurity.sdk.crypto.KeyEntry#getRawKey()
      */
     @Override
     public byte[] getValue() {
@@ -106,7 +106,7 @@ public class VirgilKeyEntry implements KeyEntry {
     /*
      * (non-Javadoc)
      * 
-     * @see com.virgilsecurity.sdk.crypto.KeyEntry#setValue(byte[])
+     * @see com.virgilsecurity.sdk.crypto.KeyEntry#setRawKey(byte[])
      */
     @Override
     public void setValue(byte[] value) {

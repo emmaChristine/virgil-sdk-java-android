@@ -33,21 +33,47 @@
 
 package com.virgilsecurity.sdk.web;
 
+import com.virgilsecurity.sdk.utils.Validator;
 import com.virgilsecurity.sdk.web.contract.AccessToken;
 import com.virgilsecurity.sdk.web.contract.AccessTokenProvider;
-import com.virgilsecurity.sdk.web.model.Jwt;
 
-import java.util.concurrent.Callable;
+public class GeneratorJwtProvider implements AccessTokenProvider {
 
-public class VirgilAccessTokenProvider implements AccessTokenProvider {
+    private JwtGenerator jwtGenerator;
+    private String identity;
+    private String additionalData;
 
-    private Callable<String> getTokenCallback;
+    public GeneratorJwtProvider(JwtGenerator jwtGenerator, String identity) {
+        Validator.illegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
+        Validator.illegalAgrument(identity, "GeneratorJwtProvider -> 'identity' should not be null");
 
-    @Override public AccessToken getToken(boolean forceReload) {
-        return null;
+        this.jwtGenerator = jwtGenerator;
+        this.identity = identity;
     }
 
-    public Jwt getVirgilToken(boolean forceReload) {
-        return null;
+    public GeneratorJwtProvider(JwtGenerator jwtGenerator, String identity, String additionalData) {
+        Validator.illegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
+        Validator.illegalAgrument(identity, "GeneratorJwtProvider -> 'identity' should not be null");
+        Validator.illegalAgrument(additionalData, "GeneratorJwtProvider -> 'additionalData' should not be null");
+
+        this.jwtGenerator = jwtGenerator;
+        this.identity = identity;
+        this.additionalData = additionalData;
+    }
+
+    @Override public AccessToken getToken(boolean forceReload) {
+        return jwtGenerator.generateToken(identity, additionalData);
+    }
+
+    public JwtGenerator getJwtGenerator() {
+        return jwtGenerator;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public String getAdditionalData() {
+        return additionalData;
     }
 }

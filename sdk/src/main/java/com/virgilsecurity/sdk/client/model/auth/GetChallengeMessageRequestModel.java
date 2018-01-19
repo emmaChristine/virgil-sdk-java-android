@@ -50,7 +50,7 @@ public class GetChallengeMessageRequestModel {
      * Create new instance of {@link GetChallengeMessageRequestModel}.
      * 
      * @param cardId
-     *            the resource owner Virgil Card identifier.
+     *            the resource owner VIRGIL Card identifier.
      */
     public GetChallengeMessageRequestModel(String cardId) {
         super();
@@ -58,19 +58,19 @@ public class GetChallengeMessageRequestModel {
     }
 
     /**
-     * Gets the resource owner Virgil Card identifier.
+     * Gets the resource owner VIRGIL Card identifier.
      * 
-     * @return the resource owner Virgil Card identifier.
+     * @return the resource owner VIRGIL Card identifier.
      */
     public String getCardId() {
         return cardId;
     }
 
     /**
-     * Sets the resource owner Virgil Card identifier.
+     * Sets the resource owner VIRGIL Card identifier.
      * 
      * @param cardId
-     *            the resource owner Virgil Card identifier.
+     *            the resource owner VIRGIL Card identifier.
      */
     public void setCardId(String cardId) {
         this.cardId = cardId;

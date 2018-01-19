@@ -32,7 +32,7 @@ package com.virgilsecurity.sdk.client.model.cards;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The reason of Virgil Card revocation.
+ * The reason of VIRGIL Card revocation.
  *
  * @author Andrii Iakovenko
  *

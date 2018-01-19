@@ -33,20 +33,32 @@
 
 package com.virgilsecurity.sdk.crypto;
 
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
 public class VirgilAccessTokenSigner implements AccessTokenSigner {
 
     private VirgilCrypto virgilCrypto;
 
-    @Override public byte[] generateTokenSignature(byte[] token, PrivateKey privateKey) {
-        return new byte[0];
+    public VirgilAccessTokenSigner() {
+        this.virgilCrypto = new VirgilCrypto(KeysType.FAST_EC_ED25519);
     }
 
-    @Override public void verifyTokenSignature(byte[] token, PublicKey publicKey) {
+    @Override public byte[] generateTokenSignature(byte[] token, PrivateKey privateKey) throws CryptoException {
+        if (!(privateKey instanceof VirgilPrivateKey))
+            throw new CryptoException("VirgilAccessTokenSigner -> 'privateKey' should be of 'VirgilPrivateKey' type");
 
+        return virgilCrypto.generateSignature(token, privateKey);
+    }
+
+    @Override public boolean verifyTokenSignature(byte[] signature, byte[] data, PublicKey publicKey) throws CryptoException {
+        if (!(publicKey instanceof VirgilPublicKey))
+            throw new CryptoException("VirgilAccessTokenSigner -> 'publicKey' should be of 'VirgilPublicKey' type");
+
+        return virgilCrypto.verifySignature(signature, data, publicKey);
     }
 
     @Override public String getAlgorithm() {
-        return null;
+        return "VEDS512";
     }
 
     public VirgilCrypto getVirgilCrypto() {

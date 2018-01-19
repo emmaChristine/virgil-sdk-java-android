@@ -30,7 +30,7 @@
 package com.virgilsecurity.sdk.client.exceptions;
 
 /**
- * Exception class for Virgil Identity Service operations.
+ * Exception class for VIRGIL Identity Service operations.
  *
  * @author Andrii Iakovenko
  *

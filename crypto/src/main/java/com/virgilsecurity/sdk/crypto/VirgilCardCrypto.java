@@ -33,28 +33,44 @@
 
 package com.virgilsecurity.sdk.crypto;
 
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
 public class VirgilCardCrypto implements CardCrypto {
 
     private VirgilCrypto virgilCrypto;
 
-    @Override public byte[] generateSignature(byte[] data, PrivateKey privateKey) {
-        return new byte[0];
+    public VirgilCardCrypto() {
+        this.virgilCrypto = new VirgilCrypto();
     }
 
-    @Override public boolean verifySignature(byte[] signature, byte[] data, PublicKey publicKey) {
-        return false;
+    @Override public byte[] generateSignature(byte[] data, PrivateKey privateKey) throws CryptoException {
+        if (!(privateKey instanceof VirgilPrivateKey))
+            throw new CryptoException("VirgilCrypto -> 'privateKey' should be of 'VirgilPrivateKey' type");
+
+        return virgilCrypto.generateSignature(data, privateKey);
     }
 
-    @Override public byte[] exportPublicKey(PublicKey publicKey) {
-        return new byte[0];
+    @Override
+    public boolean verifySignature(byte[] signature, byte[] data, PublicKey publicKey) throws CryptoException {
+        if (!(publicKey instanceof VirgilPublicKey))
+            throw new CryptoException("VirgilCrypto -> 'publicKey' should be of 'VirgilPublicKey' type");
+
+        return virgilCrypto.verifySignature(signature, data, publicKey);
+    }
+
+    @Override public byte[] exportPublicKey(PublicKey publicKey) throws CryptoException {
+        if (!(publicKey instanceof VirgilPublicKey))
+            throw new CryptoException("VirgilCrypto -> 'publicKey' should be of 'VirgilPublicKey' type");
+
+        return virgilCrypto.exportPublicKey(publicKey);
     }
 
     @Override public PublicKey importPublicKey(byte[] data) {
-        return null;
+        return virgilCrypto.importPublicKey(data);
     }
 
     @Override public byte[] generateSHA256(byte[] data) {
-        return new byte[0];
+        return virgilCrypto.generateHash(data, HashAlgorithm.SHA256);
     }
 
     public VirgilCrypto getVirgilCrypto() {

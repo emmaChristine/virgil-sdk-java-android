@@ -31,71 +31,80 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.web.model.jwt;
+package com.virgilsecurity.sdk.web.model;
 
-import com.virgilsecurity.sdk.utils.ConvertionUtils;
-import com.virgilsecurity.sdk.web.contract.AccessToken;
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebTokenBody;
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebTokenHeader;
+import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.web.TimeSpan;
 
-public class JsonWebToken implements AccessToken {
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-    private JsonWebTokenHeader header;
-    private JsonWebTokenBody body;
-    private byte[] signature;
-    private String stringRepresentation;
+public class JwtBodyContent {
 
-    public JsonWebToken(JsonWebTokenBody body) {
-        this.body = body;
+    @SerializedName("iss")
+    private String appId;
+
+    @SerializedName("sub")
+    private String identity;
+
+    @SerializedName("ada")
+    private String additionalData;
+
+    @SerializedName("exp")
+    private TimeSpan expiresAt;
+
+    @SerializedName("iat")
+    private Date issuedAt;
+
+    public JwtBodyContent(String appId,
+                          String identity,
+                          String additionalData,
+                          TimeSpan expiresAt, Date issuedAt) {
+        this.appId = appId;
+        this.identity = identity;
+        this.additionalData = additionalData;
+        this.expiresAt = expiresAt;
+        this.issuedAt = issuedAt;
     }
 
-    public JsonWebToken(JsonWebTokenHeader header,
-                        JsonWebTokenBody body) {
-        this.header = header;
-        this.body = body;
+    public String getAppId() {
+        return appId;
     }
 
-    public JsonWebTokenHeader getHeader() {
-        return header;
+    void setAppId(String appId) {
+        this.appId = appId;
     }
 
-    public JsonWebTokenBody getBody() {
-        return body;
+    public String getIdentity() {
+        return identity;
     }
 
-    public byte[] getSignature() {
-        return signature;
+    void setIdentity(String identity) {
+        this.identity = identity;
     }
 
-    @Override public String stringRepresentation() {
-        if (stringRepresentation == null)
-            return stringRepresentation = toString();
-        else
-            return stringRepresentation;
+    public String getAdditionalData() {
+        return additionalData;
     }
 
-    @Override public String identity() {
-        return null;
+    void setAdditionalData(String additionalData) {
+        this.additionalData = additionalData;
     }
 
-    public boolean isExpired() {
-        return body.isExpired();
+    public TimeSpan getExpiresAt() {
+        return expiresAt;
     }
 
-    private String headerBase64() {
-        return ConvertionUtils.toBase64String(ConvertionUtils.captureSnapshot(header));
+    void setExpiresAt(TimeSpan expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
-    private String bodyBase64() {
-        return ConvertionUtils.toBase64String(ConvertionUtils.captureSnapshot(body));
+    public Date getIssuedAt() {
+        return issuedAt;
     }
 
-    private String signatureBase64() {
-        return ConvertionUtils.toBase64String(signature);
-    }
-
-    @Override
-    public String toString() {
-        return headerBase64() + "." + bodyBase64() + "." + signatureBase64();
+    void setIssuedAt(Date issuedAt) {
+        this.issuedAt = issuedAt;
     }
 }

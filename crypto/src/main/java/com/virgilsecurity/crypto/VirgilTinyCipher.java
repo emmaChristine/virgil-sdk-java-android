@@ -183,7 +183,7 @@ public class VirgilTinyCipher implements java.lang.AutoCloseable {
     }
 
     /**
-     * Encrypt data with given public key and sign package.
+     * Encrypt data with given public key and generateStreamSignature package.
      * 
      * @param data
      *            the data to be encrypted.
@@ -198,7 +198,7 @@ public class VirgilTinyCipher implements java.lang.AutoCloseable {
     }
 
     /**
-     * Encrypt data with given public key and sign package.
+     * Encrypt data with given public key and generateStreamSignature package.
      * 
      * @param data
      *            the data to be encrypted.

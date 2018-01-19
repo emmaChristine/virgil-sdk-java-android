@@ -37,9 +37,9 @@
 package com.virgilsecurity.crypto;
 
 /**
- * This class provides high-level interface to sign and verify data using Virgil Security keys.
+ * This class provides high-level interface to generateStreamSignature and verifySignature data using Virgil Security keys.
  * 
- * This module can sign / verify as raw data and Virgil Security tickets.
+ * This module can generateStreamSignature / verifySignature as raw data and Virgil Security tickets.
  *
  * @author Andrii Iakovenko
  *
@@ -113,15 +113,15 @@ public class VirgilSigner extends VirgilSignerBase implements java.lang.AutoClos
     }
 
     /**
-     * Verify sign and data to be conformed to the given public key.
+     * Verify generateStreamSignature and data to be conformed to the given public key.
      * 
      * @param data
-     *            the data signed with {@code sign}.
+     *            the data signed with {@code generateStreamSignature}.
      * @param sign
      *            the signature.
      * @param publicKey
      *            the public key.
-     * @return {@code true} if sign is valid and data was not malformed.
+     * @return {@code true} if generateStreamSignature is valid and data was not malformed.
      */
     public boolean verify(byte[] data, byte[] sign, byte[] publicKey) {
         return virgil_crypto_javaJNI.VirgilSigner_verify(swigCPtr, this, data, sign, publicKey);

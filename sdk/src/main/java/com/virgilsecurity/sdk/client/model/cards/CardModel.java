@@ -34,7 +34,7 @@ import com.virgilsecurity.sdk.client.model.cards.PublishCardSnapshotModel;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 /**
- * The {@linkplain CardModel} class represents an information about Virgil Card entity.
+ * The {@linkplain CardModel} class represents an information about VIRGIL Card entity.
  * 
  * @author Andrii Iakovenko
  *

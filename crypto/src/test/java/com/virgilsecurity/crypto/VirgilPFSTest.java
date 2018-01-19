@@ -39,7 +39,6 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.ExactComparisonCriteria;
 
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
@@ -74,26 +73,26 @@ public class VirgilPFSTest {
         /** Generate identity keys */
         // Alice keys
         KeyPair keyPair = crypto.generateKeys();
-        aliceId = keyPair.getPublicKey().getId();
-        alicePFSPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getValue());
-        aliceIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getValue());
+        aliceId = keyPair.getPublicKey().getIdentifier();
+        alicePFSPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+        aliceIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
 
         // Bob keys
         keyPair = crypto.generateKeys();
-        bobId = keyPair.getPublicKey().getId();
-        bobIdentityPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getValue());
-        bobIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getValue());
+        bobId = keyPair.getPublicKey().getIdentifier();
+        bobIdentityPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+        bobIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
 
         /** Generate ephemeral keys */
         // Alice key
         keyPair = crypto.generateKeys();
-        aliceEphPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getValue());
-        aliceEphPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getValue());
+        aliceEphPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+        aliceEphPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
 
         // Bob key
         keyPair = crypto.generateKeys();
-        bobLTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getValue());
-        bobLTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getValue());
+        bobLTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+        bobLTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
     }
 
     @Test
@@ -130,8 +129,8 @@ public class VirgilPFSTest {
     public void encrypt_decrypt_OT() {
         /** Generate one time keys */
         KeyPair keyPair = crypto.generateKeys();
-        VirgilPFSPrivateKey bobOTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getValue());
-        VirgilPFSPublicKey bobOTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getValue());
+        VirgilPFSPrivateKey bobOTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+        VirgilPFSPublicKey bobOTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
 
         /** Encrypt */
         // Prepare PFS info

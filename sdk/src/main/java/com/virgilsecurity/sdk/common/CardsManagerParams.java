@@ -16,6 +16,6 @@ public class CardsManagerParams {
 
     public CardsManagerParams()
     {
-        validator = new ExtendedValidator();
+
     }
 }

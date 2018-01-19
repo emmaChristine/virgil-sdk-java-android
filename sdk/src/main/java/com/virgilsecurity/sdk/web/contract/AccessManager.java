@@ -33,9 +33,9 @@
 
 package com.virgilsecurity.sdk.web.contract;
 
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebToken;
+import com.virgilsecurity.sdk.web.model.Jwt;
 
 public interface AccessManager {
 
-    JsonWebToken getAccessToken();
+    Jwt getAccessToken();
 }

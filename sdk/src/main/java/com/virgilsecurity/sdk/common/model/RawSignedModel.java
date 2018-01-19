@@ -34,18 +34,31 @@
 package com.virgilsecurity.sdk.common.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.utils.StringUtils;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class RawSignedModel {
+public class RawSignedModel implements Serializable {
 
     @SerializedName("content_snapshot")
     private byte[] contentSnapshot;
 
     @SerializedName("signatures")
     private List<RawSignature> signatures;
+
+    public RawSignedModel(byte[] contentSnapshot) {
+        this.contentSnapshot = contentSnapshot;
+    }
+
+    public RawSignedModel(byte[] contentSnapshot,
+                          List<RawSignature> signatures) {
+        this.contentSnapshot = contentSnapshot;
+        this.signatures = signatures;
+    }
 
     public byte[] getContentSnapshot() {
         return contentSnapshot;
@@ -64,11 +77,27 @@ public class RawSignedModel {
     }
 
     public String exportAsString() {
-        return null;
+        String result = null;
+
+        try {
+            result = ConvertionUtils.toBase64String(ConvertionUtils.serializeObject(this));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
-    public Map<String, String> exportAsJson() {
-        return null;
+    public String exportAsJson() {
+        String result = null;
+
+        try {
+            result = ConvertionUtils.serializeObject(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     public void rawSignedModel(String model) {

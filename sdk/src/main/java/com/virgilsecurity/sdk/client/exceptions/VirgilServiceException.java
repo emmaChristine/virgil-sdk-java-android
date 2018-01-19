@@ -33,7 +33,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * Base exception class for all Virgil Services operations
+ * Base exception class for all VIRGIL Services operations
  *
  * @author Andrii Iakovenko
  *

@@ -40,23 +40,18 @@ import com.virgilsecurity.sdk.client.model.ErrorResponse;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.utils.StreamUtils;
 import com.virgilsecurity.sdk.utils.StringUtils;
+import com.virgilsecurity.sdk.web.contract.AccessToken;
 
 /**
  * @author Andrii Iakovenko
  *
  */
-public class VirgilClient {
-
-    protected VirgilClientContext context;
+public class HttpClient {
 
     /**
-     * Create new instance of {@link VirgilClient}.
-     * 
-     * @param context the VirgilClient context.
+     * Create new instance of {@link HttpClient}.
      */
-    public VirgilClient(VirgilClientContext context) {
-        super();
-        this.context = context;
+    public HttpClient() {
     }
 
     /**
@@ -64,12 +59,12 @@ public class VirgilClient {
      * 
      * @param url
      *            The URL.
-     * @param methodName
+     * @param method
      *            The HTTP method.
      * @return The connection.
      * @throws IOException
      */
-    private HttpURLConnection createConnection(URL url, String method) throws IOException {
+    private HttpURLConnection createConnection(URL url, String method, String token) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod(method);
         urlConnection.setUseCaches(false);
@@ -84,18 +79,18 @@ public class VirgilClient {
             break;
         default:
         }
-        String accessToken = context.getAccessToken();
-        if (!StringUtils.isBlank(accessToken)) {
-            urlConnection.setRequestProperty("Authorization", "VIRGIL " + context.getAccessToken());
+
+        if (!StringUtils.isBlank(token)) {
+            urlConnection.setRequestProperty("Authorization", "VIRGIL " + token);
         }
         urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 
         return urlConnection;
     }
 
-    protected <T> T execute(URL url, String method, InputStream inputStream, Class<T> clazz) {
+    public <T> T execute(URL url, String method, String token, InputStream inputStream, Class<T> clazz) {
         try {
-            HttpURLConnection urlConnection = createConnection(url, method);
+            HttpURLConnection urlConnection = createConnection(url, method, token);
             if (inputStream != null) {
                 StreamUtils.copyStream(inputStream, urlConnection.getOutputStream());
             }

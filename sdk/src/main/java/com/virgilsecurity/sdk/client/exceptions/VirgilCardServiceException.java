@@ -30,7 +30,7 @@
 package com.virgilsecurity.sdk.client.exceptions;
 
 /**
- * Exception class for Virgil Cards Service operations.
+ * Exception class for VIRGIL Cards Service operations.
  *
  * @author Andrii Iakovenko
  *

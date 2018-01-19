@@ -37,17 +37,24 @@ import com.virgilsecurity.sdk.web.contract.AccessToken;
 import com.virgilsecurity.sdk.web.contract.AccessTokenProvider;
 import com.virgilsecurity.sdk.web.model.Jwt;
 
-import java.util.concurrent.Callable;
+public class CallbackJwtProvider implements AccessTokenProvider {
 
-public class VirgilAccessTokenProvider implements AccessTokenProvider {
-
-    private Callable<String> getTokenCallback;
+    private Jwt jwtToken;
+    private GetTokenCallback getTokenCallback;
 
     @Override public AccessToken getToken(boolean forceReload) {
-        return null;
+        return getVirgilToken(forceReload);
     }
 
     public Jwt getVirgilToken(boolean forceReload) {
-        return null;
+        if (forceReload || jwtToken == null || jwtToken.isExpired()) {
+            return jwtToken = new Jwt(getTokenCallback.onGetToken());
+        } else {
+            return jwtToken;
+        }
+    }
+
+    public interface GetTokenCallback {
+        String onGetToken();
     }
 }

@@ -48,7 +48,7 @@ import com.virgilsecurity.sdk.utils.ConvertionUtils;
  * @author Andrii Iakovenko
  *
  */
-public class IdentityClient extends VirgilClient {
+public class IdentityClient extends HttpClient {
 
     /**
      * Create new instance of {@link IdentityClient}.
@@ -68,11 +68,11 @@ public class IdentityClient extends VirgilClient {
     }
 
     /**
-     * Sends the request for identity verification, that's will be processed depending of specified type.
+     * Sends the request for getIdentity verification, that's will be processed depending of specified type.
      * 
      * @param identity
-     *            an unique string that represents identity.
-     * @return the action identifier that is required for confirmation the identity.
+     *            an unique string that represents getIdentity.
+     * @return the action identifier that is required for confirmation the getIdentity.
      * 
      * @see #confirmIdentity(String, String, Token)
      */
@@ -81,13 +81,13 @@ public class IdentityClient extends VirgilClient {
     }
 
     /**
-     * Sends the request for identity verification, that's will be processed depending of specified type.
+     * Sends the request for getIdentity verification, that's will be processed depending of specified type.
      * 
      * @param identity
-     *            An unique string that represents identity.
+     *            An unique string that represents getIdentity.
      * @param extraFields
      *            The extra fields.
-     * @return the action identifier that is required for confirmation the identity.
+     * @return the action identifier that is required for confirmation the getIdentity.
      * 
      * @see #confirmIdentity(String, String, Token)
      */
@@ -96,7 +96,7 @@ public class IdentityClient extends VirgilClient {
                 GlobalCardIdentityType.EMAIL.getValue(), extraFields);
 
         try {
-            URL url = new URL(getContext().getIdentityServiceURL(), "v1/verify");
+            URL url = new URL(getContext().getIdentityServiceURL(), "v1/verifySignature");
 
             String body = ConvertionUtils.getGson().toJson(requestModel);
 
@@ -111,20 +111,20 @@ public class IdentityClient extends VirgilClient {
     }
 
     /**
-     * Confirms the identity from the verify step to obtain an identity confirmation token.
+     * Confirms the getIdentity from the verifySignature step to obtain an getIdentity confirmation token.
      * 
      * @param actionId
      *            the action identifier.
      * @param confirmationCode
      *            the confirmation code.
-     * @return the instance of {@link ConfirmEmailModel} that represent an identity validation token.
+     * @return the instance of {@link ConfirmEmailModel} that represent an getIdentity validation token.
      */
     public ConfirmEmailModel confirmEmail(String actionId, String confirmationCode) {
         return confirmEmail(actionId, confirmationCode, new Token(3600, 1));
     }
 
     /**
-     * Confirms the identity from the verify step to obtain an identity confirmation token.
+     * Confirms the getIdentity from the verifySignature step to obtain an getIdentity confirmation token.
      * 
      * @param actionId
      *            the action identifier.
@@ -132,7 +132,7 @@ public class IdentityClient extends VirgilClient {
      *            the confirmation code.
      * @param confirmationToken
      *            the confirmation token.
-     * @return the instance of {@link ConfirmEmailModel} that represent an identity validation token.
+     * @return the instance of {@link ConfirmEmailModel} that represent an getIdentity validation token.
      */
     public ConfirmEmailModel confirmEmail(String actionId, String confirmationCode, Token confirmationToken) {
         IdentityConfirmationRequestModel requestModel = new IdentityConfirmationRequestModel(actionId, confirmationCode,
@@ -157,7 +157,7 @@ public class IdentityClient extends VirgilClient {
      * Checks validated token.
      * 
      * @param identity
-     *            The value of identity.
+     *            The value of getIdentity.
      * @param validationToken
      *            The validation token.
      * @return {@code true} if validation token is valid.

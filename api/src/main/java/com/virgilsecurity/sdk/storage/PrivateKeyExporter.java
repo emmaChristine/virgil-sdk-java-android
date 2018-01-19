@@ -31,14 +31,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.web;
+package com.virgilsecurity.sdk.storage;
 
-import com.virgilsecurity.sdk.web.contract.AccessToken;
-import com.virgilsecurity.sdk.web.contract.AccessTokenProvider;
+import com.virgilsecurity.sdk.crypto.PrivateKey;
 
-public class JwtGeneratorAccessTokenProvider implements AccessTokenProvider {
+public interface PrivateKeyExporter {
 
-    @Override public AccessToken getToken(boolean forceReload) {
-        return null;
-    }
+    byte[] exportPrivateKey(PrivateKey privateKey);
+
+    PrivateKey importPrivateKey(byte[] privateKey);
 }

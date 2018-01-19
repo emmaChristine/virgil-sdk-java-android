@@ -31,66 +31,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.common.model;
+package com.virgilsecurity.sdk.web;
 
-import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.crypto.AccessTokenSigner;
+import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.web.model.Jwt;
 
-import java.util.Date;
+public class JwtVerifier {
 
-public class RawCard {
+    private PublicKey apiPublicKey;
+    private String apiPublicKeyIdentifier;
+    private AccessTokenSigner accessTokenSigner;
 
-    @SerializedName("identity")
-    private String identity;
-
-    @SerializedName("public_key")
-    private byte[] publicKeyData;
-
-    @SerializedName("version")
-    private String version;
-
-    @SerializedName("created_at")
-    private Date createdAt;
-
-    @SerializedName("previous_card_id")
-    private String previousCardId;
-
-    public String getIdentity() {
-        return identity;
+    public JwtVerifier(PublicKey apiPublicKey,
+                       String apiPublicKeyIdentifier,
+                       AccessTokenSigner accessTokenSigner) {
+        this.apiPublicKey = apiPublicKey;
+        this.apiPublicKeyIdentifier = apiPublicKeyIdentifier;
+        this.accessTokenSigner = accessTokenSigner;
     }
 
-    public void setIdentity(String identity) {
-        this.identity = identity;
-    }
-
-    public byte[] getPublicKeyData() {
-        return publicKeyData;
-    }
-
-    public void setPublicKeyData(byte[] publicKeyData) {
-        this.publicKeyData = publicKeyData;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getPreviousCardId() {
-        return previousCardId;
-    }
-
-    public void setPreviousCardId(String previousCardId) {
-        this.previousCardId = previousCardId;
+    public boolean verifyToken(Jwt jwtToken) {
+        return accessTokenSigner.verifyTokenSignature(jwtToken.getSignatureData(),
+                                                      jwtToken.snapshotWithoutSignatures(),
+                                                      apiPublicKey);
     }
 }

@@ -256,7 +256,7 @@ public interface Crypto {
      * 
      * @see PrivateKey
      */
-    byte[] sign(byte[] data, PrivateKey privateKey);
+    byte[] generateSignature(byte[] data, PrivateKey privateKey);
 
     /**
      * Sign stream data with private key.
@@ -271,7 +271,7 @@ public interface Crypto {
      * 
      * @see PrivateKey
      */
-    byte[] sign(InputStream inputStream, PrivateKey privateKey) throws SigningException;
+    byte[] generateStreamSignature(InputStream inputStream, PrivateKey privateKey) throws SigningException;
 
     /**
      * Verify byte array with signature.
@@ -286,7 +286,7 @@ public interface Crypto {
      * @throws VerificationException
      *             if data couldn't be verified.
      */
-    boolean verify(byte[] data, byte[] signature, PublicKey signer) throws VerificationException;
+    boolean verifySignature(byte[] data, byte[] signature, PublicKey signer) throws VerificationException;
 
     /**
      * Verify stream data with signature.
@@ -301,7 +301,7 @@ public interface Crypto {
      * @throws VerificationException
      *             if data couldn't be verified.
      */
-    boolean verify(InputStream inputStream, byte[] signature, PublicKey signer) throws VerificationException;
+    boolean verifyStreamSignature(InputStream inputStream, byte[] signature, PublicKey signer) throws VerificationException;
 
     /**
      * Sign data and encrypt.
@@ -332,14 +332,14 @@ public interface Crypto {
     byte[] signThenEncrypt(byte[] data, PrivateKey privateKey, PublicKey[] recipients) throws CryptoException;
 
     /**
-     * Decrypt data and verify.
+     * Decrypt data and verifySignature.
      * 
      * @param cipherData
      *            the encrypted data to be decrypted.
      * @param privateKey
      *            the private key used for decryption.
      * @param publicKey
-     *            the public key used for verify.
+     *            the public key used for verifySignature.
      * @return the decrypted data.
      * @throws CryptoException
      */

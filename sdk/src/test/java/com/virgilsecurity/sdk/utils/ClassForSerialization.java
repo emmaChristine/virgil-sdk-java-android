@@ -31,51 +31,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.common;
+package com.virgilsecurity.sdk.utils;
 
-import com.virgilsecurity.sdk.common.contract.CardVerifier;
-import com.virgilsecurity.sdk.common.model.Card;
-import com.virgilsecurity.sdk.common.model.WhiteList;
-import com.virgilsecurity.sdk.crypto.CardCrypto;
+import java.io.Serializable;
 
-import java.util.List;
+public class ClassForSerialization implements Serializable {
+    private String name;
+    private byte[] data;
 
-public class VirgilCardVerifier implements CardVerifier {
-
-    private CardCrypto cardCrypto;
-    private boolean ignoreSelfSignature;
-    private boolean ignoreVirgilSignature;
-    private WhiteList whiteList;
-
-    @Override public boolean verifyCard(Card card) {
-        return false;
+    public ClassForSerialization(String name, byte[] data) {
+        this.name = name;
+        this.data = data;
     }
 
-    public CardCrypto getCardCrypto() {
-        return cardCrypto;
+    public String getName() {
+        return name;
     }
 
-    public boolean isIgnoreSelfSignature() {
-        return ignoreSelfSignature;
-    }
-
-    public void setIgnoreSelfSignature(boolean ignoreSelfSignature) {
-        this.ignoreSelfSignature = ignoreSelfSignature;
-    }
-
-    public boolean isIgnoreVirgilSignature() {
-        return ignoreVirgilSignature;
-    }
-
-    public void setIgnoreVirgilSignature(boolean ignoreVirgilSignature) {
-        this.ignoreVirgilSignature = ignoreVirgilSignature;
-    }
-
-    public WhiteList getWhiteList() {
-        return whiteList;
-    }
-
-    public void setWhiteList(WhiteList whiteList) {
-        this.whiteList = whiteList;
+    public byte[] getData() {
+        return data;
     }
 }

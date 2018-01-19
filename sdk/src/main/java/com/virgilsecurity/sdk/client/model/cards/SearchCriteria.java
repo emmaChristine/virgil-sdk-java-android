@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 /**
- * The criteria user for Virgil Cards searching.
+ * The criteria user for VIRGIL Cards searching.
  *
  * @author Andrii Iakovenko
  *
@@ -107,7 +107,7 @@ public class SearchCriteria {
     }
 
     /**
-     * @return the identity type
+     * @return the getIdentity type
      */
     public String getIdentityType() {
         return identityType;

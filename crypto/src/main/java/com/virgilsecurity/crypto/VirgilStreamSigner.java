@@ -38,10 +38,10 @@ package com.virgilsecurity.crypto;
 
 /**
  * <p>
- * This class provides high-level interface to sign and verify data using Virgil Security keys.
+ * This class provides high-level interface to generateStreamSignature and verifySignature data using Virgil Security keys.
  * <p>
  * <p>
- * This module can sign / verify data provided by stream.
+ * This module can generateStreamSignature / verifySignature data provided by stream.
  * </p>
  *
  * @author Andrii Iakovenko
@@ -94,7 +94,7 @@ public class VirgilStreamSigner extends VirgilSignerBase implements java.lang.Au
      *            source of the data to be signed.
      * @param privateKey
      *            the private key.
-     * @return Virgil Security sign.
+     * @return Virgil Security generateStreamSignature.
      */
     public byte[] sign(VirgilDataSource source, byte[] privateKey) {
         return virgil_crypto_javaJNI.VirgilStreamSigner_sign__SWIG_1(swigCPtr, this, VirgilDataSource.getCPtr(source),
@@ -110,7 +110,7 @@ public class VirgilStreamSigner extends VirgilSignerBase implements java.lang.Au
      *            the private key protected with password.
      * @param privateKeyPassword
      *            the private key password.
-     * @return Virgil Security sign.
+     * @return Virgil Security generateStreamSignature.
      */
     public byte[] sign(VirgilDataSource source, byte[] privateKey, byte[] privateKeyPassword) {
         return virgil_crypto_javaJNI.VirgilStreamSigner_sign__SWIG_0(swigCPtr, this, VirgilDataSource.getCPtr(source),
@@ -118,7 +118,7 @@ public class VirgilStreamSigner extends VirgilSignerBase implements java.lang.Au
     }
 
     /**
-     * Verify sign and data provided by the source to be conformed to the given public key.
+     * Verify generateStreamSignature and data provided by the source to be conformed to the given public key.
      * 
      * @param source
      *            source of the data to be verified.
@@ -126,7 +126,7 @@ public class VirgilStreamSigner extends VirgilSignerBase implements java.lang.Au
      *            the signature.
      * @param publicKey
      *            the public key.
-     * @return {@code true} if sign is valid and data was not malformed.
+     * @return {@code true} if generateStreamSignature is valid and data was not malformed.
      * 
      */
     public boolean verify(VirgilDataSource source, byte[] sign, byte[] publicKey) {

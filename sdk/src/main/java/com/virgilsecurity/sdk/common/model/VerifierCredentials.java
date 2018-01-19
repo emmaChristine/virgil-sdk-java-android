@@ -35,7 +35,7 @@ package com.virgilsecurity.sdk.common.model;
 
 public class VerifierCredentials {
     private String id;
-    private String publicKey;
+    private byte[] publicKey;
 
     public String getId() {
         return id;
@@ -45,11 +45,11 @@ public class VerifierCredentials {
         this.id = id;
     }
 
-    public String getPublicKey() {
+    public byte[] getPublicKey() {
         return publicKey;
     }
 
-    public void setPublicKey(String publicKey) {
+    public void setPublicKey(byte[] publicKey) {
         this.publicKey = publicKey;
     }
 }

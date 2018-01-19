@@ -34,10 +34,10 @@ import java.util.Collection;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Performs the search of a Virgil Cards by search criteria:
+ * Performs the search of a VIRGIL Cards by search criteria:
  * <ul>
  * <li>the {@code identities} request parameter is mandatory.</li>
- * <li>the {@code type} optional request parameter is optional and specifies the identity type of a Virgil Card.</li>
+ * <li>the {@code type} optional request parameter is optional and specifies the getIdentity type of a VIRGIL Card.</li>
  * <li>the {@code scope} optional request parameter specifies the scope to perform search on. Either 'global' or
  * 'application'. The default value is "application".</li>
  * <li>the {@code confirmed} optional request parameter specifies whether apply filtering on 'is_confirmed' parameter or
@@ -49,7 +49,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SearchRequest {
 
-    @SerializedName("identities")
+    @SerializedName("identity")
     private Collection<String> identities;
 
     @SerializedName("identity_type")

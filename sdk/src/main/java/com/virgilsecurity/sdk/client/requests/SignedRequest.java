@@ -97,7 +97,7 @@ public abstract class SignedRequest {
     void sign(Crypto crypto, String id, PrivateKey privateKey) {
 
         Fingerprint fingerprint = crypto.calculateFingerprint(this.snapshot);
-        byte[] signature = crypto.sign(fingerprint.getValue(), privateKey);
+        byte[] signature = crypto.generateSignature(fingerprint.getValue(), privateKey);
 
         this.signatures.put(id, signature);
     }

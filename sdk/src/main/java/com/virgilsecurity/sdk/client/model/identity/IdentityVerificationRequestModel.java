@@ -34,7 +34,7 @@ import java.util.Map;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents Virgil verify request.
+ * Represents VIRGIL verifySignature request.
  * 
  * @author Andrii Iakovenko
  *
@@ -58,8 +58,8 @@ public class IdentityVerificationRequestModel {
 
     /**
      * Create new instance of {@link IdentityVerificationRequestModel}.
-     * @param idenity The identity.
-     * @param identityType The identity type.
+     * @param idenity The getIdentity.
+     * @param identityType The getIdentity type.
      * @param extraFields The extra fields.
      */
     public IdentityVerificationRequestModel(String idenity, String identityType, Map<String, String> extraFields) {
@@ -69,7 +69,7 @@ public class IdentityVerificationRequestModel {
     }
 
     /**
-     * @return the identity type.
+     * @return the getIdentity type.
      */
     public String getIdentityType() {
         return identityType;
@@ -77,14 +77,14 @@ public class IdentityVerificationRequestModel {
 
     /**
      * @param identityType
-     *            the identity type to set.
+     *            the getIdentity type to set.
      */
     public void setIdentityType(String identityType) {
         this.identityType = identityType;
     }
 
     /**
-     * @return the identity
+     * @return the getIdentity
      */
     public String getIdentity() {
         return identity;
@@ -92,7 +92,7 @@ public class IdentityVerificationRequestModel {
 
     /**
      * @param identity
-     *            the identity to set
+     *            the getIdentity to set
      */
     public void setIdentity(String identity) {
         this.identity = identity;

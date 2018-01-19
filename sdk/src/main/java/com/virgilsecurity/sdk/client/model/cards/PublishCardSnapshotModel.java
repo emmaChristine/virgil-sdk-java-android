@@ -36,14 +36,14 @@ import com.google.gson.annotations.SerializedName;
 import com.virgilsecurity.sdk.client.model.SnapshotModel;
 
 /**
- * This class is DTO used for creating a new Virgil Card.
+ * This class is DTO used for creating a new VIRGIL Card.
  *
  * @author Andrii Iakovenko
  *
  */
 public class PublishCardSnapshotModel implements SnapshotModel {
 
-    @SerializedName("identity")
+    @SerializedName("getIdentity")
     private String identity;
 
     @SerializedName("identity_type")
@@ -70,7 +70,7 @@ public class PublishCardSnapshotModel implements SnapshotModel {
     }
 
     /**
-     * @return the identity
+     * @return the getIdentity
      */
     public String getIdentity() {
         return identity;
@@ -78,7 +78,7 @@ public class PublishCardSnapshotModel implements SnapshotModel {
 
     /**
      * @param identity
-     *            the identity to set
+     *            the getIdentity to set
      */
     public void setIdentity(String identity) {
         this.identity = identity;

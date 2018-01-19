@@ -30,10 +30,11 @@
 package com.virgilsecurity.sdk.utils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.virgilsecurity.sdk.utils.ConvertionUtils;
+import java.io.IOException;
 
 /**
  * Unit tests for {@linkplain ConvertionUtils}.
@@ -77,4 +78,21 @@ public class ConvertionUtilsTest {
 		assertEquals(TEXT, str);
 	}
 
+	@Test
+	public void serialization() throws IOException, ClassNotFoundException {
+
+		ClassForSerialization classForSerialization = new ClassForSerialization("Gregory", "Gilbert".getBytes());
+
+		assertEquals(classForSerialization.getName(), "Gregory");
+        assertEquals(new String(classForSerialization.getData()), "Gilbert");
+
+		String serializedObject = ConvertionUtils.serializeObject(classForSerialization);
+
+		System.out.println(serializedObject);
+
+		ClassForSerialization deserializedClassForSerialization = (ClassForSerialization) ConvertionUtils.deserializeObject(serializedObject);
+
+        assertEquals(deserializedClassForSerialization.getName(), "Gregory");
+        assertEquals(new String(deserializedClassForSerialization.getData()), "Gilbert");
+	}
 }

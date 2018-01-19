@@ -1,6 +1,7 @@
 package com.virgilsecurity.sdk.common.model;
 
 import com.google.gson.reflect.TypeToken;
+import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.PublicKey;
@@ -18,19 +19,32 @@ public class Card {
     private String version;
     private Date createdAt;
     private String previousCardId;
+    private Card previousCard;
     private List<CardSignature> signatures;
+    private boolean isOutdated;
 
-    public Card(String cardId,
+    public Card(String identifier,
                 String identity,
-                byte[] fingerprint,
                 PublicKey publicKey,
                 String version,
                 Date createdAt,
-                String previousCardId,
                 List<CardSignature> signatures) {
-        this.id = cardId;
+        this.identifier = identifier;
         this.identity = identity;
-        this.fingerprint = fingerprint;
+        this.publicKey = publicKey;
+        this.version = version;
+        this.createdAt = createdAt;
+        this.signatures = signatures;
+    }
+
+    public Card(String identifier,
+                String identity,
+                PublicKey publicKey,
+                String version,
+                Date createdAt,
+                String previousCardId, List<CardSignature> signatures) {
+        this.identifier = identifier;
+        this.identity = identity;
         this.publicKey = publicKey;
         this.version = version;
         this.createdAt = createdAt;
@@ -38,46 +52,52 @@ public class Card {
         this.signatures = signatures;
     }
 
-    /**
-     * Gets the Card ID that uniquely identifies the Card in Virgil Services.
-     */
-    public String getId() {
-        return id;
+    public Card(String identifier,
+                String identity,
+                PublicKey publicKey,
+                String version,
+                Date createdAt,
+                String previousCardId,
+                Card previousCard,
+                List<CardSignature> signatures) {
+        this.identifier = identifier;
+        this.identity = identity;
+        this.publicKey = publicKey;
+        this.version = version;
+        this.createdAt = createdAt;
+        this.previousCardId = previousCardId;
+        this.previousCard = previousCard;
+        this.signatures = signatures;
+    }
+
+    public Card(String identifier,
+                String identity,
+                PublicKey publicKey,
+                String version,
+                Date createdAt,
+                String previousCardId,
+                Card previousCard,
+                List<CardSignature> signatures, boolean isOutdated) {
+        this.identifier = identifier;
+        this.identity = identity;
+        this.publicKey = publicKey;
+        this.version = version;
+        this.createdAt = createdAt;
+        this.previousCardId = previousCardId;
+        this.previousCard = previousCard;
+        this.signatures = signatures;
+        this.isOutdated = isOutdated;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
     /**
-     * Sets the Card ID that uniquely identifies the Card in Virgil Services.
-     */
-    private void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the identity value that can be anything which identifies the user in your application.
+     * Gets the getIdentity value that can be anything which identifies the user in your application.
      */
     public String getIdentity() {
         return identity;
-    }
-
-    /**
-     * Sets the identity value that can be anything which identifies the user in your application.
-     */
-    private void setIdentity(String identity) {
-        this.identity = identity;
-    }
-
-    /**
-     * Gets the fingerprint of the card.
-     */
-    public byte[] getFingerprint() {
-        return fingerprint;
-    }
-
-    /**
-     * Sets the fingerprint of the card.
-     */
-    private void setFingerprint(byte[] fingerprint) {
-        this.fingerprint = fingerprint;
     }
 
     /**
@@ -88,24 +108,10 @@ public class Card {
     }
 
     /**
-     * Sets the public key.
-     */
-    private void setPublicKey(PublicKey publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    /**
      * Gets the version of the card.
      */
     public String getVersion() {
         return version;
-    }
-
-    /**
-     * Sets the version of the card.
-     */
-    private void setVersion(String version) {
-        this.version = version;
     }
 
     /**
@@ -116,24 +122,10 @@ public class Card {
     }
 
     /**
-     * Sets the date and time fo card creation in UTC.
-     */
-    private void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
      * Get previous Card ID  that current card is used to override to
      */
     public String getPreviousCardId() {
         return previousCardId;
-    }
-
-    /**
-     * Set previous Card ID  that current card is used to override to
-     */
-    private void setPreviousCardId(String previousCardId) {
-        this.previousCardId = previousCardId;
     }
 
     /**
@@ -143,60 +135,48 @@ public class Card {
         return previousCard;
     }
 
-    /**
-     * Set previous Card that current card is used to override to
-     */
-    void setPreviousCard(Card previousCard) {
-        this.previousCard = previousCard;
+    public List<CardSignature> getSignatures() {
+        return signatures;
     }
 
-    public static Card parse(Crypto crypto, RawSignedModel request) {
-        if (request == null) {
-            throw new NullArgumentException("request should not be null");
-        }
+    public boolean isOutdated() {
+        return isOutdated;
+    }
 
-        RawCard requestInfo = ConvertionUtils.parseSnapshot(request.getContentSnapshot(), RawCard.class);
-        byte[] fingerprint = crypto.computeHash(request.getContentSnapshot(), HashAlgorithm.SHA256);
+    public static Card parse(CardCrypto crypto, RawSignedModel cardModel) {
+        if (cardModel == null)
+            throw new NullArgumentException("Card -> 'cardModel' should not be null");
+
+        RawCardContent rawCardContent = ConvertionUtils.parseSnapshot(cardModel.getContentSnapshot(),
+                                                                      RawCardContent.class);
+        byte[] fingerprint = crypto.generateSHA256(cardModel.getContentSnapshot());
         String cardId = ConvertionUtils.toHex(fingerprint);
+        PublicKey publicKey = crypto.importPublicKey(rawCardContent.getPublicKeyData());
 
-        List<CardSignature> signatures = new ArrayList<>();
-        if (request.getSignatures() != null) {
+        List<CardSignature> cardSignatures = new ArrayList<>();
+        if (cardModel.getSignatures() != null) {
 
-            for (RawSignature rawSignature : request.getSignatures()) {
+            for (RawSignature rawSignature : cardModel.getSignatures()) {
                 CardSignature cardSignature = new CardSignature.CardSignatureBuilder()
-                        .signerCardId(rawSignature.getSignerId())
-                        .signerType(StringUtils.fromStringSignerType(rawSignature.getSignerType()))
+                        .signerId(rawSignature.getSignerId())
+                        .signerType(rawSignature.getSignerType())
                         .signature(rawSignature.getSignature())
-                        .extraFields(ConvertionUtils.parseSnapshot(rawSignature.getExtraData(),
-                                                                   new TypeToken<Map<String, String>>() {
-                                                                   }))
+                        .snapshot(ConvertionUtils.base64ToBytes(rawSignature.getSnapshot()))
+                        .extraFields(ConvertionUtils.base64ToString(rawSignature.getSnapshot()))
                         .build();
-                signatures.add(cardSignature);
+
+                cardSignatures.add(cardSignature);
             }
         }
 
         Card card = new Card(cardId,
-                             requestInfo.getIdentity(),
-                             fingerprint,
-                             crypto.importPublicKey(requestInfo.getPublicKeyData()),
-                             requestInfo.getVersion(),
-                             requestInfo.getCreatedAt(),
-                             requestInfo.getPreviousCardId(),
-                             signatures);
+                             rawCardContent.getIdentity(),
+                             publicKey,
+                             rawCardContent.getVersion(),
+                             rawCardContent.getCreatedAt(),
+                             rawCardContent.getPreviousCardId(),
+                             cardSignatures);
 
         return card;
-    }
-
-    public static List<Card> parse(Crypto crypto, List<RawSignedModel> requests) {
-        if (requests == null) {
-            throw new NullArgumentException(nameof(requests));
-        }
-
-        List<RawSignedModel> cards = new ArrayList<>();
-        for (RawSignedModel rawSignedModel : requests) {
-            cards.add(rawSignedModel);
-        }
-
-        return requests.Select(r = > parse(crypto, r)).ToList();
     }
 }

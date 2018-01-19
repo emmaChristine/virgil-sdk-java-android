@@ -33,7 +33,7 @@ import com.virgilsecurity.sdk.client.model.cards.RevocationReason;
 import com.virgilsecurity.sdk.client.model.cards.RevokeCardSnapshotModel;
 
 /**
- * Request used for Virgil Card revocation.
+ * Request used for VIRGIL Card revocation.
  *
  * @author Andrii Iakovenko
  *

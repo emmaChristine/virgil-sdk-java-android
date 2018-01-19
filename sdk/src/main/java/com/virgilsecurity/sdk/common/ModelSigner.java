@@ -33,23 +33,45 @@
 
 package com.virgilsecurity.sdk.common;
 
+import com.virgilsecurity.sdk.common.model.RawSignature;
 import com.virgilsecurity.sdk.common.model.RawSignedModel;
 import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 public class ModelSigner {
 
-    private CardCrypto cardCrypto;
+    private CardCrypto crypto;
 
-    public void sign(RawSignedModel rawSignedModel,
-                     String id,
-                     String type,
+    public ModelSigner(CardCrypto crypto) {
+        this.crypto = crypto;
+    }
+
+    public void sign(RawSignedModel model,
+                     String id, // TODO: 1/15/18 do we need this?
+                     SignerType type,
                      byte[] additionalData,
                      PrivateKey privateKey) {
 
+        byte[] combinedSnapshot = new byte[2];
+        byte[] fingerprint = crypto.generateSHA256(combinedSnapshot);
+        byte[] signature = crypto.generateSignature(fingerprint, privateKey);
+
+        String signerId = ConvertionUtils.toHex(crypto.generateSHA256(model.getContentSnapshot()));
+
+        RawSignature rawSignature = new RawSignature(signerId,
+                                                     ConvertionUtils.toHex(additionalData),
+                                                     type.getRawValue(),
+                                                     signature);
+
+        model.getSignatures().add(rawSignature);
     }
 
-    public void selfSign(RawSignedModel rawSignedModel, String id, byte[] additionalData, PrivateKey privateKey) {
+    public void selfSign(RawSignedModel model, byte[] additionalData, PrivateKey privateKey) {
+        sign(model, null, SignerType.SELF, additionalData, privateKey);
+    }
 
+    public void selfSign(RawSignedModel model, PrivateKey privateKey) {
+        sign(model, null, SignerType.SELF, new byte[0], privateKey);
     }
 }

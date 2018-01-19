@@ -33,25 +33,31 @@
 
 package com.virgilsecurity.sdk.web;
 
-import com.virgilsecurity.sdk.utils.StringUtils;
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebTokenBody;
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebTokenHeader;
+import com.virgilsecurity.sdk.utils.ConvertionUtils;
+import com.virgilsecurity.sdk.web.model.JwtBodyContent;
+import com.virgilsecurity.sdk.web.model.JwtHeaderContent;
 
 public class JwtParser {
 
-    public JsonWebTokenBody parseJsonWebTokenBody(String jsonWebTokenBody) {
-        return null;
+    public static JwtBodyContent parseJwtBodyContent(String jsonWebTokenBody) {
+        if (jsonWebTokenBody == null)
+            throw new IllegalArgumentException("JwtParser -> 'jsonWebTokenBody' should not be null");
+
+        return ConvertionUtils.deserializeFromJson(jsonWebTokenBody, JwtBodyContent.class);
     }
 
-    public String buildJsonWebTokenBody(JsonWebTokenBody jsonWebTokenBody) {
-        return null;
+    public static String buildJwtBody(JwtBodyContent jwtBodyContent) {
+        return ConvertionUtils.serializeToJson(jwtBodyContent);
     }
 
-    public JsonWebTokenHeader parseJsonWebTokenHeader(String jsonWebTokenHeader) {
-        return null;
+    public static JwtHeaderContent parseJwtHeaderContent(String jsonWebTokenHeader) {
+        if (jsonWebTokenHeader != null)
+            throw new IllegalArgumentException("JwtParser -> 'jsonWebTokenHeader' should not be null");
+
+        return ConvertionUtils.deserializeFromJson(jsonWebTokenHeader, JwtHeaderContent.class);
     }
 
-    public String buildJsonWebTokenHeader(JsonWebTokenHeader jsonWebTokenHeader) {
-        return null;
+    public static String buildJwtHeader(JwtHeaderContent jwtHeaderContent) {
+        return ConvertionUtils.serializeToJson(jwtHeaderContent);
     }
 }

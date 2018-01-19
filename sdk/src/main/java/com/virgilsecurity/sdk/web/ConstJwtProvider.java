@@ -37,17 +37,28 @@ import com.virgilsecurity.sdk.web.contract.AccessToken;
 import com.virgilsecurity.sdk.web.contract.AccessTokenProvider;
 import com.virgilsecurity.sdk.web.model.Jwt;
 
-import java.util.concurrent.Callable;
+public class ConstJwtProvider implements AccessTokenProvider {
 
-public class VirgilAccessTokenProvider implements AccessTokenProvider {
+    private Jwt jwtToken;
 
-    private Callable<String> getTokenCallback;
-
-    @Override public AccessToken getToken(boolean forceReload) {
-        return null;
+    public ConstJwtProvider() {
     }
 
-    public Jwt getVirgilToken(boolean forceReload) {
-        return null;
+    public ConstJwtProvider(Jwt jwtToken) {
+        if (jwtToken != null)
+            this.jwtToken = jwtToken;
+        else
+            throw new IllegalArgumentException("ConstJwtProvider -> 'jwt' should not be null");
+    }
+
+    @Override public AccessToken getToken(boolean forceReload) {
+        return jwtToken;
+    }
+
+    public void setJwt(Jwt jwtToken) {
+        if (jwtToken != null)
+            this.jwtToken = jwtToken;
+        else
+            throw new IllegalArgumentException("ConstJwtProvider -> 'jwt' should not be null");
     }
 }

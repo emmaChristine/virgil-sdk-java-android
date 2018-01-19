@@ -122,8 +122,8 @@ public class VirgilCardValidator implements CardValidator {
             }
 
             try {
-                boolean isValid = this.crypto.verify(fingerprint.getValue(),
-                        card.getMeta().getSignatures().get(verifier.getKey()), verifier.getValue());
+                boolean isValid = this.crypto.verifySignature(fingerprint.getValue(),
+                                                              card.getMeta().getSignatures().get(verifier.getKey()), verifier.getValue());
 
                 if (!isValid) {
                     return false;

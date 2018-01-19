@@ -34,6 +34,8 @@
 package com.virgilsecurity.sdk.common.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.common.SignerType;
+import com.virgilsecurity.sdk.utils.StringUtils;
 
 public class RawSignature {
 
@@ -41,13 +43,20 @@ public class RawSignature {
     private String signerId;
 
     @SerializedName("snapshot")
-    private byte[] snapshot;
+    private String snapshot;
 
     @SerializedName("signer_type")
     private String signerType;
 
     @SerializedName("signature")
     private byte[] signature;
+
+    public RawSignature(String signerId, String snapshot, String signerType, byte[] signature) {
+        this.signerId = signerId;
+        this.snapshot = snapshot;
+        this.signerType = signerType;
+        this.signature = signature;
+    }
 
     public String getSignerId() {
         return signerId;
@@ -57,11 +66,11 @@ public class RawSignature {
         this.signerId = signerId;
     }
 
-    public byte[] getSnapshot() {
+    public String getSnapshot() {
         return snapshot;
     }
 
-    public void setSnapshot(byte[] snapshot) {
+    public void setSnapshot(String snapshot) {
         this.snapshot = snapshot;
     }
 

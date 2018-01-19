@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2016, Virgil Security, Inc.
+ * Copyright (c) 2016, VIRGIL Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 import com.virgilsecurity.sdk.utils.VirgilCardValidator;
 
 /**
- * This sample will help you get started using the Crypto Library and Virgil Keys Services for the most popular
+ * This sample will help you get started using the Crypto Library and VIRGIL Keys Services for the most popular
  * platforms and languages.
  * 
  * @author Andrii Iakovenko
@@ -60,7 +60,7 @@ public class Quickstart {
         // Initializing Crypto
         Crypto crypto = new VirgilCrypto();
 
-        // Creating a Virgil Card
+        // Creating a VIRGIL Card
         String appID = "[YOUR_APP_ID_HERE]";
         String appKeyPassword = "[YOUR_APP_KEY_PASSWORD_HERE]";
         byte[] appKeyData = "[YOUR_APP_KEY_HERE]".getBytes();
@@ -75,24 +75,24 @@ public class Quickstart {
 //        PublishCardRequest createCardRequest = new PublishCardRequest("alice", "username", exportedPublicKey);
 //
 //        /**
-//         * then, use RequestSigner class to sign request with owner and app keys.
+//         * then, use RequestSigner class to generateStreamSignature request with owner and app keys.
 //         */
 //        RequestSigner requestSigner = new RequestSigner(crypto);
 //
 //        requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
 //        requestSigner.authoritySign(createCardRequest, appID, appKey);
 //
-//        /** Publish a Virgil Card */
+//        /** Publish a VIRGIL Card */
 //        CardModel aliceCard = client.publishCard(createCardRequest);
 //
-//        // Get Virgil Card
-//        CardModel foundCard = client.getCard(aliceCard.getId());
+//        // Get VIRGIL Card
+//        CardModel foundCard = client.getCard(aliceCard.getIdentifier());
 
-        // Search for Virgil Cards
+        // Search for VIRGIL Cards
         SearchCriteria criteria = SearchCriteria.byIdentity("alice");
         List<CardModel> cards = client.searchCards(criteria);
 
-        // Validating a Virgil Cards
+        // Validating a VIRGIL Cards
         CardValidator cardValidator = new VirgilCardValidator(crypto);
         client.setCardValidator(cardValidator);
 
@@ -102,9 +102,9 @@ public class Quickstart {
             // Handle validation exception here
         }
 
-        // Revoking a Virgil Card
+        // Revoking a VIRGIL Card
         /** Use your card ID */
-//        String cardId = aliceCard.getId();
+//        String cardId = aliceCard.getIdentifier();
 //
 //        RevokeCardRequest revokeRequest = new RevokeCardRequest(cardId, RevocationReason.UNSPECIFIED);
 //

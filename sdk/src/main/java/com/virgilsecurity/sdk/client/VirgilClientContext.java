@@ -34,7 +34,7 @@ import java.net.URI;
 import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
- * This class contains common configuration parameters of Virgil services clients.
+ * This class contains common configuration parameters of VIRGIL services clients.
  *
  * @author Andrii Iakovenko
  *

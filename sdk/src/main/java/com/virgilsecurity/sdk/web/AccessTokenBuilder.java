@@ -2,8 +2,8 @@ package com.virgilsecurity.sdk.web;
 
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebToken;
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebTokenBody;
+import com.virgilsecurity.sdk.web.model.Jwt;
+import com.virgilsecurity.sdk.web.model.JwtBodyContent;
 
 import java.util.HashMap;
 
@@ -15,8 +15,6 @@ public class AccessTokenBuilder {
 
     public TimeSpan lifeTime;
 
-    private JsonWebTokenSignatureGenerator jwtSignatureGenerator;
-
     public AccessTokenBuilder(String accountId,
                               String appId,
                               TimeSpan lifeTime,
@@ -25,19 +23,18 @@ public class AccessTokenBuilder {
         this.accountId = accountId;
         this.appId = appId;
         this.lifeTime = lifeTime;
-
-        jwtSignatureGenerator = new JsonWebTokenSignatureGenerator(crypto, apiKey);
     }
 
     public String create(String identity, HashMap<String, String> data) {
-        JsonWebTokenBody jwtBody = new JsonWebTokenBody(accountId,
-                                                        new String[]{appId},
-                                                        identity,
-                                                        lifeTime,
-                                                        "1.0",
-                                                        data);
-        JsonWebToken jsonWebToken = new JsonWebToken(jwtBody, jwtSignatureGenerator);
-        return jsonWebToken.toString();
+//        JwtBodyContent jwtBody = new JwtBodyContent(accountId,
+//                                                    new String[]{appId},
+//                                                    getIdentity,
+//                                                    lifeTime,
+//                                                    "1.0",
+//                                                    data);
+//        Jwt jwt = new Jwt(jwtBody, jwtSignatureGenerator);
+//        return jwt.toString();
+        return null;
     }
 
     public String getAccountId() {
@@ -50,13 +47,5 @@ public class AccessTokenBuilder {
 
     public TimeSpan getLifeTime() {
         return lifeTime;
-    }
-
-    public JsonWebTokenSignatureGenerator getJwtSignatureGenerator() {
-        return jwtSignatureGenerator;
-    }
-
-    public void setJwtSignatureGenerator(JsonWebTokenSignatureGenerator jwtSignatureGenerator) {
-        jwtSignatureGenerator = jwtSignatureGenerator;
     }
 }

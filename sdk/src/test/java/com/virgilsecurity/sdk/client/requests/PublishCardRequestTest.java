@@ -38,7 +38,7 @@ package com.virgilsecurity.sdk.client.requests;
 public class PublishCardRequestTest {
 /*
     private static final String IDENTITY = "test@mail.com";
-    private static final String IDENTITY_TYPE = GlobalCardIdentityType.APPLICATION.getValue();
+    private static final String IDENTITY_TYPE = GlobalCardIdentityType.APPLICATION.getRawKey();
 
     private Crypto crypto;
     private PublishCardRequest request;

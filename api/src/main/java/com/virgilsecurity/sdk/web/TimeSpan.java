@@ -5,12 +5,22 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeSpan {
 
-    private Date date;
+    private Date date; // TODO: 1/19/18 move to sdk package
 
+    /**
+     * Represents time interval in specified time unit
+     *
+     * @param date of expire
+     */
     public TimeSpan(Date date) {
         this.date = date;
     }
 
+    /**
+     * Represents time interval in specified time unit
+     *
+     * @param milliseconds to expire
+     */
     public TimeSpan(long milliseconds) {
         this.date = new Date(milliseconds);
     }
@@ -40,11 +50,6 @@ public class TimeSpan {
                 span = time * (1000 * 60);
         }
 
-        return new TimeSpan(span);
-    }
-
-    public static TimeSpan fromTime(int milliseconds) {
-        long span = new Date().getTime() + milliseconds;
         return new TimeSpan(span);
     }
 
@@ -85,14 +90,28 @@ public class TimeSpan {
         }
     }
 
+    /**
+     * Decrease the expire interval
+     *
+     * @param milliseconds to decrease the expire interval
+     */
     public void decrease(long milliseconds) {
         this.date.setTime(date.getTime() - milliseconds);
     }
 
+    /**
+     * Clears the expire date. To use this object once more after clearing - you have to set new expire date
+     * or 0 (zero) will be returned when you will try to get the time span
+     */
     public void clear() {
         date = null;
     }
 
+    /**
+     * Milliseconds since January 1, 1970, 00:00:00 GMT of expire date
+     *
+     * @return milliseconds since January 1, 1970, 00:00:00 GMT of expire date
+     */
     public long getMilliseconds() {
         if (date != null)
             return date.getTime();
@@ -128,11 +147,30 @@ public class TimeSpan {
         }
     }
 
+    /**
+     * Retrieve expire date
+     *
+     * @return expire <code>Date</code> object
+     */
     public Date getExpireDate() {
         return date;
     }
 
+    /**
+     * Set expire date
+     *
+     * @return set <code>Date</code> object
+     */
     public void setExpireDate(Date date) {
         this.date = date;
+    }
+
+    /**
+     * Check if time span is expired
+     *
+     * @return <code>true</code> if already expired, otherwise <code>false</code>
+     */
+    public boolean isExpired() {
+        return new Date().after(date);
     }
 }

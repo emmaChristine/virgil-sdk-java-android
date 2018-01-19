@@ -39,7 +39,7 @@ import org.junit.Test;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**
- * Test cases for Virgil Client.
+ * Test cases for VIRGIL Client.
  *
  * @author Andrii Iakovenko
  *
@@ -62,7 +62,7 @@ public class IdentityClientIT extends BaseIT {
 
     @Test
     public void verifyEmail() {
-        // FIXME do identity service tests
+        // FIXME do getIdentity service tests
     }
 
 }

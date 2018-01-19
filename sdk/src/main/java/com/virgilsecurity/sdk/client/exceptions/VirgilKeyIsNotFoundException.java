@@ -44,7 +44,7 @@ public class VirgilKeyIsNotFoundException extends VirgilClientException {
      *
      */
     public VirgilKeyIsNotFoundException() {
-        super("Virgil Key is not found.");
+        super("VIRGIL Key is not found.");
     }
 
 }

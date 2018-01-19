@@ -56,9 +56,9 @@ public class IdentityValidationRequestModel {
      * Create new instance of {@link IdentityValidationRequestModel}.
      * 
      * @param value
-     *            the value of identity.
+     *            the value of getIdentity.
      * @param type
-     *            the identity type.
+     *            the getIdentity type.
      * @param validationToken
      *            the validation token.
      */

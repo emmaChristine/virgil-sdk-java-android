@@ -40,7 +40,7 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 
 /**
- * This sample shows how to sign and verify data.
+ * This sample shows how to generateStreamSignature and verifySignature data.
  * 
  * @author Andrii Iakovenko
  *
@@ -64,12 +64,12 @@ public class SignAndVerify {
         PrivateKey privateKey = keyPair.getPrivateKey();
 
         // Sign data with private key
-        byte[] sign = crypto.sign(text.getBytes(), privateKey);
+        byte[] sign = crypto.generateSignature(text.getBytes(), privateKey);
 
         System.out.println(String.format("Digital signature in Base64: %1$s", VirgilBase64.encode(sign)));
 
-        // Verify data with sign and public key
-        boolean isValid = crypto.verify(text.getBytes(), sign, publicKey);
+        // Verify data with generateStreamSignature and public key
+        boolean isValid = crypto.verifySignature(text.getBytes(), sign, publicKey);
 
         System.out.println(String.format("Verification result is: %1$b", isValid));
     }

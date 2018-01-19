@@ -202,11 +202,11 @@ public class CryptoIT {
         PublicKey publicKey = crypto.extractPublicKey(privateKey);
 
         // Test signing
-        byte[] sign = crypto.sign(originalData, privateKey);
+        byte[] sign = crypto.generateSignature(originalData, privateKey);
         assertArrayEquals(signature, sign);
 
         // Test verification
-        boolean valid = crypto.verify(originalData, signature, publicKey);
+        boolean valid = crypto.verifySignature(originalData, signature, publicKey);
         assertTrue(valid);
     }
 

@@ -3225,7 +3225,7 @@ SWIGEXPORT jbyteArray JNICALL Java_com_virgilsecurity_crypto_virgil_1crypto_1jav
   arg1 = *(virgil::crypto::VirgilKeyPair **)&jarg1; 
   {
     try {
-      result = ((virgil::crypto::VirgilKeyPair const *)arg1)->privateKey();
+      result = ((virgil::crypto::VirgilKeyPair const *)arg1)->apiKey();
     }
     
     

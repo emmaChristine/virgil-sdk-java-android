@@ -31,23 +31,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.web;
+package com.virgilsecurity.sdk.common.validation;
 
-import com.virgilsecurity.sdk.web.contract.AccessToken;
-import com.virgilsecurity.sdk.web.contract.AccessTokenProvider;
-import com.virgilsecurity.sdk.web.model.Jwt;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.concurrent.Callable;
+public class ValidationResult {
+    private List<String> errors;
 
-public class VirgilAccessTokenProvider implements AccessTokenProvider {
-
-    private Callable<String> getTokenCallback;
-
-    @Override public AccessToken getToken(boolean forceReload) {
-        return null;
+    public ValidationResult() {
+        this.errors = new ArrayList<>();;
     }
 
-    public Jwt getVirgilToken(boolean forceReload) {
-        return null;
+    public boolean isValid() {
+        return errors.isEmpty();
+    }
+
+    public void addError(String error) {
+        errors.add(error);
     }
 }

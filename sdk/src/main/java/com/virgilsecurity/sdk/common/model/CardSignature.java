@@ -14,7 +14,7 @@ public class CardSignature {
     /**
      * Gets the type of signer signature.
      */
-    private SignerType signerType;
+    private String signerType;
 
     /**
      * The digital signature
@@ -22,57 +22,72 @@ public class CardSignature {
     private byte[] signature;
 
     /**
-     * Extra fields
+     * The digital snapshot
      */
-    private Map<String, String> extraFields;
+    private byte[] snapshot;
+
+    /**
+     * EXTRA fields
+     */
+    private String extraFields;
 
     public String getSignerId() {
         return signerId;
     }
 
-    public SignerType getSignerType() {
+    private void setSignerId(String signerId) {
+        this.signerId = signerId;
+    }
+
+    public String getSignerType() {
         return signerType;
+    }
+
+    private void setSignerType(String signerType) {
+        this.signerType = signerType;
     }
 
     public byte[] getSignature() {
         return signature;
     }
 
-    public Map<String, String> getExtraFields() {
-        return extraFields;
-    }
-
-    void setSignerId(String signerId) {
-        this.signerId = signerId;
-    }
-
-    void setSignerType(SignerType signerType) {
-        this.signerType = signerType;
-    }
-
-    void setSignature(byte[] signature) {
+    private void setSignature(byte[] signature) {
         this.signature = signature;
     }
 
-    void setExtraFields(Map<String, String> extraFields) {
+    public byte[] getSnapshot() {
+        return snapshot;
+    }
+
+    private void setSnapshot(byte[] snapshot) {
+        this.snapshot = snapshot;
+    }
+
+    public String getExtraFields() {
+        return extraFields;
+    }
+
+    private void setExtraFields(String extraFields) {
         this.extraFields = extraFields;
     }
 
+
     public static final class CardSignatureBuilder {
-        private String signerCardId;
-        private SignerType signerType;
+        private String signerId;
+        private String signerType;
         private byte[] signature;
-        private Map<String, String> extraFields;
+        private byte[] snapshot;
+        private String extraFields;
 
         public CardSignatureBuilder() {
         }
 
-        public CardSignatureBuilder signerCardId(String signerCardId) {
-            this.signerCardId = signerCardId;
+        public CardSignatureBuilder signerId(String signerId) {
+            this.signerId = signerId;
             return this;
         }
 
-        public CardSignatureBuilder signerType(SignerType signerType) {
+        public CardSignatureBuilder signerType(String signerType) {
             this.signerType = signerType;
             return this;
         }
@@ -82,17 +97,23 @@ public class CardSignature {
             return this;
         }
 
-        public CardSignatureBuilder extraFields(Map<String, String> extraFields) {
+        public CardSignatureBuilder snapshot(byte[] snapshot) {
+            this.snapshot = snapshot;
+            return this;
+        }
+
+        public CardSignatureBuilder extraFields(String extraFields) {
             this.extraFields = extraFields;
             return this;
         }
 
         public CardSignature build() {
             CardSignature cardSignature = new CardSignature();
-            cardSignature.setSignerId(signerCardId);
-            cardSignature.setSignerType(signerType);
-            cardSignature.setSignature(signature);
-            cardSignature.setExtraFields(extraFields);
+            cardSignature.snapshot = this.snapshot;
+            cardSignature.signerType = this.signerType;
+            cardSignature.signerId = this.signerId;
+            cardSignature.extraFields = this.extraFields;
+            cardSignature.signature = this.signature;
             return cardSignature;
         }
     }

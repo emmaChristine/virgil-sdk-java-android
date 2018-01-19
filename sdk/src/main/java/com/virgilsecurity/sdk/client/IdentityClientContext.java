@@ -74,7 +74,7 @@ public class IdentityClientContext extends VirgilClientContext {
 
     private void init() {
         try {
-            this.identityServiceURL = new URL("https://identity.virgilsecurity.com");
+            this.identityServiceURL = new URL("https://getIdentity.virgilsecurity.com");
         } catch (MalformedURLException e) {
             // This should never happen
         }

@@ -31,17 +31,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.web;
+package com.virgilsecurity.sdk.utils;
 
-import com.virgilsecurity.sdk.web.contract.AccessToken;
-import com.virgilsecurity.sdk.web.contract.AccessTokenProvider;
-import com.virgilsecurity.sdk.web.model.jwt.JsonWebToken;
+public class Validator {
 
-public class ConstAccessTokenProvider implements AccessTokenProvider {
-
-    private JsonWebToken jsonWebToken;
-
-    @Override public AccessToken getToken(boolean forceReload) {
-        return null;
+    public static void illegalAgrument(Object o, String message) {
+        if (o == null)
+            throw new IllegalArgumentException(message); // TODO: 1/18/18 replace in all places and check for references to other packages
     }
 }

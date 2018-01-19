@@ -36,26 +36,65 @@ package com.virgilsecurity.sdk.common.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-public class RawCardMeta {
+public class RawCardContent {
 
-    @SerializedName("signs")
-    private Map<String, byte[]> signatures;
+    @SerializedName("getIdentity")
+    private String identity;
+
+    @SerializedName("public_key")
+    private byte[] publicKeyData;
+
+    @SerializedName("version")
+    private String version;
 
     @SerializedName("created_at")
     private Date createdAt;
 
-    @SerializedName("card_version")
-    private String version;
+    @SerializedName("previous_card_id")
+    private String previousCardId;
 
-    public Map<String, byte[]> getSignatures() {
-        return signatures;
+    public RawCardContent(String identity, byte[] publicKeyData, String version, Date createdAt) {
+        this.identity = identity;
+        this.publicKeyData = publicKeyData;
+        this.version = version;
+        this.createdAt = createdAt;
     }
 
-    public void setSignatures(Map<String, byte[]> signatures) {
-        this.signatures = signatures;
+    public RawCardContent(String identity,
+                          byte[] publicKeyData,
+                          String version,
+                          Date createdAt,
+                          String previousCardId) {
+        this.identity = identity;
+        this.publicKeyData = publicKeyData;
+        this.version = version;
+        this.createdAt = createdAt;
+        this.previousCardId = previousCardId;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public byte[] getPublicKeyData() {
+        return publicKeyData;
+    }
+
+    public void setPublicKeyData(byte[] publicKeyData) {
+        this.publicKeyData = publicKeyData;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public Date getCreatedAt() {
@@ -66,11 +105,11 @@ public class RawCardMeta {
         this.createdAt = createdAt;
     }
 
-    public String getVersion() {
-        return version;
+    public String getPreviousCardId() {
+        return previousCardId;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setPreviousCardId(String previousCardId) {
+        this.previousCardId = previousCardId;
     }
 }

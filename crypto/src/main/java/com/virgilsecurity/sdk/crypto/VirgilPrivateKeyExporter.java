@@ -31,23 +31,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.web;
+package com.virgilsecurity.sdk.crypto;
 
-import com.virgilsecurity.sdk.web.contract.AccessToken;
-import com.virgilsecurity.sdk.web.contract.AccessTokenProvider;
-import com.virgilsecurity.sdk.web.model.Jwt;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
-import java.util.concurrent.Callable;
+public class VirgilPrivateKeyExporter {
 
-public class VirgilAccessTokenProvider implements AccessTokenProvider {
+    private VirgilCrypto virgilCrypto;
+    private String password;
 
-    private Callable<String> getTokenCallback;
-
-    @Override public AccessToken getToken(boolean forceReload) {
-        return null;
+    public VirgilPrivateKeyExporter() {
+        virgilCrypto = new VirgilCrypto(KeysType.FAST_EC_ED25519);
     }
 
-    public Jwt getVirgilToken(boolean forceReload) {
-        return null;
+    public VirgilPrivateKeyExporter(VirgilCrypto virgilCrypto) {
+        if (virgilCrypto == null)
+            throw new IllegalArgumentException("VirgilPrivateKeyExporter -> 'virgilCrypto' should not be null");
+
+        this.virgilCrypto = virgilCrypto;
+    }
+
+    public VirgilPrivateKeyExporter(String password) {
+        this.password = password;
+
+        virgilCrypto = new VirgilCrypto(KeysType.FAST_EC_ED25519);
+    }
+
+    public VirgilPrivateKeyExporter(VirgilCrypto virgilCrypto, String password) {
+        if (virgilCrypto == null)
+            throw new IllegalArgumentException("VirgilPrivateKeyExporter -> 'virgilCrypto' should not be null");
+
+        this.virgilCrypto = virgilCrypto;
+        this.password = password;
+    }
+
+    public byte[] exportPrivateKey(PrivateKey privateKey) throws CryptoException {
+        if (!(privateKey instanceof VirgilPrivateKey))
+            throw new CryptoException("VirgilAccessTokenSigner -> 'privateKey' should be of 'VirgilPrivateKey' type");
+
+        return virgilCrypto.exportPrivateKey(privateKey);
+    }
+
+    public PrivateKey importPrivateKey(byte[] privateKey) throws CryptoException {
+        return virgilCrypto.importPrivateKey(privateKey);
     }
 }

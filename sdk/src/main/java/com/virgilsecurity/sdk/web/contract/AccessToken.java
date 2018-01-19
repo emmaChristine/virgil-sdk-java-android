@@ -35,9 +35,9 @@ package com.virgilsecurity.sdk.web.contract;
 
 public interface AccessToken {
 
-    String stringRepresentation();
+    String toString();
 
-    String identity();
+    String getIdentity();
 
     boolean isExpired();
 }

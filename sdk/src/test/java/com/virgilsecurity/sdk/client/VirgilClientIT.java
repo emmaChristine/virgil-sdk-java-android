@@ -30,7 +30,7 @@
 package com.virgilsecurity.sdk.client;
 
 /**
- * Test cases for Virgil Client.
+ * Test cases for VIRGIL Client.
  *
  * @author Andrii Iakovenko
  *
@@ -83,7 +83,7 @@ public class VirgilClientIT extends BaseIT {
             aliceCard = client.publishCard(createCardRequest);
 
             assertNotNull(aliceCard);
-            assertNotNull(aliceCard.getId());
+            assertNotNull(aliceCard.getIdentifier());
             assertEquals("alice", aliceCard.getSnapshotModel().getIdentity());
             assertEquals("username", aliceCard.getSnapshotModel().getIdentityType());
             assertEquals(CardScope.APPLICATION, aliceCard.getSnapshotModel().getScope());
@@ -94,9 +94,9 @@ public class VirgilClientIT extends BaseIT {
 
         // Get card
         try {
-            CardModel card = client.getCard(aliceCard.getId());
+            CardModel card = client.getCard(aliceCard.getIdentifier());
             assertNotNull(card);
-            assertEquals(aliceCard.getId(), card.getId());
+            assertEquals(aliceCard.getIdentifier(), card.getIdentifier());
             assertEquals("alice", card.getSnapshotModel().getIdentity());
             assertEquals("username", card.getSnapshotModel().getIdentityType());
             assertEquals(CardScope.APPLICATION, card.getSnapshotModel().getScope());
@@ -115,7 +115,7 @@ public class VirgilClientIT extends BaseIT {
 
             boolean found = false;
             for (CardModel card : cards) {
-                if (APP_ID.equals(card.getId())) {
+                if (APP_ID.equals(card.getIdentifier())) {
                     found = true;
                     break;
                 }
@@ -125,7 +125,7 @@ public class VirgilClientIT extends BaseIT {
             fail(e.getMessage());
         }
 
-        // Search by identity
+        // Search by getIdentity
         criteria = SearchCriteria.byIdentity("alice");
 
         try {
@@ -135,12 +135,12 @@ public class VirgilClientIT extends BaseIT {
 
             boolean found = false;
             for (CardModel card : cards) {
-                if (aliceCard.getId().equals(card.getId())) {
+                if (aliceCard.getIdentifier().equals(card.getIdentifier())) {
                     found = true;
                     break;
                 }
             }
-            assertTrue("Created card should be found by identity", found);
+            assertTrue("Created card should be found by getIdentity", found);
         } catch (VirgilServiceException e) {
             fail(e.getMessage());
         }
@@ -155,7 +155,7 @@ public class VirgilClientIT extends BaseIT {
 
             boolean found = false;
             for (CardModel card : cards) {
-                if (aliceCard.getId().equals(card.getId())) {
+                if (aliceCard.getIdentifier().equals(card.getIdentifier())) {
                     found = true;
                     break;
                 }
@@ -166,7 +166,7 @@ public class VirgilClientIT extends BaseIT {
         }
 
         // Revoke card
-        RevokeCardRequest revokeRequest = new RevokeCardRequest(aliceCard.getId(), RevocationReason.UNSPECIFIED);
+        RevokeCardRequest revokeRequest = new RevokeCardRequest(aliceCard.getIdentifier(), RevocationReason.UNSPECIFIED);
 
         requestSigner.authoritySign(revokeRequest, APP_ID, appKey);
 

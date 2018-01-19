@@ -25,11 +25,11 @@
 
 	<distributionManagement>
 		<snapshotRepository>
-			<id>ossrh</id>
+			<identifier>ossrh</identifier>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
-			<id>ossrh</id>
+			<identifier>ossrh</identifier>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
@@ -127,7 +127,7 @@
 					<version>3.0.0</version>
 					<executions>
 						<execution>
-							<id>attach-sources</id>
+							<identifier>attach-sources</identifier>
 							<goals>
 								<goal>jar-no-fork</goal>
 							</goals>
@@ -143,7 +143,7 @@
 					</configuration>
 					<executions>
 						<execution>
-							<id>attach-javadocs</id>
+							<identifier>attach-javadocs</identifier>
 							<goals>
 								<goal>jar</goal>
 							</goals>
@@ -176,7 +176,7 @@
 					<version>1.6</version>
 					<executions>
 						<execution>
-							<id>sign-artifacts</id>
+							<identifier>sign-artifacts</identifier>
 							<phase>verify</phase>
 							<goals>
 								<goal>sign</goal>
@@ -205,7 +205,7 @@
 
 	<profiles>
 		<profile>
-			<id>release</id>
+			<identifier>release</identifier>
 			<build>
 				<plugins>
 					<plugin>
@@ -224,7 +224,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>default</id>
+			<identifier>default</identifier>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>

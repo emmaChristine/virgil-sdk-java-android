@@ -45,7 +45,7 @@ import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
 import com.virgilsecurity.sdk.crypto.exceptions.KeyStorageException;
 
 /**
- * Virgil implementation of a storage facility for cryptographic keys.
+ * VIRGIL implementation of a storage facility for cryptographic keys.
  *
  * @author Andrii Iakovenko
  *

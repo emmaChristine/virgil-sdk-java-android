@@ -38,7 +38,7 @@ import org.junit.Test;
  * @author Andrii Iakovenko
  *
  */
-public class VirgilClientContextTest {
+public class HttpClientContextTest {
 
 	@Test
 	public void isValidURI_invalidURI() {

@@ -35,13 +35,40 @@ package com.virgilsecurity.sdk.web;
 
 import com.virgilsecurity.sdk.crypto.AccessTokenSigner;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.web.model.Jwt;
+import com.virgilsecurity.sdk.web.model.JwtBodyContent;
+import com.virgilsecurity.sdk.web.model.JwtHeaderContent;
+
+import java.util.Date;
 
 public class JwtGenerator {
 
-    private PrivateKey privateKey;
-    private String adiPublicKeyIdentifier;
-    private AccessTokenSigner accessTokenSigner;
-    private String appId;
-    private TimeSpan timeInterval;
+    private final PrivateKey apiKey;
+    private final String apiPublicKeyIdentifier;
+    private final AccessTokenSigner accessTokenSigner;
+    private final String appId;
+    private final TimeSpan ttl;
 
+    public JwtGenerator(PrivateKey apiKey,
+                        String apiPublicKeyIdentifier,
+                        AccessTokenSigner accessTokenSigner,
+                        String appId,
+                        TimeSpan ttl) {
+        this.apiKey = apiKey;
+        this.apiPublicKeyIdentifier = apiPublicKeyIdentifier;
+        this.accessTokenSigner = accessTokenSigner;
+        this.appId = appId;
+        this.ttl = ttl;
+    }
+
+    public Jwt generateToken(String identity, String additionalData) {
+        JwtHeaderContent jwtHeaderContent = new JwtHeaderContent(apiPublicKeyIdentifier);
+        JwtBodyContent jwtBodyContent = new JwtBodyContent(appId, identity, additionalData, ttl, new Date());
+
+        Jwt jwtToken = new Jwt(jwtHeaderContent, jwtBodyContent);
+        jwtToken.setSignatureData(accessTokenSigner.generateTokenSignature(jwtToken.snapshotWithoutSignatures(),
+                                                                           apiKey));
+
+        return jwtToken;
+    }
 }

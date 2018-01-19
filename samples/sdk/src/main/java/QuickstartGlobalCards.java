@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2017, Virgil Security, Inc.
+ * Copyright (c) 2017, VIRGIL Security, Inc.
  *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,7 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.utils.VirgilCardValidator;
 
 /**
- * This sample will help you get started using the Crypto Library and Virgil Keys Services for the most popular
+ * This sample will help you get started using the Crypto Library and VIRGIL Keys Services for the most popular
  * platforms and languages.
  * 
  * @author Andrii Iakovenko
@@ -62,14 +62,14 @@ public class QuickstartGlobalCards {
         // Initializing Crypto
         Crypto crypto = new VirgilCrypto();
 
-        // Creating a Virgil Card
+        // Creating a VIRGIL Card
         /** Generate a new Public/Private keypair using VirgilCrypto class. */
         KeyPair aliceKeys = crypto.generateKeys();
 
-        /** Confirm the identity */
+        /** Confirm the getIdentity */
         String identity = "[EMAIL_IDENTITY_HERE]";
         String identityType = GlobalCardIdentityType.EMAIL.getValue();
-//        String actionId = client.verifyIdentity(identity, identityType);
+//        String actionId = client.verifyIdentity(getIdentity, identityType);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter confirmation code");
@@ -78,27 +78,27 @@ public class QuickstartGlobalCards {
 
         /** Prepare request */
         byte[] exportedPublicKey = crypto.exportPublicKey(aliceKeys.getPublicKey());
-//        PublishGlobalCardRequest createCardRequest = new PublishGlobalCardRequest(identity, identityType,
+//        PublishGlobalCardRequest createCardRequest = new PublishGlobalCardRequest(getIdentity, identityType,
 //                exportedPublicKey, validationToken);
 
         /**
-         * then, use RequestSigner class to sign request with owner and app keys.
+         * then, use RequestSigner class to generateStreamSignature request with owner and app keys.
          */
 //        RequestSigner requestSigner = new RequestSigner(crypto);
 //        requestSigner.selfSign(createCardRequest, aliceKeys.getPrivateKey());
 //
-//        /** Publish a Virgil Card */
+//        /** Publish a VIRGIL Card */
 //        CardModel aliceCard = client.publishGlobalCard(createCardRequest);
 //
-//        // Get Virgil Card
-//        CardModel foundCard = client.getCard(aliceCard.getId());
+//        // Get VIRGIL Card
+//        CardModel foundCard = client.getCard(aliceCard.getIdentifier());
 
-        // Search for Virgil Cards
+        // Search for VIRGIL Cards
         SearchCriteria criteria = SearchCriteria.byIdentity(identity);
         criteria.setScope(CardScope.GLOBAL);
         List<CardModel> cards = client.searchCards(criteria);
 
-        // Validating a Virgil Cards
+        // Validating a VIRGIL Cards
         CardValidator cardValidator = new VirgilCardValidator(crypto);
         client.setCardValidator(cardValidator);
 
@@ -108,15 +108,15 @@ public class QuickstartGlobalCards {
             // Handle validation exception here
         }
 
-        // Revoking a Virgil Card
+        // Revoking a VIRGIL Card
 //        /** Use your card ID */
-//        String cardId = aliceCard.getId();
+//        String cardId = aliceCard.getIdentifier();
 //
 //        RevokeGlobalCardRequest revokeRequest = new RevokeGlobalCardRequest(cardId, RevocationReason.UNSPECIFIED,
 //                validationToken);
 //
 //        Fingerprint fingerprint = crypto.calculateFingerprint(revokeRequest.getSnapshot());
-//        byte[] signature = crypto.sign(fingerprint.getValue(), aliceKeys.getPrivateKey());
+//        byte[] signature = crypto.generateStreamSignature(fingerprint.getRawKey(), aliceKeys.getPrivateKey());
 //
 //        revokeRequest.appendSignature(cardId, signature);
 //

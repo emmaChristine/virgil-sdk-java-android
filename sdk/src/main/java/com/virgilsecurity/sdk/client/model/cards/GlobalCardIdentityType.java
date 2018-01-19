@@ -30,7 +30,7 @@
 package com.virgilsecurity.sdk.client.model.cards;
 
 /**
- * Global identity types supported by Virgil Services.
+ * Global getIdentity types supported by VIRGIL Services.
  *
  * @author Andrii Iakovenko
  *

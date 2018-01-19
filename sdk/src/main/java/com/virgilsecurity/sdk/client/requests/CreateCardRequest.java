@@ -54,7 +54,7 @@ public class CreateCardRequest extends SignedRequest {
     protected CardScope scope;
 
     /**
-     * @return the identity
+     * @return the getIdentity
      */
     public String getIdentity() {
         return identity;
@@ -62,7 +62,7 @@ public class CreateCardRequest extends SignedRequest {
 
     /**
      * @param identity
-     *            the identity to set
+     *            the getIdentity to set
      */
     public void setIdentity(String identity) {
         checkNoSnapshot();

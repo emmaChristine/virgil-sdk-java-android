@@ -67,16 +67,15 @@ public class StringUtils {
     public static SignerType fromStringSignerType(String signer) {
         switch (signer) {
             case "self":
-                return SignerType.Self;
+                return SignerType.SELF;
             case "app":
-                return SignerType.App;
+                return SignerType.APP;
             case "extra":
-                return SignerType.Extra;
+                return SignerType.EXTRA;
             case "virgil":
-                return SignerType.Virgil;
+                return SignerType.VIRGIL;
             default:
                 return null;
         }
     }
-
 }
