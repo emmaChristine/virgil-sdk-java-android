@@ -33,13 +33,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import com.virgilsecurity.sdk.client.CardValidator;
 import com.virgilsecurity.sdk.client.CardClient;
 import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
-import com.virgilsecurity.sdk.client.model.cards.CardModel;
-import com.virgilsecurity.sdk.client.model.cards.CardScope;
-import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
-import com.virgilsecurity.sdk.client.model.cards.SearchCriteria;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;

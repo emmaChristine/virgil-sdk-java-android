@@ -32,19 +32,12 @@
  */
 package com.virgilsecurity.sdk.client;
 
-import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
 import com.virgilsecurity.sdk.client.exceptions.VirgilServiceException;
-import com.virgilsecurity.sdk.client.model.cards.CardModel;
-import com.virgilsecurity.sdk.client.model.cards.CardScope;
-import com.virgilsecurity.sdk.client.model.cards.SearchCriteria;
-import com.virgilsecurity.sdk.client.model.cards.SearchRequest;
-import com.virgilsecurity.sdk.client.requests.CreateUserCardRequest;
-import com.virgilsecurity.sdk.common.model.RawSignedModel;
+import com.virgilsecurity.sdk.client.model.RawSignedModel;
 import com.virgilsecurity.sdk.exception.EmptyArgumentException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
-import com.virgilsecurity.sdk.utils.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;

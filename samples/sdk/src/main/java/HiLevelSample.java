@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -51,7 +50,7 @@ import com.virgilsecurity.sdk.highlevel.VirgilBuffer;
 import com.virgilsecurity.sdk.highlevel.VirgilCard;
 import com.virgilsecurity.sdk.highlevel.VirgilCards;
 import com.virgilsecurity.sdk.highlevel.VirgilKey;
-import com.virgilsecurity.sdk.storage.DefaultKeyStorage;
+import com.virgilsecurity.sdk.storage.PrivateKeyStorage;
 
 /**
  * @author Andrii Iakovenko
@@ -89,7 +88,7 @@ public class HiLevelSample {
     private static void globalCards() throws IOException, VirgilException {
         /** Initialize high-level SDK with only application access token */
         VirgilApiContext ctx = new VirgilApiContext(ACCESS_TOKEN);
-        ctx.setKeyStorage(/* keystorage you set for secure chat context */ new DefaultKeyStorage());
+        ctx.setKeyStorage(/* keystorage you set for secure chat context */ new PrivateKeyStorage());
         VirgilApi virgil = new VirgilApiImpl(ctx);
 
         /** Register Global VIRGIL Card */

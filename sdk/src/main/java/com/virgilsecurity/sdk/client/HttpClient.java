@@ -36,11 +36,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
-import com.virgilsecurity.sdk.client.model.ErrorResponse;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.utils.StreamUtils;
 import com.virgilsecurity.sdk.utils.StringUtils;
-import com.virgilsecurity.sdk.web.contract.AccessToken;
 
 /**
  * @author Andrii Iakovenko

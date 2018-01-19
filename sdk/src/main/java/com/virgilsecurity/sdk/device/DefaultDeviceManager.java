@@ -29,8 +29,6 @@
  */
 package com.virgilsecurity.sdk.device;
 
-import com.virgilsecurity.sdk.device.DeviceManager;
-
 /**
  * The {@linkplain DefaultDeviceManager} provides an information about the device such as assigned name, device model, and
  * operating-system name and version.

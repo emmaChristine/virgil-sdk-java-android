@@ -33,9 +33,6 @@ import java.util.Map;
 
 /**
  * Represents a key pair storage entry.
- *
- * @author Andrii Iakovenko
- *
  */
 public interface KeyEntry {
 
@@ -74,4 +71,11 @@ public interface KeyEntry {
      */
     Map<String, String> getMetadata();
 
+    /**
+     * Sets the key entry value.
+     *
+     * @param metadata
+     *            the key entry value.
+     */
+    void setMetadata(Map<String, String> metadata);
 }

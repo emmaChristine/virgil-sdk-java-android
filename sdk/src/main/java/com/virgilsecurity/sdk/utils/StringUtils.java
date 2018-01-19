@@ -29,7 +29,7 @@
  */
 package com.virgilsecurity.sdk.utils;
 
-import com.virgilsecurity.sdk.common.SignerType;
+import com.virgilsecurity.sdk.cards.SignerType;
 
 /**
  * Operations on {@link java.lang.String} that are {@code null} safe.

@@ -37,9 +37,6 @@ import com.virgilsecurity.sdk.storage.KeyEntry;
 
 /**
  * A key pair storage entry.
- *
- * @author Andrii Iakovenko
- *
  */
 public class VirgilKeyEntry implements KeyEntry {
 
@@ -123,4 +120,8 @@ public class VirgilKeyEntry implements KeyEntry {
         return metadata;
     }
 
+    @Override
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
+    }
 }

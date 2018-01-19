@@ -34,7 +34,6 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilKeyIsAlreadyExistsException;
-import com.virgilsecurity.sdk.client.model.cards.GlobalCardIdentityType;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeysType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
