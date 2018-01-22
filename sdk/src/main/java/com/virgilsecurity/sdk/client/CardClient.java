@@ -47,14 +47,14 @@ import java.util.List;
 
 public class CardClient {
 
-    private URL baseUrl;
+    private URL serviceUrl;
     private HttpClient httpClient;
 
     /**
      * Create a new instance of {@code CardClient}
      */
-    public CardClient(URL baseUrl) {
-        this.baseUrl = baseUrl;
+    public CardClient(URL serviceUrl) {
+        this.serviceUrl = serviceUrl;
         httpClient = new HttpClient();
     }
 
@@ -65,9 +65,9 @@ public class CardClient {
      * @param token  token to authorize the request.
      * @return the card loaded from VIRGIL Cards service.
      */
-    public RawSignedModel getCard(String cardId, String token) {
+    public RawSignedModel getCard(String cardId, String token) { // TODO: 1/22/18 should return Pair<RawSignedModel, boolean>
         try {
-            URL url = new URL(baseUrl, "card/" + cardId);
+            URL url = new URL(serviceUrl, "card/" + cardId);
 
             return httpClient.execute(url,
                                       "GET",
@@ -91,7 +91,7 @@ public class CardClient {
      */
     public RawSignedModel publishCard(RawSignedModel rawCard, String token) throws VirgilServiceException {
         try {
-            URL url = new URL(baseUrl, "card");
+            URL url = new URL(serviceUrl, "card");
             String body = rawCard.exportAsJson();
 
             return httpClient.execute(url,
@@ -113,7 +113,7 @@ public class CardClient {
      * @param token    token to authorize the request.
      * @return the found cards list.
      */
-    public List<RawSignedModel> searchCards(String identity, String token) {
+    public List<RawSignedModel> searchCards(String identity, String token) { // TODO: 1/22/18 should return chain of cards
         if (identity == null)
             throw new NullArgumentException("CardClient -> 'identity' should not be null");
 
@@ -121,7 +121,7 @@ public class CardClient {
             throw new EmptyArgumentException("CardClient -> 'identity' should not be empty");
 
         try {
-            URL url = new URL(baseUrl, "card/actions/search");
+            URL url = new URL(serviceUrl, "card/actions/search");
             String body = "{\"identity\":\"" + identity + "\"}";
 
             RawSignedModel[] cardModels =

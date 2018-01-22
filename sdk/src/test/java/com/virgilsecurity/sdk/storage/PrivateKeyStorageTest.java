@@ -77,17 +77,17 @@ public class PrivateKeyStorageTest {
 
     @Before
     public void setUp() {
-        crypto = new VirgilCrypto();
-        storage = new PrivateKeyStorage(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
-
-        keyPair = crypto.generateKeys();
-
-        alias = UUID.randomUUID().toString();
-
-        entry = new VirgilKeyEntry();
-        entry.setName(alias);
-        entry.setValue(crypto.exportPrivateKey(keyPair.getPrivateKey()));
-        entry.getMetadata().put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+//        crypto = new VirgilCrypto();
+//        storage = new PrivateKeyStorage(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
+//
+//        keyPair = crypto.generateKeys();
+//
+//        alias = UUID.randomUUID().toString();
+//
+//        entry = new VirgilKeyEntry();
+//        entry.setName(alias);
+//        entry.setValue(crypto.exportPrivateKey(keyPair.getPrivateKey()));
+//        entry.getMetadata().put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
     }
 
     @Test

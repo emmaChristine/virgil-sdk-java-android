@@ -34,8 +34,11 @@
 package com.virgilsecurity.sdk.cards.validation;
 
 import com.virgilsecurity.sdk.cards.Card;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
+import java.io.IOException;
 
 public interface CardVerifier {
 
-    boolean verifyCard(Card card);
+    boolean verifyCard(Card card) throws IOException, CryptoException;
 }

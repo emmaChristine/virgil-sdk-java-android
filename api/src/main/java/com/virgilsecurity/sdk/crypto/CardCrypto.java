@@ -33,13 +33,15 @@
 
 package com.virgilsecurity.sdk.crypto;
 
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
 public interface CardCrypto {
 
-    byte[] generateSignature(byte[] data, PrivateKey privateKey) throws Exception;
+    byte[] generateSignature(byte[] data, PrivateKey privateKey) throws CryptoException;
 
-    boolean verifySignature(byte[] signature, byte[] data, PublicKey publicKey) throws Exception;
+    boolean verifySignature(byte[] signature, byte[] data, PublicKey publicKey) throws CryptoException;
 
-    byte[] exportPublicKey(PublicKey publicKey) throws Exception;
+    byte[] exportPublicKey(PublicKey publicKey) throws CryptoException;
 
     PublicKey importPublicKey(byte[] data);
 

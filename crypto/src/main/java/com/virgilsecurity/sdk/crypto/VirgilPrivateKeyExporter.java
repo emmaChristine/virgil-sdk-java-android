@@ -69,7 +69,7 @@ public class VirgilPrivateKeyExporter {
         if (!(privateKey instanceof VirgilPrivateKey))
             throw new CryptoException("VirgilAccessTokenSigner -> 'privateKey' should be of 'VirgilPrivateKey' type");
 
-        return virgilCrypto.exportPrivateKey(privateKey);
+        return virgilCrypto.exportPrivateKey((VirgilPrivateKey) privateKey);
     }
 
     public PrivateKey importPrivateKey(byte[] privateKey) throws CryptoException {

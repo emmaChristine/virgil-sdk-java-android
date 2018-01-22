@@ -35,6 +35,7 @@ package com.virgilsecurity.sdk.jsonWebToken;
 
 import com.virgilsecurity.sdk.crypto.AccessTokenSigner;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 import java.util.Date;
 
@@ -58,7 +59,7 @@ public class JwtGenerator {
         this.ttl = ttl;
     }
 
-    public Jwt generateToken(String identity, String additionalData) {
+    public Jwt generateToken(String identity, String additionalData) throws CryptoException {
         JwtHeaderContent jwtHeaderContent = new JwtHeaderContent(apiPublicKeyIdentifier);
         JwtBodyContent jwtBodyContent = new JwtBodyContent(appId, identity, additionalData, ttl, new Date());
 

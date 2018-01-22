@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import com.virgilsecurity.crypto.VirgilKeyPair;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,30 +61,30 @@ import com.virgilsecurity.sdk.crypto.exceptions.KeyEntryNotFoundException;
  *
  */
 public class VirgilKeyStorageTest {
-    private Crypto crypto;
+    private VirgilCrypto crypto;
     private VirgilKeyStorage storage;
 
     private File tmpDir;
     private String alias;
     private KeyEntry entry;
 
-    private KeyPair keyPair;
+    private VirgilKeyPair keyPair;
 
     @Before
     public void setUp() {
-        crypto = new VirgilCrypto();
-
-        tmpDir = new File(System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID().toString());
-        storage = new VirgilKeyStorage(tmpDir.getAbsolutePath());
-
-        keyPair = crypto.generateKeys();
-
-        alias = UUID.randomUUID().toString();
-
-        entry = new VirgilKeyEntry();
-        entry.setName(alias);
-        entry.setValue(crypto.exportPrivateKey(keyPair.getPrivateKey()));
-        entry.getMetadata().put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+//        crypto = new VirgilCrypto();
+//
+//        tmpDir = new File(System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID().toString());
+//        storage = new VirgilKeyStorage(tmpDir.getAbsolutePath());
+//
+//        keyPair = crypto.generateKeys();
+//
+//        alias = UUID.randomUUID().toString();
+//
+//        entry = new VirgilKeyEntry();
+//        entry.setName(alias);
+//        entry.setValue(crypto.exportPrivateKey(keyPair.getPrivateKey()));
+//        entry.getMetadata().put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
     }
 
     @Test

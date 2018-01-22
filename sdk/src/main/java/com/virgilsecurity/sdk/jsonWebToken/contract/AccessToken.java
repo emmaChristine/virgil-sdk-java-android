@@ -38,6 +38,4 @@ public interface AccessToken {
     String toString();
 
     String getIdentity();
-
-    boolean isExpired();
 }

@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.cards.CardManager;
+package com.virgilsecurity.sdk.cards;
 
 import com.sun.istack.internal.NotNull;
 import com.virgilsecurity.sdk.cards.ModelSigner;
@@ -44,11 +44,13 @@ import com.virgilsecurity.sdk.client.model.RawSignedModel;
 import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
 
+import java.io.IOException;
 import java.util.*;
 
 public class CardManager {
@@ -89,7 +91,7 @@ public class CardManager {
         this.signCallback = signCallback;
     }
 
-    private void verifyCard(Card card) throws VerificationException {
+    private void verifyCard(Card card) throws CryptoException, IOException {
         if (!cardVerifier.verifyCard(card))
             throw new VerificationException();
     }
@@ -127,7 +129,7 @@ public class CardManager {
         return cardModel;
     }
 
-    public Card publishCard(RawSignedModel cardModel) throws VerificationException {
+    public Card publishCard(RawSignedModel cardModel) throws CryptoException, IOException {
         AccessToken token = accessTokenProvider.getToken(false);
         Card card = Card.parse(crypto,
                                cardClient.publishCard(cardModel, token.toString()));
@@ -152,7 +154,7 @@ public class CardManager {
         return publishCard(cardModel);
     }
 
-    public Card getCard(String cardId) throws VerificationException {
+    public Card getCard(String cardId) throws CryptoException, IOException {
         AccessToken token = accessTokenProvider.getToken(false);
         Card card = Card.parse(crypto, cardClient.getCard(cardId, token.toString()));
 
@@ -161,7 +163,7 @@ public class CardManager {
         return card;
     }
 
-    public List<Card> searchCards(String identity) {
+    public List<Card> searchCards(String identity) throws CryptoException {
         AccessToken token = accessTokenProvider.getToken(false);
 
         List<RawSignedModel> cardModels = cardClient.searchCards(identity, token.toString());
@@ -173,14 +175,24 @@ public class CardManager {
         return cards;
     }
 
-    public Card importCardBase64(String card) {
+    /**
+     *
+     * @param card
+     * @return imported card from Base64 String
+     */
+    public Card importCardAsString(String card) {
         return ConvertionUtils.deserializeFromJson(ConvertionUtils.base64ToString(card), Card.class);
     }
 
-    public Card importCardJson(String card) {
+    public Card importCardAsJson(String card) {
         return ConvertionUtils.deserializeFromJson(card, Card.class);
     }
 
+    /**
+     *
+     * @param card
+     * @return Base64 String from exported card
+     */
     public String exportCardAsString(Card card) {
         return ConvertionUtils.toBase64String(ConvertionUtils.serializeToJson(card));
     }

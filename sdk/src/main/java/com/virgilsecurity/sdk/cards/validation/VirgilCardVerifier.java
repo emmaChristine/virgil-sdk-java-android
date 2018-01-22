@@ -38,6 +38,7 @@ import com.virgilsecurity.sdk.cards.Card;
 import com.virgilsecurity.sdk.cards.CardSignature;
 import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -54,7 +55,7 @@ public class VirgilCardVerifier implements CardVerifier {
     private boolean verifyVirgilSignature = true;
     private List<WhiteList> whiteLists;
 
-    @Override public boolean verifyCard(Card card) {
+    @Override public boolean verifyCard(Card card) throws IOException, CryptoException {
         ValidationResult validationResult = new ValidationResult();
 
         if (verifySelfSignature)
@@ -95,7 +96,7 @@ public class VirgilCardVerifier implements CardVerifier {
                           String signerCardId,
                           PublicKey signerPublicKey,
                           SignerType signerType,
-                          ValidationResult validationResult) {
+                          ValidationResult validationResult) throws IOException, CryptoException {
 
         if (card.getSignatures() == null || card.getSignatures().isEmpty()) {
             validationResult.addError("The card does not contain any signature");
@@ -124,22 +125,14 @@ public class VirgilCardVerifier implements CardVerifier {
             extraDataSnapshot = extraSnapshot;
         }
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-        try {
-            outputStream.write(cardSnapshot);
-            outputStream.write(extraDataSnapshot);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        outputStream.write(cardSnapshot);
+        outputStream.write(extraDataSnapshot);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         byte[] fingerprint = crypto.generateSHA256(outputStream.toByteArray());
 
-        try {
-            if (!crypto.verifySignature(signature.getSignature(), fingerprint, signerPublicKey)) {
-                validationResult.addError("The card with id " + signerCardId + " was corrupted");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!crypto.verifySignature(signature.getSignature(), fingerprint, signerPublicKey)) {
+            validationResult.addError("The card with id " + signerCardId + " was corrupted");
         }
     }
 

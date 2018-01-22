@@ -52,7 +52,7 @@ public class Card {
     private Date createdAt;
     private String previousCardId;
     private Card previousCard;
-    private List<CardSignature> signatures;
+    private List<CardSignature> signatures; // TODO: 1/22/18 add signatures limit up to 8
     private boolean isOutdated;
 
     public Card(String identifier,

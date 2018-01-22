@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import com.virgilsecurity.crypto.VirgilBase64;
+import com.virgilsecurity.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -49,27 +50,27 @@ import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
 public class AuthenticatedEncryption {
 
     public static void main(String[] args) throws IOException, VirgilException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Enter the text to be signed with alice's Private key: ");
-        String dataToSign = br.readLine();
-        byte[] data = dataToSign.getBytes();
-        System.out.println();
-
-        // Initialize Crypto
-        Crypto crypto = new VirgilCrypto();
-
-        // Generate keys for Alice and Bob
-        KeyPair alice = crypto.generateKeys();
-        KeyPair bob = crypto.generateKeys();
-
-        // Sign then Encrypt
-        byte[] cipherData = crypto.signThenEncrypt(data, alice.getPrivateKey(), bob.getPublicKey());
-
-        System.out.println(String.format("Cipher text in Base64:\n %1$s", VirgilBase64.encode(cipherData)));
-
-        // Decrypt then Verify
-        byte[] decryptedData = crypto.decryptThenVerify(cipherData, bob.getPrivateKey(), alice.getPublicKey());
-
-        System.out.println(String.format("Decrypted text:\n %1$s", new String(decryptedData, StandardCharsets.UTF_8)));
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//        System.out.println("Enter the text to be signed with alice's Private key: ");
+//        String dataToSign = br.readLine();
+//        byte[] data = dataToSign.getBytes();
+//        System.out.println();
+//
+//        // Initialize Crypto
+//        VirgilCrypto crypto = new VirgilCrypto();
+//
+//        // Generate keys for Alice and Bob
+//        VirgilKeyPair alice = crypto.generateKeys();
+//        VirgilKeyPair bob = crypto.generateKeys();
+//
+//        // Sign then Encrypt
+//        byte[] cipherData = crypto.signThenEncrypt(data, alice.privateKey(), bob.publicKey());
+//
+//        System.out.println(String.format("Cipher text in Base64:\n %1$s", VirgilBase64.encode(cipherData)));
+//
+//        // Decrypt then Verify
+//        byte[] decryptedData = crypto.decryptThenVerify(cipherData, bob.getPrivateKey(), alice.getPublicKey());
+//
+//        System.out.println(String.format("Decrypted text:\n %1$s", new String(decryptedData, StandardCharsets.UTF_8)));
     }
 }

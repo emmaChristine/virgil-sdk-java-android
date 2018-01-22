@@ -37,6 +37,7 @@ import com.virgilsecurity.sdk.client.model.RawSignature;
 import com.virgilsecurity.sdk.client.model.RawSignedModel;
 import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 public class ModelSigner {
@@ -48,19 +49,13 @@ public class ModelSigner {
     }
 
     public void sign(RawSignedModel model,
-                     String id, // TODO: 1/15/18 do we need this?
                      SignerType type,
                      byte[] additionalData,
-                     PrivateKey privateKey) {
+                     PrivateKey privateKey) throws CryptoException {
 
         byte[] combinedSnapshot = new byte[2];
         byte[] fingerprint = crypto.generateSHA256(combinedSnapshot);
-        byte[] signature = new byte[0];
-        try {
-            signature = crypto.generateSignature(fingerprint, privateKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        byte[] signature = crypto.generateSignature(fingerprint, privateKey);
 
         String signerId = ConvertionUtils.toHex(crypto.generateSHA256(model.getContentSnapshot()));
 
@@ -72,11 +67,11 @@ public class ModelSigner {
         model.getSignatures().add(rawSignature);
     }
 
-    public void selfSign(RawSignedModel model, byte[] additionalData, PrivateKey privateKey) {
-        sign(model, null, SignerType.SELF, additionalData, privateKey);
+    public void selfSign(RawSignedModel model, byte[] additionalData, PrivateKey privateKey) throws CryptoException {
+        sign(model, SignerType.SELF, additionalData, privateKey);
     }
 
-    public void selfSign(RawSignedModel model, PrivateKey privateKey) {
-        sign(model, null, SignerType.SELF, new byte[0], privateKey);
+    public void selfSign(RawSignedModel model, PrivateKey privateKey) throws CryptoException {
+        sign(model, SignerType.SELF, new byte[0], privateKey);
     }
 }

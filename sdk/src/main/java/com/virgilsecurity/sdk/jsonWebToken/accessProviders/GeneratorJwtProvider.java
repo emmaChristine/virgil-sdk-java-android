@@ -33,6 +33,7 @@
 
 package com.virgilsecurity.sdk.jsonWebToken.accessProviders;
 
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.jsonWebToken.JwtGenerator;
 import com.virgilsecurity.sdk.utils.Validator;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
@@ -62,7 +63,7 @@ public class GeneratorJwtProvider implements AccessTokenProvider {
         this.additionalData = additionalData;
     }
 
-    @Override public AccessToken getToken(boolean forceReload) {
+    @Override public AccessToken getToken(boolean forceReload) throws CryptoException {
         return jwtGenerator.generateToken(identity, additionalData);
     }
 

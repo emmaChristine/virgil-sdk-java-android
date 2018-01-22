@@ -31,34 +31,70 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.jsonWebToken.accessProviders;
+/**
+ * The {@linkplain DefaultDeviceManager} provides an information about the device such as assigned name, device model, and
+ * operating-system name and version.
+ * 
+ * @author Andrii Iakovenko
+ *
+ */
+public class DefaultDeviceManager implements DeviceManager {
 
-import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
-import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
-import com.virgilsecurity.sdk.jsonWebToken.Jwt;
-
-public class ConstJwtProvider implements AccessTokenProvider {
-
-    private Jwt jwtToken;
-
-    public ConstJwtProvider() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getDeviceName()
+     */
+    @Override
+    public String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return capitalize(model);
+        } else {
+            return capitalize(manufacturer) + " " + model;
+        }
     }
 
-    public ConstJwtProvider(Jwt jwtToken) {
-        if (jwtToken != null)
-            this.jwtToken = jwtToken;
-        else
-            throw new IllegalArgumentException("ConstJwtProvider -> 'jwt' should not be null");
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getSystemName()
+     */
+    @Override
+    public String getSystemName() {
+        return "Android";
     }
 
-    @Override public AccessToken getToken(boolean forceReload) {
-        return jwtToken;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getSystemVersion()
+     */
+    @Override
+    public String getSystemVersion() {
+        return Build.VERSION.RELEASE;
     }
 
-    public void setJwt(Jwt jwtToken) {
-        if (jwtToken != null)
-            this.jwtToken = jwtToken;
-        else
-            throw new IllegalArgumentException("ConstJwtProvider -> 'jwt' should not be null");
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.virgilsecurity.sdk.client.device.DeviceManager#getDeviceModel()
+     */
+    @Override
+    public String getDeviceModel() {
+        return Build.MODEL;
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
     }
 }

@@ -75,35 +75,19 @@ public class RawSignedModel implements Serializable {
         this.signatures = signatures;
     }
 
-    public String exportAsString() {
-        String result = null;
-
-        try {
-            result = ConvertionUtils.toBase64String(ConvertionUtils.serializeObject(this));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+    public String exportAsString() throws IOException {
+        return ConvertionUtils.toBase64String(ConvertionUtils.serializeObject(this));
     }
 
-    public String exportAsJson() {
-        String result = null;
-
-        try {
-            result = ConvertionUtils.serializeObject(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+    public String exportAsJson() throws IOException {
+        return ConvertionUtils.serializeObject(this);
     }
 
-    public void rawSignedModel(String model) {
-
+    public static RawSignedModel fromString(String cardModel) {
+        return ConvertionUtils.deserializeFromJson(ConvertionUtils.base64ToString(cardModel), RawSignedModel.class);
     }
 
-    public void rawSignedModel(Map<String, String> model) {
-
+    public static RawSignedModel fromJson(String cardModel) {
+        return ConvertionUtils.deserializeFromJson(cardModel, RawSignedModel.class);
     }
 }

@@ -60,113 +60,113 @@ public class VirgilPFSTest {
     // Receiver
     private static final String BOB = "bob";
 
-    private Crypto crypto;
-    private byte[] aliceId, bobId;
-    private VirgilPFSPrivateKey alicePFSPrivateKey, aliceEphPrivateKey, bobIdentityPrivateKey, bobLTPrivateKey;
-    private VirgilPFSPublicKey aliceIdentityPublicKey, aliceEphPublicKey, bobIdentityPublicKey, bobLTPublicKey;
-    private VirgilPFS alicePFS, bobPFS;
-
-    @Before
-    public void setUp() {
-        crypto = new VirgilCrypto(KeysType.EC_CURVE25519);
-
-        /** Generate identity keys */
-        // Alice keys
-        KeyPair keyPair = crypto.generateKeys();
-        aliceId = keyPair.getPublicKey().getIdentifier();
-        alicePFSPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
-        aliceIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
-
-        // Bob keys
-        keyPair = crypto.generateKeys();
-        bobId = keyPair.getPublicKey().getIdentifier();
-        bobIdentityPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
-        bobIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
-
-        /** Generate ephemeral keys */
-        // Alice key
-        keyPair = crypto.generateKeys();
-        aliceEphPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
-        aliceEphPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
-
-        // Bob key
-        keyPair = crypto.generateKeys();
-        bobLTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
-        bobLTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
-    }
-
-    @Test
-    public void encrypt_decrypt_LT() {
-        /** Encrypt */
-        // Prepare PFS info
-        VirgilPFSInitiatorPrivateInfo alicePrivateInfo = new VirgilPFSInitiatorPrivateInfo(alicePFSPrivateKey,
-                aliceEphPrivateKey);
-        VirgilPFSResponderPublicInfo bobPublicInfo = new VirgilPFSResponderPublicInfo(bobIdentityPublicKey,
-                bobLTPublicKey);
-
-        // Initialize PFS
-        alicePFS = new VirgilPFS();
-        alicePFS.startInitiatorSession(alicePrivateInfo, bobPublicInfo);
-        VirgilPFSEncryptedMessage encryptedMessage = alicePFS.encrypt(DATA);
-
-        assertNotNull(encryptedMessage);
-
-        /** Decrypt */
-        VirgilPFSInitiatorPublicInfo alicePublicInfo = new VirgilPFSInitiatorPublicInfo(aliceIdentityPublicKey,
-                aliceEphPublicKey);
-        VirgilPFSResponderPrivateInfo bobPrivateInfo = new VirgilPFSResponderPrivateInfo(bobIdentityPrivateKey,
-                bobLTPrivateKey);
-
-        bobPFS = new VirgilPFS();
-        bobPFS.startResponderSession(bobPrivateInfo, alicePublicInfo);
-        byte[] decrypted = bobPFS.decrypt(encryptedMessage);
-
-        assertNotNull(decrypted);
-        assertArrayEquals(DATA, decrypted);
-    }
-
-    @Test
-    public void encrypt_decrypt_OT() {
-        /** Generate one time keys */
-        KeyPair keyPair = crypto.generateKeys();
-        VirgilPFSPrivateKey bobOTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
-        VirgilPFSPublicKey bobOTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
-
-        /** Encrypt */
-        // Prepare PFS info
-        VirgilPFSInitiatorPrivateInfo alicePrivateInfo = new VirgilPFSInitiatorPrivateInfo(alicePFSPrivateKey,
-                aliceEphPrivateKey);
-        VirgilPFSResponderPublicInfo bobPublicInfo = new VirgilPFSResponderPublicInfo(bobIdentityPublicKey,
-                bobLTPublicKey, bobOTPublicKey);
-
-        // Initialize PFS
-        alicePFS = new VirgilPFS();
-        alicePFS.startInitiatorSession(alicePrivateInfo, bobPublicInfo);
-        VirgilPFSEncryptedMessage encryptedMessage = alicePFS.encrypt(DATA);
-
-        assertNotNull(encryptedMessage);
-        assertNotNull(encryptedMessage.getCipherText());
-        assertThat(DATA, not(equalTo(encryptedMessage.getCipherText())));
-
-        /** Decrypt */
-        VirgilPFSInitiatorPublicInfo alicePublicInfo = new VirgilPFSInitiatorPublicInfo(aliceIdentityPublicKey,
-                aliceEphPublicKey);
-        VirgilPFSResponderPrivateInfo bobPrivateInfo = new VirgilPFSResponderPrivateInfo(bobIdentityPrivateKey,
-                bobLTPrivateKey, bobOTPrivateKey);
-
-        bobPFS = new VirgilPFS();
-        bobPFS.startResponderSession(bobPrivateInfo, alicePublicInfo);
-        byte[] decrypted = bobPFS.decrypt(encryptedMessage);
-
-        assertNotNull(decrypted);
-        assertArrayEquals(DATA, decrypted);
-    }
-
-    @Test
-    public void encrypt_decrypt_OT_multiple_times() {
-        for (int i = 0; i < 10; i++) {
-            encrypt_decrypt_OT();
-        }
-    }
+//    private Crypto crypto;
+//    private byte[] aliceId, bobId;
+//    private VirgilPFSPrivateKey alicePFSPrivateKey, aliceEphPrivateKey, bobIdentityPrivateKey, bobLTPrivateKey;
+//    private VirgilPFSPublicKey aliceIdentityPublicKey, aliceEphPublicKey, bobIdentityPublicKey, bobLTPublicKey;
+//    private VirgilPFS alicePFS, bobPFS;
+//
+//    @Before
+//    public void setUp() {
+//        crypto = new VirgilCrypto(KeysType.EC_CURVE25519);
+//
+//        /** Generate identity keys */
+//        // Alice keys
+//        KeyPair keyPair = crypto.generateKeys();
+//        aliceId = keyPair.getPublicKey().getIdentifier();
+//        alicePFSPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+//        aliceIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
+//
+//        // Bob keys
+//        keyPair = crypto.generateKeys();
+//        bobId = keyPair.getPublicKey().getIdentifier();
+//        bobIdentityPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+//        bobIdentityPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
+//
+//        /** Generate ephemeral keys */
+//        // Alice key
+//        keyPair = crypto.generateKeys();
+//        aliceEphPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+//        aliceEphPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
+//
+//        // Bob key
+//        keyPair = crypto.generateKeys();
+//        bobLTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+//        bobLTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
+//    }
+//
+//    @Test
+//    public void encrypt_decrypt_LT() {
+//        /** Encrypt */
+//        // Prepare PFS info
+//        VirgilPFSInitiatorPrivateInfo alicePrivateInfo = new VirgilPFSInitiatorPrivateInfo(alicePFSPrivateKey,
+//                aliceEphPrivateKey);
+//        VirgilPFSResponderPublicInfo bobPublicInfo = new VirgilPFSResponderPublicInfo(bobIdentityPublicKey,
+//                bobLTPublicKey);
+//
+//        // Initialize PFS
+//        alicePFS = new VirgilPFS();
+//        alicePFS.startInitiatorSession(alicePrivateInfo, bobPublicInfo);
+//        VirgilPFSEncryptedMessage encryptedMessage = alicePFS.encrypt(DATA);
+//
+//        assertNotNull(encryptedMessage);
+//
+//        /** Decrypt */
+//        VirgilPFSInitiatorPublicInfo alicePublicInfo = new VirgilPFSInitiatorPublicInfo(aliceIdentityPublicKey,
+//                aliceEphPublicKey);
+//        VirgilPFSResponderPrivateInfo bobPrivateInfo = new VirgilPFSResponderPrivateInfo(bobIdentityPrivateKey,
+//                bobLTPrivateKey);
+//
+//        bobPFS = new VirgilPFS();
+//        bobPFS.startResponderSession(bobPrivateInfo, alicePublicInfo);
+//        byte[] decrypted = bobPFS.decrypt(encryptedMessage);
+//
+//        assertNotNull(decrypted);
+//        assertArrayEquals(DATA, decrypted);
+//    }
+//
+//    @Test
+//    public void encrypt_decrypt_OT() {
+//        /** Generate one time keys */
+//        KeyPair keyPair = crypto.generateKeys();
+//        VirgilPFSPrivateKey bobOTPrivateKey = new VirgilPFSPrivateKey(keyPair.getPrivateKey().getRawKey());
+//        VirgilPFSPublicKey bobOTPublicKey = new VirgilPFSPublicKey(keyPair.getPublicKey().getRawKey());
+//
+//        /** Encrypt */
+//        // Prepare PFS info
+//        VirgilPFSInitiatorPrivateInfo alicePrivateInfo = new VirgilPFSInitiatorPrivateInfo(alicePFSPrivateKey,
+//                aliceEphPrivateKey);
+//        VirgilPFSResponderPublicInfo bobPublicInfo = new VirgilPFSResponderPublicInfo(bobIdentityPublicKey,
+//                bobLTPublicKey, bobOTPublicKey);
+//
+//        // Initialize PFS
+//        alicePFS = new VirgilPFS();
+//        alicePFS.startInitiatorSession(alicePrivateInfo, bobPublicInfo);
+//        VirgilPFSEncryptedMessage encryptedMessage = alicePFS.encrypt(DATA);
+//
+//        assertNotNull(encryptedMessage);
+//        assertNotNull(encryptedMessage.getCipherText());
+//        assertThat(DATA, not(equalTo(encryptedMessage.getCipherText())));
+//
+//        /** Decrypt */
+//        VirgilPFSInitiatorPublicInfo alicePublicInfo = new VirgilPFSInitiatorPublicInfo(aliceIdentityPublicKey,
+//                aliceEphPublicKey);
+//        VirgilPFSResponderPrivateInfo bobPrivateInfo = new VirgilPFSResponderPrivateInfo(bobIdentityPrivateKey,
+//                bobLTPrivateKey, bobOTPrivateKey);
+//
+//        bobPFS = new VirgilPFS();
+//        bobPFS.startResponderSession(bobPrivateInfo, alicePublicInfo);
+//        byte[] decrypted = bobPFS.decrypt(encryptedMessage);
+//
+//        assertNotNull(decrypted);
+//        assertArrayEquals(DATA, decrypted);
+//    }
+//
+//    @Test
+//    public void encrypt_decrypt_OT_multiple_times() {
+//        for (int i = 0; i < 10; i++) {
+//            encrypt_decrypt_OT();
+//        }
+//    }
 
 }

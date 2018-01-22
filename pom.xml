@@ -25,11 +25,11 @@
 
 	<distributionManagement>
 		<snapshotRepository>
-			<identifier>ossrh</identifier>
+			<id>ossrh</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
-			<identifier>ossrh</identifier>
+			<id>ossrh</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
@@ -39,6 +39,11 @@
 			<name>Andrii Iakovenko</name>
 			<email>andrii-iakovenko@gmail.com</email>
 			<organizationUrl>https://github.com/andrii-iakovenko</organizationUrl>
+		</developer>
+		<developer>
+			<name>Danylo Oliinyk</name>
+			<email>danylo.oliinyk@gmail.com</email>
+			<organizationUrl>https://github.com/BuddahLD</organizationUrl>
 		</developer>
 	</developers>
 
@@ -127,7 +132,7 @@
 					<version>3.0.0</version>
 					<executions>
 						<execution>
-							<identifier>attach-sources</identifier>
+							<id>attach-sources</id>
 							<goals>
 								<goal>jar-no-fork</goal>
 							</goals>
@@ -143,7 +148,7 @@
 					</configuration>
 					<executions>
 						<execution>
-							<identifier>attach-javadocs</identifier>
+							<id>attach-javadocs</id>
 							<goals>
 								<goal>jar</goal>
 							</goals>
@@ -176,7 +181,7 @@
 					<version>1.6</version>
 					<executions>
 						<execution>
-							<identifier>sign-artifacts</identifier>
+							<id>sign-artifacts</id>
 							<phase>verify</phase>
 							<goals>
 								<goal>sign</goal>
@@ -205,7 +210,7 @@
 
 	<profiles>
 		<profile>
-			<identifier>release</identifier>
+			<id>release</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -224,7 +229,7 @@
 			</build>
 		</profile>
 		<profile>
-			<identifier>default</identifier>
+			<id>default</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>

@@ -33,13 +33,13 @@
 
 package com.virgilsecurity.sdk.crypto;
 
-import java.util.concurrent.Executor;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 public interface AccessTokenSigner {
 
-    byte[] generateTokenSignature(byte[] token, PrivateKey privateKey) throws Exception;
+    byte[] generateTokenSignature(byte[] token, PrivateKey privateKey) throws CryptoException;
 
-    boolean verifyTokenSignature(byte[] signature, byte[] data, PublicKey publicKey) throws Exception;
+    boolean verifyTokenSignature(byte[] signature, byte[] data, PublicKey publicKey) throws CryptoException;
 
     String getAlgorithm();
 }

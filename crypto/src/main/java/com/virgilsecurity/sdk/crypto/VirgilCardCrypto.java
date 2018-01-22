@@ -47,7 +47,7 @@ public class VirgilCardCrypto implements CardCrypto {
         if (!(privateKey instanceof VirgilPrivateKey))
             throw new CryptoException("VirgilCrypto -> 'privateKey' should be of 'VirgilPrivateKey' type");
 
-        return virgilCrypto.generateSignature(data, privateKey);
+        return virgilCrypto.generateSignature(data, (VirgilPrivateKey) privateKey);
     }
 
     @Override
@@ -55,14 +55,14 @@ public class VirgilCardCrypto implements CardCrypto {
         if (!(publicKey instanceof VirgilPublicKey))
             throw new CryptoException("VirgilCrypto -> 'publicKey' should be of 'VirgilPublicKey' type");
 
-        return virgilCrypto.verifySignature(signature, data, publicKey);
+        return virgilCrypto.verifySignature(signature, data, (VirgilPublicKey) publicKey);
     }
 
     @Override public byte[] exportPublicKey(PublicKey publicKey) throws CryptoException {
         if (!(publicKey instanceof VirgilPublicKey))
             throw new CryptoException("VirgilCrypto -> 'publicKey' should be of 'VirgilPublicKey' type");
 
-        return virgilCrypto.exportPublicKey(publicKey);
+        return virgilCrypto.exportPublicKey((VirgilPublicKey) publicKey);
     }
 
     @Override public PublicKey importPublicKey(byte[] data) {

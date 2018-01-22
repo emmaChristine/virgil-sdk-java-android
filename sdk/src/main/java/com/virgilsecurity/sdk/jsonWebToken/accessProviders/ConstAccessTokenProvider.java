@@ -31,29 +31,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.jsonWebToken;
+package com.virgilsecurity.sdk.jsonWebToken.accessProviders;
 
-import com.virgilsecurity.sdk.crypto.AccessTokenSigner;
-import com.virgilsecurity.sdk.crypto.PublicKey;
-import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
+import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
+import com.virgilsecurity.sdk.jsonWebToken.Jwt;
 
-public class JwtVerifier {
+public class ConstAccessTokenProvider implements AccessTokenProvider {
 
-    private PublicKey apiPublicKey;
-    private String apiPublicKeyIdentifier;
-    private AccessTokenSigner accessTokenSigner;
+    private Jwt jwtToken;
 
-    public JwtVerifier(PublicKey apiPublicKey,
-                       String apiPublicKeyIdentifier,
-                       AccessTokenSigner accessTokenSigner) {
-        this.apiPublicKey = apiPublicKey;
-        this.apiPublicKeyIdentifier = apiPublicKeyIdentifier;
-        this.accessTokenSigner = accessTokenSigner;
+    public ConstAccessTokenProvider() {
     }
 
-    public boolean verifyToken(Jwt jwtToken) throws CryptoException {
-        return accessTokenSigner.verifyTokenSignature(jwtToken.getSignatureData(),
-                                                      jwtToken.snapshotWithoutSignatures(),
-                                                      apiPublicKey);
+    public ConstAccessTokenProvider(Jwt jwtToken) {
+        if (jwtToken != null)
+            this.jwtToken = jwtToken;
+        else
+            throw new IllegalArgumentException("ConstAccessTokenProvider -> 'jwt' should not be null");
+    }
+
+    @Override public AccessToken getToken(boolean forceReload) {
+        return jwtToken;
+    }
+
+    public void setJwt(Jwt jwtToken) {
+        if (jwtToken != null)
+            this.jwtToken = jwtToken;
+        else
+            throw new IllegalArgumentException("ConstAccessTokenProvider -> 'jwt' should not be null");
     }
 }

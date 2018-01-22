@@ -36,7 +36,7 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<execution>
-						<identifier>unpack-dependencies</identifier>
+						<id>unpack-dependencies</id>
 						<goals>
 							<goal>unpack-dependencies</goal>
 						</goals>

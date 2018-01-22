@@ -32,13 +32,11 @@
 import java.util.List;
 
 import com.virgilsecurity.sdk.client.CardClient;
-import com.virgilsecurity.sdk.client.exceptions.CardValidationException;
 import com.virgilsecurity.sdk.crypto.Crypto;
 import com.virgilsecurity.sdk.crypto.KeyPair;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.VirgilException;
-import com.virgilsecurity.sdk.utils.VirgilCardValidator;
 
 /**
  * This sample will help you get started using the Crypto Library and VIRGIL Keys Services for the most popular

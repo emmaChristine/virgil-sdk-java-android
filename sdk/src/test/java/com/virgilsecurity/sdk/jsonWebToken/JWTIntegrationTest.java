@@ -8,11 +8,10 @@ public class JWTIntegrationTest extends PropertyManager {
 
     private Crypto crypto;
 
-    @Before
-    public void setUp() {
-        crypto = new VirgilCrypto();
-    }
-
+//    @Before
+//    public void setUp() {
+//        crypto = new VirgilCrypto();
+//    }
 //    @Test
 //    public CardManager getCardManager(String getIdentity) throws CryptoException {
 //        PrivateKey apiPrivateKey = crypto.importPrivateKey(ConvertionUtils.base64ToBytes(API_PRIVATE_KEY));

@@ -31,29 +31,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.jsonWebToken;
+package com.virgilsecurity.sdk.common;
 
-import com.virgilsecurity.sdk.crypto.AccessTokenSigner;
-import com.virgilsecurity.sdk.crypto.PublicKey;
-import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.google.gson.annotations.SerializedName;
 
-public class JwtVerifier {
+/**
+ *
+ * @author Andrii Iakovenko
+ *
+ */
+public class ErrorResponse {
 
-    private PublicKey apiPublicKey;
-    private String apiPublicKeyIdentifier;
-    private AccessTokenSigner accessTokenSigner;
+    @SerializedName("code")
+    private int code;
 
-    public JwtVerifier(PublicKey apiPublicKey,
-                       String apiPublicKeyIdentifier,
-                       AccessTokenSigner accessTokenSigner) {
-        this.apiPublicKey = apiPublicKey;
-        this.apiPublicKeyIdentifier = apiPublicKeyIdentifier;
-        this.accessTokenSigner = accessTokenSigner;
+    /**
+     * @return the code
+     */
+    public int getCode() {
+        return code;
     }
 
-    public boolean verifyToken(Jwt jwtToken) throws CryptoException {
-        return accessTokenSigner.verifyTokenSignature(jwtToken.getSignatureData(),
-                                                      jwtToken.snapshotWithoutSignatures(),
-                                                      apiPublicKey);
+    /**
+     * @param code
+     *            the code to set
+     */
+    public void setCode(int code) {
+        this.code = code;
     }
+
 }
