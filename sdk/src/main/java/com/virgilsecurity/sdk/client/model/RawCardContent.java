@@ -54,6 +54,10 @@ public class RawCardContent {
     @SerializedName("previous_card_id")
     private String previousCardId;
 
+    public RawCardContent() {
+
+    }
+
     public RawCardContent(String identity, byte[] publicKeyData, String version, Date createdAt) {
         this.identity = identity;
         this.publicKeyData = publicKeyData;

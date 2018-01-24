@@ -37,6 +37,7 @@ import com.google.gson.annotations.SerializedName;
 import com.virgilsecurity.sdk.jsonWebToken.TimeSpan;
 
 import java.util.Date;
+import java.util.Map;
 
 public class JwtBodyContent {
 
@@ -47,7 +48,7 @@ public class JwtBodyContent {
     private String identity;
 
     @SerializedName("ada")
-    private String additionalData;
+    private Map<String, String> additionalData;
 
     @SerializedName("exp")
     private TimeSpan expiresAt;
@@ -57,8 +58,19 @@ public class JwtBodyContent {
 
     public JwtBodyContent(String appId,
                           String identity,
-                          String additionalData,
-                          TimeSpan expiresAt, Date issuedAt) {
+                          TimeSpan expiresAt,
+                          Date issuedAt) {
+        this.appId = appId;
+        this.identity = identity;
+        this.expiresAt = expiresAt;
+        this.issuedAt = issuedAt;
+    }
+
+    public JwtBodyContent(String appId,
+                          String identity,
+                          Map<String, String> additionalData,
+                          TimeSpan expiresAt,
+                          Date issuedAt) {
         this.appId = appId;
         this.identity = identity;
         this.additionalData = additionalData;
@@ -82,11 +94,11 @@ public class JwtBodyContent {
         this.identity = identity;
     }
 
-    public String getAdditionalData() {
+    public Map<String, String> getAdditionalData() {
         return additionalData;
     }
 
-    void setAdditionalData(String additionalData) {
+    void setAdditionalData(Map<String, String> additionalData) {
         this.additionalData = additionalData;
     }
 

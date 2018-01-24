@@ -38,6 +38,7 @@ import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,8 @@ public class RawSignedModel implements Serializable {
 
     public RawSignedModel(byte[] contentSnapshot) {
         this.contentSnapshot = contentSnapshot;
+
+        signatures = new ArrayList<>();
     }
 
     public RawSignedModel(byte[] contentSnapshot,
@@ -76,11 +79,11 @@ public class RawSignedModel implements Serializable {
     }
 
     public String exportAsString() throws IOException {
-        return ConvertionUtils.toBase64String(ConvertionUtils.serializeObject(this));
+        return ConvertionUtils.toBase64String(ConvertionUtils.serializeToJson(this));
     }
 
     public String exportAsJson() throws IOException {
-        return ConvertionUtils.serializeObject(this);
+        return ConvertionUtils.serializeToJson(this);
     }
 
     public static RawSignedModel fromString(String cardModel) {

@@ -365,7 +365,7 @@ public class VirgilCrypto {
      * 
      * @see com.virgilsecurity.sdk.crypto.Crypto#generateKeys()
      */
-    public KeyPair generateKeys() {
+    public KeyPairVirgiled generateKeys() {
         return generateKeys(this.defaultKeyPairType);
     }
 
@@ -376,7 +376,7 @@ public class VirgilCrypto {
      *            the key type.
      * @return generated key pair.
      */
-    public KeyPair generateKeys(KeysType keysType) {
+    public KeyPairVirgiled generateKeys(KeysType keysType) {
         VirgilKeyPair keyPair = VirgilKeyPair.generate(toVirgilKeyPairType(keysType));
 
         byte[] keyPairId = this.computePublicKeyHash(keyPair.publicKey());
@@ -384,7 +384,7 @@ public class VirgilCrypto {
         VirgilPublicKey publicKey = new VirgilPublicKey(keyPairId, VirgilKeyPair.publicKeyToDER(keyPair.publicKey()));
         VirgilPrivateKey privateKey = new VirgilPrivateKey(keyPairId, VirgilKeyPair.privateKeyToDER(keyPair.privateKey()));
 
-        return new KeyPair(publicKey, privateKey);
+        return new KeyPairVirgiled(publicKey, privateKey);
     }
 
     /*

@@ -31,30 +31,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.cards.validation;
+package com.virgilsecurity.sdk.cards;
 
-public class VerifierCredentials {
-    private String id;
-    private byte[] publicKey;
+import com.virgilsecurity.sdk.client.CardClient;
+import com.virgilsecurity.sdk.client.model.RawSignedModel;
+import com.virgilsecurity.sdk.common.Mocker;
+import com.virgilsecurity.sdk.common.PropertyManager;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-    public VerifierCredentials(String id, byte[] publicKey) {
-        this.id = id;
-        this.publicKey = publicKey;
+public class CardClientTest extends PropertyManager {
+
+    private static final String IDENTITY = "SomeTestIdentity";
+
+    private CardClient cardClient;
+    private Mocker mocker;
+
+    @Before
+    public void setUp() {
+        cardClient = new CardClient(CARDS_SERVICE_ADDRESS);
+        mocker = new Mocker();
     }
 
-    public String getId() {
-        return id;
+    @Test
+    public void fakeToken() throws CryptoException {
+        RawSignedModel cardModelBeforePublish = mocker.generateCardModel();
+
+        RawSignedModel cardModelAfterPublish =
+                cardClient.publishCard(cardModelBeforePublish,
+                                       mocker.generateAccessToken(IDENTITY).toString());
+
+        Assert.assertEquals(cardModelBeforePublish, cardModelAfterPublish);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public byte[] getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(byte[] publicKey) {
-        this.publicKey = publicKey;
-    }
 }

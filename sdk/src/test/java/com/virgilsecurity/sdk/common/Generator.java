@@ -31,30 +31,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.cards.validation;
+package com.virgilsecurity.sdk.common;
 
-public class VerifierCredentials {
-    private String id;
-    private byte[] publicKey;
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
+import org.apache.commons.lang.math.RandomUtils;
 
-    public VerifierCredentials(String id, byte[] publicKey) {
-        this.id = id;
-        this.publicKey = publicKey;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+public class Generator {
+
+    private static Random randomizer;
+
+    public static byte[] randomBytes(int length) {
+        if (randomizer == null)
+            randomizer = new Random();
+
+        byte[] rndBytes = new byte[length];
+        randomizer.nextBytes(rndBytes);
+
+        return rndBytes;
     }
 
-    public String getId() {
-        return id;
+    public static int randomInt(int bound) {
+        if (randomizer == null)
+            randomizer = new Random();
+
+        return randomizer.nextInt(bound);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public static String firstName() {
+        String[] names = new String[] {"Alice", "Bob", "Greg", "Jenny", "John", "Molly"};
+        return names[randomInt(5)];
     }
 
-    public byte[] getPublicKey() {
-        return publicKey;
+    public static String lastName() {
+        String[] names = new String[] {"Archer", "Slater", "Cook", "Fisher", "Hunter", "Glover"};
+        return names[randomInt(5)];
     }
 
-    public void setPublicKey(byte[] publicKey) {
-        this.publicKey = publicKey;
+    public static <T> T randomArrayElement(List<T> list) {
+        return list.get(randomInt(list.size() - 1));
+    }
+
+    public static Date randomDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, randomInt(4000));
+        calendar.set(Calendar.MONTH, randomInt(11));
+        calendar.set(Calendar.DAY_OF_MONTH, randomInt(27));
+        return calendar.getTime();
     }
 }

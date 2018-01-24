@@ -31,30 +31,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.cards.validation;
+package com.virgilsecurity.sdk.common;
 
-public class VerifierCredentials {
-    private String id;
-    private byte[] publicKey;
+import java.io.Serializable;
 
-    public VerifierCredentials(String id, byte[] publicKey) {
-        this.id = id;
-        this.publicKey = publicKey;
+public class ClassForSerialization implements Serializable {
+    private String name;
+    private byte[] data;
+
+    public ClassForSerialization(String name, byte[] data) {
+        this.name = name;
+        this.data = data;
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public byte[] getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(byte[] publicKey) {
-        this.publicKey = publicKey;
+    public byte[] getData() {
+        return data;
     }
 }

@@ -31,30 +31,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.cards.validation;
+package com.virgilsecurity.sdk.common;
 
-public class VerifierCredentials {
-    private String id;
-    private byte[] publicKey;
+import com.virgilsecurity.sdk.cards.CardManager;
+import com.virgilsecurity.sdk.cards.validation.VirgilCardVerifier;
+import com.virgilsecurity.sdk.crypto.VirgilCardCrypto;
+import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import org.junit.Before;
 
-    public VerifierCredentials(String id, byte[] publicKey) {
-        this.id = id;
-        this.publicKey = publicKey;
+public class IntegrationHelper extends PropertyManager {
+
+    private VirgilCardCrypto cardCrypto;
+    private VirgilCrypto virgilCrypto;
+
+    public IntegrationHelper() {
+        cardCrypto = new VirgilCardCrypto();
+        virgilCrypto = new VirgilCrypto();
     }
 
-    public String getId() {
-        return id;
-    }
+    public CardManager getManager(String username) {
+        VirgilCardVerifier cardVerifier = new VirgilCardVerifier(true, true);
+        cardVerifier.changeServiceCredentials(SERVICE_CARD_ID, SERVICE_PUBLIC_KEY_DER_BASE64);
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public byte[] getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(byte[] publicKey) {
-        this.publicKey = publicKey;
+        return null;
     }
 }

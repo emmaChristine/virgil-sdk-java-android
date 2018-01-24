@@ -30,31 +30,65 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.virgilsecurity.sdk.crypto;
 
-package com.virgilsecurity.sdk.cards.validation;
+/**
+ * The key pair.
+ */
+public class KeyPairVirgiled {
 
-public class VerifierCredentials {
-    private String id;
-    private byte[] publicKey;
+    private VirgilPublicKey publicKey;
 
-    public VerifierCredentials(String id, byte[] publicKey) {
-        this.id = id;
+    private VirgilPrivateKey privateKey;
+
+    /**
+     * Create a new instance of {@code KeyPairVirgiled}
+     *
+     */
+    public KeyPairVirgiled() {
+    }
+
+    /**
+     * Create a new instance of {@code KeyPair}
+     *
+     * @param publicKey
+     *            the Virgil public key.
+     * @param privateKey
+     *            the Virgil private key.
+     */
+    public KeyPairVirgiled(VirgilPublicKey publicKey, VirgilPrivateKey privateKey) {
         this.publicKey = publicKey;
+        this.privateKey = privateKey;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public byte[] getPublicKey() {
+    /**
+     * @return the Virgil publicKey
+     */
+    public VirgilPublicKey getPublicKey() {
         return publicKey;
     }
 
-    public void setPublicKey(byte[] publicKey) {
+    /**
+     * @param publicKey
+     *            the Virgil public key to set
+     */
+    public void setPublicKey(VirgilPublicKey publicKey) {
         this.publicKey = publicKey;
     }
+
+    /**
+     * @return the Virgil privateKey
+     */
+    public VirgilPrivateKey getPrivateKey() {
+        return privateKey;
+    }
+
+    /**
+     * @param privateKey
+     *            the Virgil privateKey to set
+     */
+    public void setPrivateKey(VirgilPrivateKey privateKey) {
+        this.privateKey = privateKey;
+    }
+
 }

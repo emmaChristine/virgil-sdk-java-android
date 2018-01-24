@@ -1,8 +1,7 @@
 package com.virgilsecurity.sdk.jsonWebToken;
 
+import com.virgilsecurity.sdk.common.PropertyManager;
 import com.virgilsecurity.sdk.crypto.Crypto;
-import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-import org.junit.Before;
 
 public class JWTIntegrationTest extends PropertyManager {
 
@@ -20,7 +19,7 @@ public class JWTIntegrationTest extends PropertyManager {
 //        data.put("username", "my username");
 //
 //        AccessTokenBuilder tokenBuilder = new AccessTokenBuilder(ACCOUNT_ID,
-//                                                                 APP_ID,
+//                                                                 APP_CARD_ID,
 //                                                                 TimeSpan.fromTime(10, TimeUnit.MINUTES),
 //                                                                 apiPrivateKey,
 //                                                                 crypto);

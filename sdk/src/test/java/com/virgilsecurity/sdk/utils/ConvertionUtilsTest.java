@@ -32,6 +32,7 @@ package com.virgilsecurity.sdk.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.virgilsecurity.sdk.common.ClassForSerialization;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -31,30 +31,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.cards.validation;
+package com.virgilsecurity.sdk.common;
 
-public class VerifierCredentials {
-    private String id;
-    private byte[] publicKey;
+public enum StringEncoding {
+    UTF8,
+    BASE64,
+    HEX;
 
-    public VerifierCredentials(String id, byte[] publicKey) {
-        this.id = id;
-        this.publicKey = publicKey;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public byte[] getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(byte[] publicKey) {
-        this.publicKey = publicKey;
+    private StringEncoding() {
     }
 }

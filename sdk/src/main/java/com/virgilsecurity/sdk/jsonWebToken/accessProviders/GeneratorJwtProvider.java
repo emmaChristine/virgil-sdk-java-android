@@ -39,11 +39,13 @@ import com.virgilsecurity.sdk.utils.Validator;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
 
+import java.util.Map;
+
 public class GeneratorJwtProvider implements AccessTokenProvider {
 
     private JwtGenerator jwtGenerator;
     private String identity;
-    private String additionalData;
+    private Map<String, String> additionalData;
 
     public GeneratorJwtProvider(JwtGenerator jwtGenerator, String identity) {
         Validator.illegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
@@ -53,7 +55,7 @@ public class GeneratorJwtProvider implements AccessTokenProvider {
         this.identity = identity;
     }
 
-    public GeneratorJwtProvider(JwtGenerator jwtGenerator, String identity, String additionalData) {
+    public GeneratorJwtProvider(JwtGenerator jwtGenerator, String identity, Map<String, String> additionalData) {
         Validator.illegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
         Validator.illegalAgrument(identity, "GeneratorJwtProvider -> 'identity' should not be null");
         Validator.illegalAgrument(additionalData, "GeneratorJwtProvider -> 'additionalData' should not be null");
@@ -75,7 +77,7 @@ public class GeneratorJwtProvider implements AccessTokenProvider {
         return identity;
     }
 
-    public String getAdditionalData() {
+    public Map<String, String> getAdditionalData() {
         return additionalData;
     }
 }

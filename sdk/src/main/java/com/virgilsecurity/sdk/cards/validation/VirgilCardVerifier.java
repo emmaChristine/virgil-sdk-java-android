@@ -33,27 +33,60 @@
 
 package com.virgilsecurity.sdk.cards.validation;
 
+import com.sun.istack.internal.NotNull;
 import com.virgilsecurity.sdk.cards.SignerType;
 import com.virgilsecurity.sdk.cards.Card;
 import com.virgilsecurity.sdk.cards.CardSignature;
 import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.VirgilCardCrypto;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
+import com.virgilsecurity.sdk.utils.Validator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VirgilCardVerifier implements CardVerifier {
 
-    private static final String VIRGIL_CARD_ID = "3e29d43373348cfb373b7eae189214dc01d7237765e572db685839b64adca853";
-    private static final String VIRGIL_PUBLIC_KEY_BASE64 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQVlSNTAxa1YxdFVuZTJ1T2RrdzRrRXJSUmJKcmMyU3lhejVWMWZ1RytyVnM9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo";
+    private String virgilCardId = "3e29d43373348cfb373b7eae189214dc01d7237765e572db685839b64adca853";
+    private String virgilPublicKeyBase64 = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQVl" +
+            "SNTAxa1YxdFVuZTJ1T2RrdzRrRXJSUmJKcmMyU3lhejVWMWZ1RytyVnM9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo";
 
     private CardCrypto crypto;
     private boolean verifySelfSignature = true;
     private boolean verifyVirgilSignature = true;
     private List<WhiteList> whiteLists;
+
+    public VirgilCardVerifier(@NotNull CardCrypto crypto) {
+        Validator.illegalAgrument(crypto, "VirgilCardVerifier -> 'crypto' should not be null");
+        this.crypto = crypto;
+
+        this.whiteLists = new ArrayList<>();
+    }
+
+    public VirgilCardVerifier(boolean verifySelfSignature, boolean verifyVirgilSignature) {
+        this.verifySelfSignature = verifySelfSignature;
+        this.verifyVirgilSignature = verifyVirgilSignature;
+
+        this.crypto = new VirgilCardCrypto();
+        this.whiteLists = new ArrayList<>();
+    }
+
+    public VirgilCardVerifier(@NotNull CardCrypto crypto,
+                              boolean verifySelfSignature,
+                              boolean verifyVirgilSignature,
+                              @NotNull List<WhiteList> whiteLists) {
+        Validator.illegalAgrument(crypto, "VirgilCardVerifier -> 'crypto' should not be null");
+        Validator.illegalAgrument(whiteLists, "VirgilCardVerifier -> 'whiteLists' should not be null");
+
+        this.crypto = crypto;
+        this.whiteLists = whiteLists;
+        this.verifySelfSignature = verifySelfSignature;
+        this.verifyVirgilSignature = verifyVirgilSignature;
+    }
 
     @Override public boolean verifyCard(Card card) throws IOException, CryptoException {
         ValidationResult validationResult = new ValidationResult();
@@ -62,12 +95,12 @@ public class VirgilCardVerifier implements CardVerifier {
             validate(crypto, card, card.getIdentifier(), card.getPublicKey(), SignerType.SELF, validationResult);
 
         if (verifyVirgilSignature) {
-            byte[] publicKeyData = ConvertionUtils.toBase64Bytes(VIRGIL_PUBLIC_KEY_BASE64);
+            byte[] publicKeyData = ConvertionUtils.toBase64Bytes(virgilPublicKeyBase64);
             PublicKey publicKey = crypto.importPublicKey(publicKeyData);
             if (publicKey == null) {
                 validationResult.addError("Error importing VIRGIL Public Key");
             }
-            validate(crypto, card, VIRGIL_CARD_ID, publicKey, SignerType.VIRGIL, validationResult);
+            validate(crypto, card, virgilCardId, publicKey, SignerType.VIRGIL, validationResult);
         }
 
         boolean containsSignature = false;
@@ -158,5 +191,18 @@ public class VirgilCardVerifier implements CardVerifier {
 
     public List<WhiteList> getWhiteList() {
         return whiteLists;
+    }
+
+    public String getVirgilCardId() {
+        return virgilCardId;
+    }
+
+    public String getVirgilPublicKeyBase64() {
+        return virgilPublicKeyBase64;
+    }
+
+    public void changeServiceCredentials(String virgilCardId, String virgilPublicKeyBase64) {
+        this.virgilCardId = virgilCardId;
+        this.virgilPublicKeyBase64 = virgilPublicKeyBase64;
     }
 }

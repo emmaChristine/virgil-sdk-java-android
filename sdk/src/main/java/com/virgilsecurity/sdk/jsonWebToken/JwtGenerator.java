@@ -38,6 +38,7 @@ import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 import java.util.Date;
+import java.util.Map;
 
 public class JwtGenerator {
 
@@ -59,9 +60,20 @@ public class JwtGenerator {
         this.ttl = ttl;
     }
 
-    public Jwt generateToken(String identity, String additionalData) throws CryptoException {
+    public Jwt generateToken(String identity, Map<String, String> additionalData) throws CryptoException {
         JwtHeaderContent jwtHeaderContent = new JwtHeaderContent(apiPublicKeyIdentifier);
         JwtBodyContent jwtBodyContent = new JwtBodyContent(appId, identity, additionalData, ttl, new Date());
+
+        Jwt jwtToken = new Jwt(jwtHeaderContent, jwtBodyContent);
+        jwtToken.setSignatureData(accessTokenSigner.generateTokenSignature(jwtToken.snapshotWithoutSignatures(),
+                                                                           apiKey));
+
+        return jwtToken;
+    }
+
+    public Jwt generateToken(String identity) throws CryptoException {
+        JwtHeaderContent jwtHeaderContent = new JwtHeaderContent(apiPublicKeyIdentifier);
+        JwtBodyContent jwtBodyContent = new JwtBodyContent(appId, identity, ttl, new Date());
 
         Jwt jwtToken = new Jwt(jwtHeaderContent, jwtBodyContent);
         jwtToken.setSignatureData(accessTokenSigner.generateTokenSignature(jwtToken.snapshotWithoutSignatures(),

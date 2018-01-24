@@ -31,24 +31,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.utils;
+package com.virgilsecurity.sdk.cards;
 
-import java.io.Serializable;
+import com.virgilsecurity.sdk.common.Mocker;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ClassForSerialization implements Serializable {
-    private String name;
-    private byte[] data;
+public class CardsManagerTest {
 
-    public ClassForSerialization(String name, byte[] data) {
-        this.name = name;
-        this.data = data;
+    private Mocker mocker;
+
+    @Before
+    public void setUp() {
+        mocker = new Mocker();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
 }

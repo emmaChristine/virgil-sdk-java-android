@@ -40,6 +40,7 @@ import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
 import java.io.ByteArrayInputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +50,26 @@ public class CardClient {
 
     private URL serviceUrl;
     private HttpClient httpClient;
+
+    /**
+     * Create a new instance of {@code CardClient}
+     */
+    public CardClient() {
+        httpClient = new HttpClient();
+    }
+
+    /**
+     * Create a new instance of {@code CardClient}
+     */
+    public CardClient(String serviceUrl) {
+        try {
+            this.serviceUrl = new URL(serviceUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("CardClient -> 'serviceUrl' has wrong format");
+        }
+        httpClient = new HttpClient();
+    }
 
     /**
      * Create a new instance of {@code CardClient}
@@ -82,7 +103,7 @@ public class CardClient {
     }
 
     /**
-     * Publishes card in VIRGIL Cards service.
+     * Publishes card in Virgil Cards service.
      *
      * @param rawCard the create card request.
      * @param token   token to authorize the request.
@@ -137,5 +158,17 @@ public class CardClient {
         } catch (Exception e) {
             throw new VirgilCardServiceException(e);
         }
+    }
+
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    public URL getServiceUrl() {
+        return serviceUrl;
     }
 }

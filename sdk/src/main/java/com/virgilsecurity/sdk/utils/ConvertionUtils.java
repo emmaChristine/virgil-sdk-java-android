@@ -35,17 +35,21 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.virgilsecurity.crypto.VirgilBase64;
+import com.virgilsecurity.sdk.common.StringEncoding;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
  * Utilities class for data conversion.
  *
  * @author Andrii Iakovenko
+ * @author Danylo Oliinyk
  */
 public class ConvertionUtils {
 
@@ -298,7 +302,7 @@ public class ConvertionUtils {
     }
 
     /**
-     * Write the object to a Base64 String
+     * Write the object to a Base64 String.
      *
      * @param serializable object to be serialized
      * @return Base64 String representation of serialized object
@@ -310,5 +314,30 @@ public class ConvertionUtils {
         oos.writeObject(serializable);
         oos.close();
         return toBase64String(baos.toByteArray());
+    }
+
+    /**
+     * Decodes the current bytes to a string according to the specified
+     * character encoding.
+     *
+     * @param inputBytes bytes to decode
+     * @param encoding   The character encoding to decode to.
+     * @return {@link String} that represents this instance.
+     */
+    public static String toString(byte[] inputBytes, StringEncoding encoding) {
+        if (inputBytes == null)
+            throw new IllegalArgumentException("ConvertionUtils -> 'inputBytes' should not be null");
+
+        switch (encoding) {
+            case BASE64:
+                return toBase64String(inputBytes);
+            case HEX:
+                String hex = inputBytes.toString();
+                return hex.replace("-", "").toLowerCase(Locale.getDefault());
+            case UTF8:
+                return new String(inputBytes, StandardCharsets.UTF_8);
+            default:
+                return new String(inputBytes, StandardCharsets.UTF_8);
+        }
     }
 }
