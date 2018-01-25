@@ -197,7 +197,7 @@ public class Mocker extends PropertyManager {
         calendar.set(Calendar.HOUR_OF_DAY, 10);
 
         RawCardContent rawCardContent = new RawCardContent(IDENTITY,
-                                                           PUBLIC_KEY.getBytes(),
+                                                           ConvertionUtils.toBase64String(PUBLIC_KEY.getBytes()),
                                                            "5.0",
                                                            calendar.getTime(),
                                                            previousCardId);
@@ -213,7 +213,7 @@ public class Mocker extends PropertyManager {
         calendar.set(Calendar.HOUR_OF_DAY, 10);
 
         RawCardContent rawCardContent = new RawCardContent(IDENTITY,
-                                                           PUBLIC_KEY.getBytes(),
+                                                           ConvertionUtils.toBase64String(PUBLIC_KEY.getBytes()),
                                                            "5.0",
                                                            calendar.getTime());
 
@@ -232,7 +232,7 @@ public class Mocker extends PropertyManager {
         VirgilPrivateKey privateKey = keyPairVirgiled.getPrivateKey();
 
         RawCardContent rawCardContent = new RawCardContent(IDENTITY,
-                                                           crypto.exportPublicKey(publicKey),
+                                                           ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey)),
                                                            "5.0",
                                                            calendar.getTime());
 

@@ -109,27 +109,27 @@ public class Jwt implements AccessToken {
         return bodyContent.getExpiresAt().isExpired();
     }
 
-    private String headerBase64() {
-        return ConvertionUtils.toBase64String(ConvertionUtils.captureSnapshot(headerContent));
+    private String headerBase64url() {
+        return ConvertionUtils.toBase64Url(ConvertionUtils.toBase64String(ConvertionUtils.captureSnapshot(headerContent)));
     }
 
-    private String bodyBase64() {
-        return ConvertionUtils.toBase64String(ConvertionUtils.captureSnapshot(bodyContent));
+    private String bodyBase64url() {
+        return ConvertionUtils.toBase64Url(ConvertionUtils.toBase64String(ConvertionUtils.captureSnapshot(bodyContent)));
     }
 
-    private String signatureBase64() {
-        return ConvertionUtils.toBase64String(signatureData);
+    private String signatureBase64url() {
+        return ConvertionUtils.toBase64Url(ConvertionUtils.toBase64String(signatureData));
     }
 
     public byte[] snapshotWithoutSignatures() {
-        return ConvertionUtils.toBase64Bytes(headerBase64() + "." + bodyBase64());
+        return ConvertionUtils.toBase64Bytes(headerBase64url() + "." + bodyBase64url());
     }
 
     @Override
     public String toString() {
         if (signatureData != null)
-            return headerBase64() + "." + bodyBase64() + "." + signatureBase64();
+            return headerBase64url() + "." + bodyBase64url() + "." + signatureBase64url();
         else
-            return headerBase64() + "." + bodyBase64() + ".";
+            return headerBase64url() + "." + bodyBase64url() + ".";
     }
 }

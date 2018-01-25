@@ -340,4 +340,44 @@ public class ConvertionUtils {
                 return new String(inputBytes, StandardCharsets.UTF_8);
         }
     }
+
+    /**
+     * Encodes base64 string to base64url
+     *
+     * @param input base64 string
+     * @return base64url string
+     */
+    public static String toBase64Url(String input) {
+        return input.split("=")[0]
+                .replace("+", "-")
+                .replace("/", "_");
+    }
+
+    /**
+     * Decodes base64url string to base64
+     *
+     * @param input base64url string
+     * @return base64 string
+     */
+    public static String fromBase64Url(String input) {
+        String result = input;
+
+        result = result.replace("-", "+");
+        result = result.replace("_", "/");
+
+        switch (result.length() % 4) {
+            case 0:
+                break;
+            case 2:
+                result += "==";
+                break;
+            case 3:
+                result += "=";
+                break;
+            default:
+                throw new IllegalArgumentException("ConvertionUtils -> 'input' has wrong base64url format");
+        }
+
+        return result;
+    }
 }

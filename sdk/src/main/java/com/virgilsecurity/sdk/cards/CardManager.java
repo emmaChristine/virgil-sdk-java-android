@@ -99,7 +99,7 @@ public class CardManager {
     public RawSignedModel generateRawCard(PrivateKey privateKey, PublicKey publicKey, String previousCardId) throws Exception {
         AccessToken token = accessTokenProvider.getToken(false);
         RawCardContent cardContent = new RawCardContent(token.getIdentity(),
-                                                        crypto.exportPublicKey(publicKey),
+                                                        ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey)),
                                                         CURRENT_CARD_VERSION,
                                                         new Date(),
                                                         previousCardId);
@@ -116,7 +116,7 @@ public class CardManager {
     public RawSignedModel generateRawCard(PrivateKey privateKey, PublicKey publicKey) throws Exception {
         AccessToken token = accessTokenProvider.getToken(false);
         RawCardContent cardContent = new RawCardContent(token.getIdentity(),
-                                                        crypto.exportPublicKey(publicKey),
+                                                        ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey)),
                                                         CURRENT_CARD_VERSION,
                                                         new Date());
 

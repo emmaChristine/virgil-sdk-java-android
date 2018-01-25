@@ -45,7 +45,7 @@ public class RawCardContent {
     private String identity;
 
     @SerializedName("public_key")
-    private byte[] publicKeyData;
+    private String publicKey;
 
     @SerializedName("version")
     private String version;
@@ -60,20 +60,20 @@ public class RawCardContent {
 
     }
 
-    public RawCardContent(String identity, byte[] publicKeyData, String version, Date createdAt) {
+    public RawCardContent(String identity, String publicKey, String version, Date createdAt) {
         this.identity = identity;
-        this.publicKeyData = publicKeyData;
+        this.publicKey = publicKey;
         this.version = version;
         this.createdAt = createdAt.getTime() / 1000;
     }
 
     public RawCardContent(String identity,
-                          byte[] publicKeyData,
+                          String publicKey,
                           String version,
                           Date createdAt,
                           String previousCardId) {
         this.identity = identity;
-        this.publicKeyData = publicKeyData;
+        this.publicKey = publicKey;
         this.version = version;
         this.createdAt = createdAt.getTime() / 1000;
         this.previousCardId = previousCardId;
@@ -87,12 +87,12 @@ public class RawCardContent {
         this.identity = identity;
     }
 
-    public byte[] getPublicKeyData() {
-        return publicKeyData;
+    public String getPublicKeyData() {
+        return publicKey;
     }
 
-    public void setPublicKeyData(byte[] publicKeyData) {
-        this.publicKeyData = publicKeyData;
+    public void setPublicKeyData(String publicKeyData) {
+        this.publicKey = publicKeyData;
     }
 
     public String getVersion() {

@@ -79,6 +79,4 @@ public class CardClientTest extends PropertyManager {
 
         Assert.assertEquals(cardModelBeforePublish, cardModelAfterPublish);
     }
-
-
 }

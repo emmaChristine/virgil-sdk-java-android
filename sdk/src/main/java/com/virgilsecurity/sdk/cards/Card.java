@@ -183,7 +183,7 @@ public class Card {
                                                                       RawCardContent.class);
         byte[] fingerprint = crypto.generateSHA256(cardModel.getContentSnapshot());
         String cardId = ConvertionUtils.toHex(fingerprint);
-        PublicKey publicKey = crypto.importPublicKey(rawCardContent.getPublicKeyData());
+        PublicKey publicKey = crypto.importPublicKey(ConvertionUtils.base64ToBytes(rawCardContent.getPublicKeyData()));
 
         List<CardSignature> cardSignatures = new ArrayList<>();
         if (cardModel.getSignatures() != null) {
