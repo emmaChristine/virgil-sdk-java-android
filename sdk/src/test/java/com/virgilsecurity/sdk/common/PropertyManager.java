@@ -38,13 +38,13 @@ import org.apache.commons.lang.StringUtils;
 public class PropertyManager {
 
     protected final String APP_ID = getPropertyByName("APP_ID");
-    protected final String APP_CARD_ID = getPropertyByName("APP_CARD_ID");
     protected final String ACCOUNT_ID = getPropertyByName("ACCOUNT_ID");
 
     protected final String APP_PRIVATE_KEY_PASSWORD = getPropertyByName("APP_PRIVATE_KEY_PASSWORD");
 
-    protected final String ACCESS_PUBLIC_KEY_ID = getPropertyByName("ACCESS_PUBLIC_KEY_ID");
-    protected final String ACCESS_PRIVATE_KEY_BASE64 = getPropertyByName("ACCESS_PRIVATE_KEY_BASE64"); // REPLACE \\n with \n
+    protected final String API_PUBLIC_KEY = getPropertyByName("API_PUBLIC_KEY");
+    protected final String API_PUBLIC_KEY_IDENTIFIER = getPropertyByName("API_PUBLIC_KEY_IDENTIFIER");
+    protected final String API_PRIVATE_KEY_BASE64 = getPropertyByName("API_PRIVATE_KEY_BASE64"); // REPLACE \\n with \n
 
     protected final String SERVICE_CARD_ID = getPropertyByName("SERVICE_CARD_ID");
     protected final String SERVICE_PUBLIC_KEY_PEM_BASE64 = getPropertyByName("SERVICE_PUBLIC_KEY_PEM_BASE64");

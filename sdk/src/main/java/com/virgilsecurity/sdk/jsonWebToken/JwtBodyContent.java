@@ -41,6 +41,9 @@ import java.util.Map;
 
 public class JwtBodyContent {
 
+    private static final String ISSUER_PREFIX = "virgil-";
+    private static final String SUBJECT_PREFIX = "identity-";
+
     @SerializedName("iss")
     private String appId;
 
@@ -51,19 +54,19 @@ public class JwtBodyContent {
     private Map<String, String> additionalData;
 
     @SerializedName("exp")
-    private TimeSpan expiresAt;
+    private long expiresAt;
 
     @SerializedName("iat")
-    private Date issuedAt;
+    private long issuedAt;
 
     public JwtBodyContent(String appId,
                           String identity,
                           TimeSpan expiresAt,
                           Date issuedAt) {
-        this.appId = appId;
-        this.identity = identity;
-        this.expiresAt = expiresAt;
-        this.issuedAt = issuedAt;
+        this.appId = ISSUER_PREFIX + appId;
+        this.identity = SUBJECT_PREFIX + identity;
+        this.expiresAt = expiresAt.getTimestamp();
+        this.issuedAt = issuedAt.getTime() / 1000;
     }
 
     public JwtBodyContent(String appId,
@@ -71,50 +74,30 @@ public class JwtBodyContent {
                           Map<String, String> additionalData,
                           TimeSpan expiresAt,
                           Date issuedAt) {
-        this.appId = appId;
-        this.identity = identity;
+        this.appId = ISSUER_PREFIX + appId;
+        this.identity = SUBJECT_PREFIX + identity;
         this.additionalData = additionalData;
-        this.expiresAt = expiresAt;
-        this.issuedAt = issuedAt;
+        this.expiresAt = expiresAt.getTimestamp();
+        this.issuedAt = issuedAt.getTime() / 1000;
     }
 
     public String getAppId() {
         return appId;
     }
 
-    void setAppId(String appId) {
-        this.appId = appId;
-    }
-
     public String getIdentity() {
         return identity;
-    }
-
-    void setIdentity(String identity) {
-        this.identity = identity;
     }
 
     public Map<String, String> getAdditionalData() {
         return additionalData;
     }
 
-    void setAdditionalData(Map<String, String> additionalData) {
-        this.additionalData = additionalData;
-    }
-
     public TimeSpan getExpiresAt() {
-        return expiresAt;
-    }
-
-    void setExpiresAt(TimeSpan expiresAt) {
-        this.expiresAt = expiresAt;
+        return new TimeSpan(expiresAt * 1000);
     }
 
     public Date getIssuedAt() {
-        return issuedAt;
-    }
-
-    void setIssuedAt(Date issuedAt) {
-        this.issuedAt = issuedAt;
+        return new Date(issuedAt * 1000);
     }
 }

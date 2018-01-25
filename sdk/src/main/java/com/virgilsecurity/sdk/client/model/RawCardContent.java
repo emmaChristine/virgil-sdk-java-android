@@ -34,12 +34,14 @@
 package com.virgilsecurity.sdk.client.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.virgilsecurity.sdk.utils.ConvertionUtils;
 
+import java.io.IOException;
 import java.util.Date;
 
 public class RawCardContent {
 
-    @SerializedName("getIdentity")
+    @SerializedName("identity")
     private String identity;
 
     @SerializedName("public_key")
@@ -49,7 +51,7 @@ public class RawCardContent {
     private String version;
 
     @SerializedName("created_at")
-    private Date createdAt;
+    private long createdAt;
 
     @SerializedName("previous_card_id")
     private String previousCardId;
@@ -62,7 +64,7 @@ public class RawCardContent {
         this.identity = identity;
         this.publicKeyData = publicKeyData;
         this.version = version;
-        this.createdAt = createdAt;
+        this.createdAt = createdAt.getTime() / 1000;
     }
 
     public RawCardContent(String identity,
@@ -73,7 +75,7 @@ public class RawCardContent {
         this.identity = identity;
         this.publicKeyData = publicKeyData;
         this.version = version;
-        this.createdAt = createdAt;
+        this.createdAt = createdAt.getTime() / 1000;
         this.previousCardId = previousCardId;
     }
 
@@ -101,11 +103,27 @@ public class RawCardContent {
         this.version = version;
     }
 
-    public Date getCreatedAt() {
+    public Date getCreatedAtDate() {
+        return new Date(createdAt * 1000);
+    }
+
+    public void setCreatedAtDate(Date createdAt) {
+        this.createdAt = createdAt.getTime() / 1000;
+    }
+
+    /**
+     *
+     * @return in seconds (Unix time)
+     */
+    public long getCreatedAtTimestamp() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    /**
+     *
+     * @param createdAt in seconds (Unix time)
+     */
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -115,5 +133,21 @@ public class RawCardContent {
 
     public void setPreviousCardId(String previousCardId) {
         this.previousCardId = previousCardId;
+    }
+
+    public String exportAsString() throws IOException {
+        return ConvertionUtils.toBase64String(ConvertionUtils.serializeToJson(this));
+    }
+
+    public String exportAsJson() throws IOException {
+        return ConvertionUtils.serializeToJson(this);
+    }
+
+    public static RawCardContent fromString(String cardModel) {
+        return ConvertionUtils.deserializeFromJson(ConvertionUtils.base64ToString(cardModel), RawCardContent.class);
+    }
+
+    public static RawCardContent fromJson(String cardModel) {
+        return ConvertionUtils.deserializeFromJson(cardModel, RawCardContent.class);
     }
 }

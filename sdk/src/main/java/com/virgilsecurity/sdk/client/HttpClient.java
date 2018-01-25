@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import com.virgilsecurity.sdk.client.exceptions.VirgilCardServiceException;
 import com.virgilsecurity.sdk.common.ErrorResponse;
@@ -43,7 +45,6 @@ import com.virgilsecurity.sdk.utils.StringUtils;
 
 /**
  * @author Andrii Iakovenko
- *
  */
 public class HttpClient {
 
@@ -55,11 +56,9 @@ public class HttpClient {
 
     /**
      * Create and configure http connection.
-     * 
-     * @param url
-     *            The URL.
-     * @param method
-     *            The HTTP method.
+     *
+     * @param url    The URL.
+     * @param method The HTTP method.
      * @return The connection.
      * @throws IOException
      */
@@ -69,18 +68,17 @@ public class HttpClient {
         urlConnection.setUseCaches(false);
 
         switch (method) {
-        case "DELETE":
-        case "POST":
-        case "PUT":
-        case "PATCH":
-            urlConnection.setDoOutput(true);
-            urlConnection.setChunkedStreamingMode(0);
-            break;
-        default:
+            case "DELETE":
+            case "POST":
+            case "PUT":
+            case "PATCH":
+                urlConnection.setDoOutput(true);
+                urlConnection.setChunkedStreamingMode(0);
+                break;
         }
 
         if (!StringUtils.isBlank(token)) {
-            urlConnection.setRequestProperty("Authorization", "VIRGIL " + token);
+            urlConnection.setRequestProperty("Authorization", "Virgil " + token);
         }
         urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 

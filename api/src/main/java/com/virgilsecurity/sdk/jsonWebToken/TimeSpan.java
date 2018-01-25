@@ -5,7 +5,9 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeSpan {
 
-    private Date date; // TODO: 1/19/18 move to sdk package
+    private Date date;
+    // TODO: 1/19/18 move to sdk package
+    // TODO: 1/25/18 check if span works well on jwt.io
 
     /**
      * Represents time interval in specified time unit
@@ -26,28 +28,32 @@ public class TimeSpan {
     }
 
     /**
-     *
-     * @param time in specified by second argument unit. Must be >= 0.
+     * @param time     in specified by second argument unit. Must be >= 0.
      * @param timeUnit supported TimeUnit: SECONDS, MINUTES, HOURS, DAYS.
      * @return TimeSpan instance with time span in specified unit.
-     *         For unsupported units time span in minutes will be returned.
+     * For unsupported units time span in minutes will be returned.
      */
     public static TimeSpan fromTime(int time, TimeUnit timeUnit) {
         if (time <= 0)
             throw new IllegalArgumentException("Time should be more that zero (0)");
 
-        long span;
+        long span = new Date().getTime();
         switch (timeUnit) {
             case SECONDS:
-                span = time * 1000;
+                span += time * 1000;
+                break;
             case MINUTES:
-                span = time * (1000 * 60);
+                span += time * (1000 * 60);
+                break;
             case HOURS:
-                span = time * (1000 * 60 * 60);
+                span += time * (1000 * 60 * 60);
+                break;
             case DAYS:
-                span = time * (1000 * 60 * 60 * 24);
+                span += time * (1000 * 60 * 60 * 24);
+                break;
             default:
-                span = time * (1000 * 60);
+                span += time * (1000 * 60);
+                break;
         }
 
         return new TimeSpan(span);
@@ -79,14 +85,19 @@ public class TimeSpan {
         switch (timeUnit) {
             case SECONDS:
                 this.date.setTime(date.getTime() + time * 1000);
+                break;
             case MINUTES:
                 this.date.setTime(date.getTime() + time * (1000 * 60));
+                break;
             case HOURS:
                 this.date.setTime(date.getTime() + time * (1000 * 60 * 60));
+                break;
             case DAYS:
                 this.date.setTime(date.getTime() + time * (1000 * 60 * 60 * 24));
+                break;
             default:
                 this.date.setTime(date.getTime() + time * (1000 * 60));
+                break;
         }
     }
 
@@ -134,7 +145,7 @@ public class TimeSpan {
 
         switch (timeUnit) {
             case SECONDS:
-                return (new Date().getTime() -  date.getTime()) / 1000;
+                return (new Date().getTime() - date.getTime()) / 1000;
             case MINUTES:
                 return date.getTime() / (1000 * 60);
             case HOURS:
@@ -143,7 +154,6 @@ public class TimeSpan {
                 return date.getTime() / (1000 * 60 * 60 * 24);
             default:
                 return date.getTime();
-
         }
     }
 
@@ -172,5 +182,17 @@ public class TimeSpan {
      */
     public boolean isExpired() {
         return new Date().after(date);
+    }
+
+    /**
+     * Get Timestamp in UTC Time format
+     *
+     * @return number of seconds since 00:00:00 1 January 1970
+     */
+    public long getTimestamp() {
+        if (date == null)
+            return 0;
+
+        return date.getTime() / 1000;
     }
 }

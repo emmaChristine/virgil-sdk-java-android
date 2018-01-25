@@ -33,14 +33,19 @@
 
 package com.virgilsecurity.sdk.cards;
 
+import com.sun.org.apache.bcel.internal.generic.IDIV;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import com.virgilsecurity.sdk.client.CardClient;
 import com.virgilsecurity.sdk.client.model.RawSignedModel;
 import com.virgilsecurity.sdk.common.Mocker;
 import com.virgilsecurity.sdk.common.PropertyManager;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.jsonWebToken.Jwt;
+import com.virgilsecurity.sdk.jsonWebToken.JwtVerifier;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import sun.util.logging.PlatformLogger;
 
 public class CardClientTest extends PropertyManager {
 
@@ -53,6 +58,15 @@ public class CardClientTest extends PropertyManager {
     public void setUp() {
         cardClient = new CardClient(CARDS_SERVICE_ADDRESS);
         mocker = new Mocker();
+
+        PlatformLogger.getLogger("sun.net.www.protocol.http.HttpURLConnection")
+                      .setLevel(PlatformLogger.Level.ALL);
+    }
+
+    @Test
+    public void tokenVerification() throws CryptoException {
+        Jwt accessToken = mocker.generateAccessToken(IDENTITY);
+        Assert.assertTrue(mocker.getVerifier().verifyToken(accessToken));
     }
 
     @Test

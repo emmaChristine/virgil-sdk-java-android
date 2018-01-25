@@ -45,6 +45,7 @@ import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.jsonWebToken.Jwt;
 import com.virgilsecurity.sdk.jsonWebToken.JwtGenerator;
+import com.virgilsecurity.sdk.jsonWebToken.JwtVerifier;
 import com.virgilsecurity.sdk.jsonWebToken.TimeSpan;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
@@ -63,6 +64,7 @@ public class Mocker extends PropertyManager {
     private JwtGenerator jwtGenerator;
     private VirgilCrypto crypto;
     private AccessTokenSigner accessTokenSigner;
+    private JwtVerifier verifier;
 
     public Mocker() {
         random = new Random();
@@ -71,17 +73,21 @@ public class Mocker extends PropertyManager {
 
         VirgilPrivateKey privateKey;
         try {
-            privateKey = crypto.importPrivateKey(ConvertionUtils.base64ToBytes(ACCESS_PRIVATE_KEY_BASE64));
+            privateKey = crypto.importPrivateKey(ConvertionUtils.base64ToBytes(API_PRIVATE_KEY_BASE64));
         } catch (CryptoException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Mocker -> 'ACCESS_PRIVATE_KEY_BASE64' seems to has wrong format");
         }
 
         jwtGenerator = new JwtGenerator(privateKey,
-                                        ACCESS_PUBLIC_KEY_ID,
+                                        API_PUBLIC_KEY_IDENTIFIER,
                                         accessTokenSigner,
                                         APP_ID,
                                         TimeSpan.fromTime(5, TimeUnit.MINUTES));
+
+        verifier = new JwtVerifier(crypto.importPublicKey(ConvertionUtils.base64ToBytes(API_PUBLIC_KEY)),
+                                   API_PUBLIC_KEY_IDENTIFIER,
+                                   accessTokenSigner);
     }
 
     public Card card() {
@@ -264,5 +270,9 @@ public class Mocker extends PropertyManager {
 
     public Jwt generateAccessToken(String identity) throws CryptoException {
         return jwtGenerator.generateToken(identity);
+    }
+
+    public JwtVerifier getVerifier() {
+        return verifier;
     }
 }

@@ -205,7 +205,7 @@ public class Card {
                              rawCardContent.getIdentity(),
                              publicKey,
                              rawCardContent.getVersion(),
-                             rawCardContent.getCreatedAt(),
+                             rawCardContent.getCreatedAtDate(),
                              rawCardContent.getPreviousCardId(),
                              cardSignatures);
 

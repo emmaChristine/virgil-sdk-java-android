@@ -112,7 +112,7 @@ public class CardClient {
      */
     public RawSignedModel publishCard(RawSignedModel rawCard, String token) throws VirgilServiceException {
         try {
-            URL url = new URL(serviceUrl, "card");
+            URL url = new URL(serviceUrl, ""); // FIXME: 1/25/18 second parameter should be "card" on prod
             String body = rawCard.exportAsJson();
 
             return httpClient.execute(url,
