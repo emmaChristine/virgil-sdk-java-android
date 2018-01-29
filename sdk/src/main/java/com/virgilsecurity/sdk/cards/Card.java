@@ -209,7 +209,7 @@ public class Card {
                         .signerId(rawSignature.getSignerId())
                         .signerType(rawSignature.getSignerType())
                         .signature(rawSignature.getSignature())
-                        .snapshot(ConvertionUtils.base64ToBytes(rawSignature.getSnapshot()))
+                        .snapshot(rawSignature.getSnapshot())
                         .extraFields(ConvertionUtils.base64ToString(rawSignature.getSnapshot()))
                         .build();
 
@@ -242,8 +242,7 @@ public class Card {
 
         for (CardSignature signature : signatures) {
             cardModel.getSignatures().add(new RawSignature(signature.getSignerId(),
-                                                           ConvertionUtils.toString(signature.getSnapshot(),
-                                                                                    StringEncoding.BASE64),
+                                                           signature.getSnapshot(),
                                                            signature.getSignerType(),
                                                            signature.getSignature()));
         }

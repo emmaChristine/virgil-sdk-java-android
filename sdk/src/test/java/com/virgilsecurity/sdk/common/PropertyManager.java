@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class PropertyManager {
 
+/*    // -------------- DEV --------------
     protected final String APP_ID = getPropertyByName("APP_ID");
     protected final String ACCOUNT_ID = getPropertyByName("ACCOUNT_ID");
 
@@ -50,7 +51,23 @@ public class PropertyManager {
     protected final String SERVICE_PUBLIC_KEY_PEM_BASE64 = getPropertyByName("SERVICE_PUBLIC_KEY_PEM_BASE64");
     protected final String SERVICE_PUBLIC_KEY_DER_BASE64 = getPropertyByName("SERVICE_PUBLIC_KEY_DER_BASE64");
 
-    protected final String CARDS_SERVICE_ADDRESS = getPropertyByName("CARDS_SERVICE_ADDRESS");
+    protected final String CARDS_SERVICE_ADDRESS = getPropertyByName("CARDS_SERVICE_ADDRESS");*/
+
+    // -------------- STAGE --------------
+    protected final String APP_ID = getPropertyByName("STAGE_APP_ID");
+    protected final String ACCOUNT_ID = getPropertyByName("STAGE_ACCOUNT_ID");
+
+    protected final String APP_PRIVATE_KEY_PASSWORD = getPropertyByName("STAGE_APP_PRIVATE_KEY_PASSWORD");
+
+    protected final String API_PUBLIC_KEY = getPropertyByName("STAGE_API_PUBLIC_KEY");
+    protected final String API_PUBLIC_KEY_IDENTIFIER = getPropertyByName("STAGE_API_PUBLIC_KEY_IDENTIFIER");
+    protected final String API_PRIVATE_KEY_BASE64 = getPropertyByName("STAGE_API_PRIVATE_KEY_BASE64"); // REPLACE \\n with \n
+
+    protected final String SERVICE_CARD_ID = getPropertyByName("STAGE_SERVICE_CARD_ID");
+    protected final String SERVICE_PUBLIC_KEY_PEM_BASE64 = getPropertyByName("STAGE_SERVICE_PUBLIC_KEY_PEM_BASE64");
+    protected final String SERVICE_PUBLIC_KEY_DER_BASE64 = getPropertyByName("STAGE_SERVICE_PUBLIC_KEY_DER_BASE64");
+
+    protected final String CARDS_SERVICE_ADDRESS = getPropertyByName("STAGE_CARDS_SERVICE_ADDRESS");
 
     public String getPropertyByName(String propertyName) {
         boolean isMacOs = System.getProperty("os.name")

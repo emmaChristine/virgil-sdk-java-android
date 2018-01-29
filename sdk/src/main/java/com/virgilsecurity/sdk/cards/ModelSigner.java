@@ -75,7 +75,7 @@ public class ModelSigner {
         RawSignature rawSignature = new RawSignature(id,
                                                      ConvertionUtils.toBase64String(additionalData),
                                                      type.getRawValue(),
-                                                     signature);
+                                                     ConvertionUtils.toBase64String(signature));
 
         cardModel.getSignatures().add(rawSignature);
     }

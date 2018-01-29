@@ -44,6 +44,7 @@ import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.jsonWebToken.Jwt;
 import com.virgilsecurity.sdk.jsonWebToken.JwtGenerator;
 import com.virgilsecurity.sdk.jsonWebToken.JwtVerifier;
+import com.virgilsecurity.sdk.jsonWebToken.TokenContext;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
@@ -55,18 +56,14 @@ import java.util.concurrent.TimeUnit;
 public class Mocker extends PropertyManager {
 
     private static final String IDENTITY = "TEST";
-    private static final String PUBLIC_KEY = "MCowBQYDK2VwAyEA3J0Ivcs4/ahBafrn6mB4t+UI+IBhWjC/toVDrPJcCZk=";
 
-    private Random random;
     private JwtGenerator jwtGenerator;
     private VirgilCrypto crypto;
-    private AccessTokenSigner accessTokenSigner;
     private JwtVerifier verifier;
 
     public Mocker() {
-        random = new Random();
         crypto = new VirgilCrypto();
-        accessTokenSigner = new VirgilAccessTokenSigner();
+        AccessTokenSigner accessTokenSigner = new VirgilAccessTokenSigner();
 
         VirgilPrivateKey privateKey;
         try {
@@ -101,13 +98,13 @@ public class Mocker extends PropertyManager {
         signatures.add(new CardSignature.CardSignatureBuilder()
                                .signerId(cardId)
                                .signerType(SignerType.SELF.getRawValue())
-                               .signature(signatureSelf)
+                               .signature(ConvertionUtils.toBase64String(signatureSelf))
                                .build());
 
         signatures.add(new CardSignature.CardSignatureBuilder()
                                .signerId(cardId)
                                .signerType(SignerType.VIRGIL.getRawValue())
-                               .signature(signatureVirgil)
+                               .signature(ConvertionUtils.toBase64String(signatureVirgil))
                                .build());
 
         VirgilCrypto virgilCrypto = new VirgilCrypto();
@@ -140,7 +137,7 @@ public class Mocker extends PropertyManager {
             signatures.add(new CardSignature.CardSignatureBuilder()
                                    .signerId(cardId)
                                    .signerType(SignerType.SELF.getRawValue())
-                                   .signature(signatureSelf)
+                                   .signature(ConvertionUtils.toBase64String(signatureSelf))
                                    .build());
         }
 
@@ -148,7 +145,7 @@ public class Mocker extends PropertyManager {
             signatures.add(new CardSignature.CardSignatureBuilder()
                                    .signerId(cardId)
                                    .signerType(SignerType.VIRGIL.getRawValue())
-                                   .signature(signatureVirgil)
+                                   .signature(ConvertionUtils.toBase64String(signatureVirgil))
                                    .build());
         }
 
@@ -179,7 +176,7 @@ public class Mocker extends PropertyManager {
                                                   exportPublicKey),
                           new CardSignature.CardSignatureBuilder()
                                   .signerId(cardId)
-                                  .signature(Generator.randomBytes(64))
+                                  .signature(ConvertionUtils.toBase64String(Generator.randomBytes(64)))
                                   .build());
     }
 
@@ -220,7 +217,7 @@ public class Mocker extends PropertyManager {
         };
 
         AccessTokenProvider accessTokenProvider = new AccessTokenProvider() {
-            @Override public AccessToken getToken(boolean forceReload) throws CryptoException {
+            @Override public AccessToken getToken(TokenContext context) throws CryptoException {
                 return null;
             }
         };

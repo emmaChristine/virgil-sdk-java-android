@@ -33,10 +33,17 @@
 
 package com.virgilsecurity.sdk.common;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class ClassForSerialization implements Serializable {
+
+    private static final long serialVersionUID = 3507743291950891092L;
+
+    @SerializedName("name")
     private String name;
+    @SerializedName("data")
     private byte[] data;
 
     public ClassForSerialization(String name, byte[] data) {

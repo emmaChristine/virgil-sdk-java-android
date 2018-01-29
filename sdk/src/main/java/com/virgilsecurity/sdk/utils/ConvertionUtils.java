@@ -43,6 +43,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -224,6 +225,17 @@ public class ConvertionUtils {
      */
     public static <T> T deserializeFromJson(String serializedObject, Class<T> objectType) {
         return getGson().fromJson(serializedObject, objectType);
+    }
+
+    /**
+     * Deserialize from JSON String to Map
+     *
+     * @param serializedObject object to be deserialized
+     * @return Map object deserialized from JSON String
+     */
+    public static Map<String, Object> deserializeFromJson(String serializedObject) {
+        Type mapType = new TypeToken<Map<String, Object>>(){}.getType();
+        return getGson().fromJson(serializedObject, mapType);
     }
 
     public static <T> T parseSnapshot(byte[] snapshot, Charset stringEncoding, Class<T> objectType) {

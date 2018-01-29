@@ -48,12 +48,12 @@ public class CardSignature {
     /**
      * The digital signature
      */
-    private byte[] signature;
+    private String signature;
 
     /**
      * The digital snapshot
      */
-    private byte[] snapshot;
+    private String snapshot;
 
     /**
      * EXTRA fields
@@ -76,19 +76,19 @@ public class CardSignature {
         this.signerType = signerType;
     }
 
-    public byte[] getSignature() {
+    public String getSignature() {
         return signature;
     }
 
-    private void setSignature(byte[] signature) {
+    private void setSignature(String signature) {
         this.signature = signature;
     }
 
-    public byte[] getSnapshot() {
+    public String getSnapshot() {
         return snapshot;
     }
 
-    private void setSnapshot(byte[] snapshot) {
+    private void setSnapshot(String snapshot) {
         this.snapshot = snapshot;
     }
 
@@ -104,8 +104,8 @@ public class CardSignature {
     public static final class CardSignatureBuilder {
         private String signerId;
         private String signerType;
-        private byte[] signature;
-        private byte[] snapshot;
+        private String signature;
+        private String snapshot;
         private String extraFields;
 
         public CardSignatureBuilder() {
@@ -121,12 +121,12 @@ public class CardSignature {
             return this;
         }
 
-        public CardSignatureBuilder signature(byte[] signature) {
+        public CardSignatureBuilder signature(String signature) {
             this.signature = signature;
             return this;
         }
 
-        public CardSignatureBuilder snapshot(byte[] snapshot) {
+        public CardSignatureBuilder snapshot(String snapshot) {
             this.snapshot = snapshot;
             return this;
         }

@@ -164,7 +164,7 @@ public class VirgilCardVerifier implements CardVerifier {
 
         byte[] fingerprint = crypto.generateSHA256(outputStream.toByteArray());
 
-        if (!crypto.verifySignature(signature.getSignature(), fingerprint, signerPublicKey)) {
+        if (!crypto.verifySignature(ConvertionUtils.base64ToBytes(signature.getSignature()), fingerprint, signerPublicKey)) {
             validationResult.addError("The card with id " + signerCardId + " was corrupted");
         }
     }

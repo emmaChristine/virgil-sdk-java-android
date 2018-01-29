@@ -47,9 +47,9 @@ public class RawSignature {
     private String signerType;
 
     @SerializedName("signature")
-    private byte[] signature;
+    private String signature;
 
-    public RawSignature(String signerId, String snapshot, String signerType, byte[] signature) {
+    public RawSignature(String signerId, String snapshot, String signerType, String signature) {
         this.signerId = signerId;
         this.snapshot = snapshot;
         this.signerType = signerType;
@@ -80,11 +80,11 @@ public class RawSignature {
         this.signerType = signerType;
     }
 
-    public byte[] getSignature() {
+    public String getSignature() {
         return signature;
     }
 
-    public void setSignature(byte[] signature) {
+    public void setSignature(String signature) {
         this.signature = signature;
     }
 }
