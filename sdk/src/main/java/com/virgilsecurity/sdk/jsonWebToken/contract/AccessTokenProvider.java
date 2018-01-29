@@ -34,8 +34,9 @@
 package com.virgilsecurity.sdk.jsonWebToken.contract;
 
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.jsonWebToken.TokenContext;
 
 public interface AccessTokenProvider {
 
-    AccessToken getToken(boolean forceReload) throws CryptoException;
+    AccessToken getToken(TokenContext context) throws CryptoException;
 }

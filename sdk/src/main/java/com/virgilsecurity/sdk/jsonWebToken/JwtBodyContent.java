@@ -34,7 +34,7 @@
 package com.virgilsecurity.sdk.jsonWebToken;
 
 import com.google.gson.annotations.SerializedName;
-import com.virgilsecurity.sdk.jsonWebToken.TimeSpan;
+import com.virgilsecurity.sdk.common.TimeSpan;
 
 import java.util.Date;
 import java.util.Map;

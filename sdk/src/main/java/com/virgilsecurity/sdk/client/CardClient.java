@@ -134,7 +134,7 @@ public class CardClient {
      * @param token    token to authorize the request.
      * @return the found cards list.
      */
-    public List<RawSignedModel> searchCards(String identity, String token) { // TODO: 1/22/18 should return chain of cards
+    public List<RawSignedModel> searchCards(String identity, String token) {
         if (identity == null)
             throw new NullArgumentException("CardClient -> 'identity' should not be null");
 

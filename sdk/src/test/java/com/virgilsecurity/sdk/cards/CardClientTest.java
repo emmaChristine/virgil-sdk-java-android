@@ -42,10 +42,13 @@ import com.virgilsecurity.sdk.common.PropertyManager;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.jsonWebToken.Jwt;
 import com.virgilsecurity.sdk.jsonWebToken.JwtVerifier;
+import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import sun.util.logging.PlatformLogger;
+
+import java.io.IOException;
 
 public class CardClientTest extends PropertyManager {
 
@@ -70,12 +73,43 @@ public class CardClientTest extends PropertyManager {
     }
 
     @Test
-    public void fakeToken() throws CryptoException {
+    public void validTokenPublishCard() throws CryptoException {
         RawSignedModel cardModelBeforePublish = mocker.generateCardModel();
 
         RawSignedModel cardModelAfterPublish =
                 cardClient.publishCard(cardModelBeforePublish,
                                        mocker.generateAccessToken(IDENTITY).toString());
+
+        Assert.assertEquals(cardModelBeforePublish, cardModelAfterPublish);
+    }
+
+    @Test
+    public void validTokenPublishCardExported() throws CryptoException {
+        String jsonCardModel = "{\"content_snapshot\":\"ewogICJ2ZXJzaW9uIiA6ICI1LjAiLAogICJwdWJsaWNfa2" +
+                "V5IiA6ICJMUzB0TFMxQ1JVZEpUaUJRVlVKTVNVTWdTMFZaTFMwdExTMEtUVU52ZDBKUldVUkxNbFozUVhsRlF" +
+                "XSTBTRlVyZUVsclVDdDJkM0F2VmpZeU5tZHNlWE5SWjJWaFdYbFJNV2RCT1ZkVFNreDZkVzQ0WkdzOUNpMHRM" +
+                "UzB0UlU1RUlGQlZRa3hKUXlCTFJWa3RMUzB0TFFvPSIsCiAgImlkZW50aXR5IiA6ICJpZGVudGl0eSIsCiAgI" +
+                "mNyZWF0ZWRfYXQiIDogMTUxNjk3MjAwOQp9\",\"signatures\":[{\"signer_type\":\"self\",\"sig" +
+                "nature\":\"MFEwDQYJYIZIAWUDBAICBQAEQINRagKzeNyk2juS5G6Ratlk5sNYFDB4TtIJ2ELQflYJSq9LoP" +
+                "H541IRdbl0q/jzEJw94v4VCfNhEioXBRv0hAU=\",\"snapshot\":\"\",\"signer_id\":\"56d5df161e" +
+                "f884a2d3702c41ad9487036720208a68c425b968f86cd1a45fb75e\"}]}";
+
+        RawSignedModel cardModelBeforePublish = ConvertionUtils.deserializeFromJson(jsonCardModel, RawSignedModel.class);
+
+        RawSignedModel cardModelAfterPublish =
+                cardClient.publishCard(cardModelBeforePublish,
+                                       mocker.generateAccessToken(IDENTITY).toString());
+
+        Assert.assertEquals(cardModelBeforePublish, cardModelAfterPublish);
+    }
+
+    @Test
+    public void fakeTokenPublishCard() throws CryptoException {
+        RawSignedModel cardModelBeforePublish = mocker.generateCardModel();
+
+        RawSignedModel cardModelAfterPublish =
+                cardClient.publishCard(cardModelBeforePublish,
+                                       "Try our tokens");
 
         Assert.assertEquals(cardModelBeforePublish, cardModelAfterPublish);
     }

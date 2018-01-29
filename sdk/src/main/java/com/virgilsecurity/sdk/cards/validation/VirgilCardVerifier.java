@@ -61,7 +61,7 @@ public class VirgilCardVerifier implements CardVerifier {
     private List<WhiteList> whiteLists;
 
     public VirgilCardVerifier(@NotNull CardCrypto crypto) {
-        Validator.illegalAgrument(crypto, "VirgilCardVerifier -> 'crypto' should not be null");
+        Validator.checkIllegalAgrument(crypto, "VirgilCardVerifier -> 'crypto' should not be null");
         this.crypto = crypto;
 
         this.whiteLists = new ArrayList<>();
@@ -79,8 +79,8 @@ public class VirgilCardVerifier implements CardVerifier {
                               boolean verifySelfSignature,
                               boolean verifyVirgilSignature,
                               @NotNull List<WhiteList> whiteLists) {
-        Validator.illegalAgrument(crypto, "VirgilCardVerifier -> 'crypto' should not be null");
-        Validator.illegalAgrument(whiteLists, "VirgilCardVerifier -> 'whiteLists' should not be null");
+        Validator.checkIllegalAgrument(crypto, "VirgilCardVerifier -> 'crypto' should not be null");
+        Validator.checkIllegalAgrument(whiteLists, "VirgilCardVerifier -> 'whiteLists' should not be null");
 
         this.crypto = crypto;
         this.whiteLists = whiteLists;

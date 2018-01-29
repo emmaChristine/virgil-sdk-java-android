@@ -98,7 +98,7 @@ public class HttpClient {
                         String body = ConvertionUtils.toString(in);
                         if (!StringUtils.isBlank(body)) {
                             ErrorResponse error = ConvertionUtils.getGson().fromJson(body, ErrorResponse.class);
-                            throw new VirgilCardServiceException(error.getCode());
+                            throw new VirgilCardServiceException(error.getCode(), error.getMessage());
                         }
                     }
                     if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {

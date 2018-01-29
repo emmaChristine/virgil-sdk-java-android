@@ -52,6 +52,18 @@ public class VirgilCardServiceException extends VirgilServiceException {
     /**
      * Create a new instance of {@code VirgilCardServiceException}
      *
+     * @param code
+     *            The error code.
+     * @param message
+     *            The error message.
+     */
+    public VirgilCardServiceException(int code, String message) {
+        super(code, message);
+    }
+
+    /**
+     * Create a new instance of {@code VirgilCardServiceException}
+     *
      */
     public VirgilCardServiceException() {
     }

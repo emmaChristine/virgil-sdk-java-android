@@ -35,10 +35,13 @@ package com.virgilsecurity.sdk.cards;
 
 import com.virgilsecurity.sdk.client.model.RawSignature;
 import com.virgilsecurity.sdk.client.model.RawSignedModel;
+import com.virgilsecurity.sdk.common.StringEncoding;
 import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
+
+import java.io.ByteArrayOutputStream;
 
 public class ModelSigner {
 
@@ -48,30 +51,45 @@ public class ModelSigner {
         this.crypto = crypto;
     }
 
-    public void sign(RawSignedModel model,
+    public void sign(RawSignedModel cardModel,
+                     String id,
                      SignerType type,
                      byte[] additionalData,
                      PrivateKey privateKey) throws CryptoException {
 
-        byte[] combinedSnapshot = new byte[2];
+        byte[] combinedSnapshot = new byte[cardModel.getContentSnapshot().length + additionalData.length];
+        System.arraycopy(cardModel.getContentSnapshot(),
+                         0,
+                         combinedSnapshot,
+                         0,
+                         cardModel.getContentSnapshot().length);
+        System.arraycopy(additionalData,
+                         0,
+                         combinedSnapshot,
+                         cardModel.getContentSnapshot().length,
+                         additionalData.length);
+
         byte[] fingerprint = crypto.generateSHA256(combinedSnapshot);
         byte[] signature = crypto.generateSignature(fingerprint, privateKey);
 
-        String signerId = ConvertionUtils.toHex(crypto.generateSHA256(model.getContentSnapshot()));
-
-        RawSignature rawSignature = new RawSignature(signerId,
-                                                     ConvertionUtils.toHex(additionalData),
+        RawSignature rawSignature = new RawSignature(id,
+                                                     ConvertionUtils.toBase64String(additionalData),
                                                      type.getRawValue(),
                                                      signature);
 
-        model.getSignatures().add(rawSignature);
+        cardModel.getSignatures().add(rawSignature);
     }
 
-    public void selfSign(RawSignedModel model, byte[] additionalData, PrivateKey privateKey) throws CryptoException {
-        sign(model, SignerType.SELF, additionalData, privateKey);
+    public void selfSign(RawSignedModel cardModel, byte[] additionalData, PrivateKey privateKey) throws CryptoException {
+        String signerId = ConvertionUtils.toHex(crypto.generateSHA256(cardModel.getContentSnapshot()));
+
+        sign(cardModel, signerId, SignerType.SELF, additionalData, privateKey);
     }
 
-    public void selfSign(RawSignedModel model, PrivateKey privateKey) throws CryptoException {
-        sign(model, SignerType.SELF, new byte[0], privateKey);
+    public void selfSign(RawSignedModel cardModel, PrivateKey privateKey) throws CryptoException {
+        String signerId = ConvertionUtils.toString(crypto.generateSHA256(cardModel.getContentSnapshot()),
+                                                   StringEncoding.HEX);
+
+        sign(cardModel, signerId, SignerType.SELF, new byte[0], privateKey);
     }
 }

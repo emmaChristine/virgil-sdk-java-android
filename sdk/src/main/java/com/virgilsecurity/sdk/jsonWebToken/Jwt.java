@@ -122,7 +122,7 @@ public class Jwt implements AccessToken {
     }
 
     public byte[] snapshotWithoutSignatures() {
-        return ConvertionUtils.toBase64Bytes(headerBase64url() + "." + bodyBase64url());
+        return (headerBase64url() + "." + bodyBase64url()).getBytes();
     }
 
     @Override

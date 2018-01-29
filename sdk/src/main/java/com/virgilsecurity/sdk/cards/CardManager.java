@@ -46,6 +46,7 @@ import com.virgilsecurity.sdk.crypto.PrivateKey;
 import com.virgilsecurity.sdk.crypto.PublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+import com.virgilsecurity.sdk.jsonWebToken.TokenContext;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
@@ -55,6 +56,7 @@ import java.util.*;
 
 public class CardManager {
     private static final String CURRENT_CARD_VERSION = "5.0";
+    private static final String TOKEN_CONTEXT_OPERATION = "SomeOperation";
 
     private ModelSigner modelSigner;
     private CardCrypto crypto;
@@ -96,32 +98,73 @@ public class CardManager {
             throw new VerificationException();
     }
 
-    public RawSignedModel generateRawCard(PrivateKey privateKey, PublicKey publicKey, String previousCardId) throws Exception {
-        AccessToken token = accessTokenProvider.getToken(false);
-        RawCardContent cardContent = new RawCardContent(token.getIdentity(),
+    public RawSignedModel generateRawCard(PrivateKey privateKey,
+                                          PublicKey publicKey,
+                                          String identity,
+                                          String previousCardId,
+                                          Map<String, String> additionalData) throws Exception {
+        RawCardContent cardContent = new RawCardContent(identity,
                                                         ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey)),
                                                         CURRENT_CARD_VERSION,
                                                         new Date(),
                                                         previousCardId);
 
         byte[] snapshot = ConvertionUtils.captureSnapshot(cardContent);
-        RawSignedModel rawCard = new RawSignedModel(snapshot);
-        modelSigner.selfSign(rawCard, privateKey);
+        RawSignedModel cardModel = new RawSignedModel(snapshot);
+        modelSigner.selfSign(cardModel, ConvertionUtils.captureSnapshot(additionalData), privateKey);
 
-        rawCard = signCallback.onSign(rawCard);
+        cardModel = signCallback.onSign(cardModel);
 
-        return rawCard;
+        return cardModel;
     }
 
-    public RawSignedModel generateRawCard(PrivateKey privateKey, PublicKey publicKey) throws Exception {
-        AccessToken token = accessTokenProvider.getToken(false);
-        RawCardContent cardContent = new RawCardContent(token.getIdentity(),
+    public RawSignedModel generateRawCard(PrivateKey privateKey,
+                                          PublicKey publicKey,
+                                          String identity,
+                                          String previousCardId) throws Exception {
+        RawCardContent cardContent = new RawCardContent(identity,
+                                                        ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey)),
+                                                        CURRENT_CARD_VERSION,
+                                                        new Date(),
+                                                        previousCardId);
+
+        byte[] snapshot = ConvertionUtils.captureSnapshot(cardContent);
+        RawSignedModel cardModel = new RawSignedModel(snapshot);
+        modelSigner.selfSign(cardModel, privateKey);
+
+        cardModel = signCallback.onSign(cardModel);
+
+        return cardModel;
+    }
+
+    public RawSignedModel generateRawCard(PrivateKey privateKey,
+                                          PublicKey publicKey,
+                                          String identity,
+                                          Map<String, String> additionalData) throws Exception {
+        RawCardContent cardContent = new RawCardContent(identity,
                                                         ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey)),
                                                         CURRENT_CARD_VERSION,
                                                         new Date());
 
         byte[] snapshot = ConvertionUtils.captureSnapshot(cardContent);
-        RawSignedModel cardModel = new RawSignedModel(snapshot, Collections.<RawSignature>emptyList());
+        RawSignedModel cardModel = new RawSignedModel(snapshot);
+        modelSigner.selfSign(cardModel, ConvertionUtils.captureSnapshot(additionalData), privateKey);
+
+        cardModel = signCallback.onSign(cardModel);
+
+        return cardModel;
+    }
+
+    public RawSignedModel generateRawCard(PrivateKey privateKey,
+                                          PublicKey publicKey,
+                                          String identity) throws Exception {
+        RawCardContent cardContent = new RawCardContent(identity,
+                                                        ConvertionUtils.toBase64String(crypto.exportPublicKey(publicKey)),
+                                                        CURRENT_CARD_VERSION,
+                                                        new Date());
+
+        byte[] snapshot = ConvertionUtils.captureSnapshot(cardContent);
+        RawSignedModel cardModel = new RawSignedModel(snapshot);
         modelSigner.selfSign(cardModel, privateKey);
 
         cardModel = signCallback.onSign(cardModel);
@@ -130,7 +173,7 @@ public class CardManager {
     }
 
     public Card publishCard(RawSignedModel cardModel) throws CryptoException, IOException {
-        AccessToken token = accessTokenProvider.getToken(false);
+        AccessToken token = accessTokenProvider.getToken(new TokenContext(TOKEN_CONTEXT_OPERATION, false));
         Card card = Card.parse(crypto,
                                cardClient.publishCard(cardModel, token.toString()));
 
@@ -141,21 +184,43 @@ public class CardManager {
 
     public Card publishCard(PrivateKey privateKey,
                             PublicKey publicKey,
-                            String previousCardId) throws Exception {
+                            String identity,
+                            String previousCardId,
+                            Map<String, String> additionalData) throws Exception {
 
-        RawSignedModel cardModel = generateRawCard(privateKey, publicKey, previousCardId);
+        RawSignedModel cardModel = generateRawCard(privateKey, publicKey, identity, previousCardId, additionalData);
 
         return publishCard(cardModel);
     }
 
-    public Card publishCard(PrivateKey privateKey, PublicKey publicKey) throws Exception {
-        RawSignedModel cardModel = generateRawCard(privateKey, publicKey);
+    public Card publishCard(PrivateKey privateKey,
+                            PublicKey publicKey,
+                            String identity,
+                            Map<String, String> additionalData) throws Exception {
+
+        RawSignedModel cardModel = generateRawCard(privateKey, publicKey, identity, additionalData);
+
+        return publishCard(cardModel);
+    }
+
+    public Card publishCard(PrivateKey privateKey,
+                            PublicKey publicKey,
+                            String identity,
+                            String previousCardId) throws Exception {
+
+        RawSignedModel cardModel = generateRawCard(privateKey, publicKey, identity, previousCardId);
+
+        return publishCard(cardModel);
+    }
+
+    public Card publishCard(PrivateKey privateKey, PublicKey publicKey, String identity) throws Exception {
+        RawSignedModel cardModel = generateRawCard(privateKey, publicKey, identity);
 
         return publishCard(cardModel);
     }
 
     public Card getCard(String cardId) throws CryptoException, IOException {
-        AccessToken token = accessTokenProvider.getToken(false);
+        AccessToken token = accessTokenProvider.getToken(new TokenContext(TOKEN_CONTEXT_OPERATION, false));
         Card card = Card.parse(crypto, cardClient.getCard(cardId, token.toString()));
 
         verifyCard(card);
@@ -164,7 +229,7 @@ public class CardManager {
     }
 
     public List<Card> searchCards(String identity) throws CryptoException {
-        AccessToken token = accessTokenProvider.getToken(false);
+        AccessToken token = accessTokenProvider.getToken(new TokenContext(TOKEN_CONTEXT_OPERATION, false));
 
         List<RawSignedModel> cardModels = cardClient.searchCards(identity, token.toString());
 
@@ -172,7 +237,23 @@ public class CardManager {
         for (RawSignedModel cardModel : cardModels)
             cards.add(Card.parse(crypto, cardModel));
 
-        return cards;
+        for (Card cardOuter : cards) {
+            for (Card cardInner : cards) {
+                if (cardOuter.getPreviousCardId().equals(cardInner.getIdentifier())) {
+                    cardOuter.setPreviousCard(cardInner);
+                    cardInner.setOutdated(true);
+                    break;
+                }
+            }
+        }
+
+        List<Card> result = new ArrayList<>();
+        for (Card card : cards) {
+            if (!card.isOutdated())
+                result.add(card);
+        }
+
+        return result;
     }
 
     /**
@@ -188,6 +269,10 @@ public class CardManager {
         return ConvertionUtils.deserializeFromJson(card, Card.class);
     }
 
+    public Card importCardAsRawModel(RawSignedModel cardModel) {
+        return Card.parse(crypto, cardModel);
+    }
+
     /**
      *
      * @param card
@@ -199,6 +284,10 @@ public class CardManager {
 
     public String exportCardAsJson(Card card) {
         return ConvertionUtils.serializeToJson(card);
+    }
+
+    public RawSignedModel exportCardAsRawModel(Card card) throws CryptoException {
+        return card.getRawCard(crypto);
     }
 
     public interface SignCallback {

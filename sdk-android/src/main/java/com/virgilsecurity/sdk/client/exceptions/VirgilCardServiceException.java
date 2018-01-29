@@ -48,7 +48,7 @@ public class VirgilCardServiceException extends VirgilServiceException {
     private static final Map<Integer, String> ERROR_MESSAGES;
 
     static {
-        ERROR_MESSAGES = new HashMap<Integer, String>();
+        ERROR_MESSAGES = new HashMap<>();
         ERROR_MESSAGES.put(10000,
                 "Internal application error. You know, shit happens, so do internal server errors.Just take a deep breath and try harder.");
         ERROR_MESSAGES.put(20300, "The Virgil access token was not specified or is invalid");

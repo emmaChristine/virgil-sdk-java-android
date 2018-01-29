@@ -31,12 +31,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.sdk.utils;
+package com.virgilsecurity.sdk.jsonWebToken;
 
-public class Validator {
+public class TokenContext {
 
-    public static void checkIllegalAgrument(Object o, String message) {
-        if (o == null)
-            throw new IllegalArgumentException(message); // TODO: 1/18/18 replace in all places and check for references to other packages
+    private String identity;
+    private String operation;
+    private boolean forceReload;
+
+    public TokenContext(String operation, boolean forceReload) {
+        this.operation = operation;
+        this.forceReload = forceReload;
+    }
+
+    public TokenContext(String identity, String operation, boolean forceReload) {
+        this.identity = identity;
+        this.operation = operation;
+        this.forceReload = forceReload;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public boolean isForceReload() {
+        return forceReload;
     }
 }

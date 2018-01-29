@@ -33,6 +33,7 @@
 
 package com.virgilsecurity.sdk.jsonWebToken.accessProviders;
 
+import com.virgilsecurity.sdk.jsonWebToken.TokenContext;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
 import com.virgilsecurity.sdk.jsonWebToken.Jwt;
@@ -51,7 +52,7 @@ public class ConstAccessTokenProvider implements AccessTokenProvider {
             throw new IllegalArgumentException("ConstAccessTokenProvider -> 'jwt' should not be null");
     }
 
-    @Override public AccessToken getToken(boolean forceReload) {
+    @Override public AccessToken getToken(TokenContext context) {
         return jwtToken;
     }
 

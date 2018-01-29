@@ -35,6 +35,7 @@ package com.virgilsecurity.sdk.jsonWebToken.accessProviders;
 
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.jsonWebToken.JwtGenerator;
+import com.virgilsecurity.sdk.jsonWebToken.TokenContext;
 import com.virgilsecurity.sdk.utils.Validator;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
@@ -44,37 +45,28 @@ import java.util.Map;
 public class GeneratorJwtProvider implements AccessTokenProvider {
 
     private JwtGenerator jwtGenerator;
-    private String identity;
     private Map<String, String> additionalData;
 
-    public GeneratorJwtProvider(JwtGenerator jwtGenerator, String identity) {
-        Validator.illegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
-        Validator.illegalAgrument(identity, "GeneratorJwtProvider -> 'identity' should not be null");
+    public GeneratorJwtProvider(JwtGenerator jwtGenerator) {
+        Validator.checkIllegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
 
         this.jwtGenerator = jwtGenerator;
-        this.identity = identity;
     }
 
-    public GeneratorJwtProvider(JwtGenerator jwtGenerator, String identity, Map<String, String> additionalData) {
-        Validator.illegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
-        Validator.illegalAgrument(identity, "GeneratorJwtProvider -> 'identity' should not be null");
-        Validator.illegalAgrument(additionalData, "GeneratorJwtProvider -> 'additionalData' should not be null");
+    public GeneratorJwtProvider(JwtGenerator jwtGenerator, Map<String, String> additionalData) {
+        Validator.checkIllegalAgrument(jwtGenerator, "GeneratorJwtProvider -> 'jwtGenerator' should not be null");
+        Validator.checkIllegalAgrument(additionalData, "GeneratorJwtProvider -> 'additionalData' should not be null");
 
         this.jwtGenerator = jwtGenerator;
-        this.identity = identity;
         this.additionalData = additionalData;
     }
 
-    @Override public AccessToken getToken(boolean forceReload) throws CryptoException {
-        return jwtGenerator.generateToken(identity, additionalData);
+    @Override public AccessToken getToken(TokenContext context) throws CryptoException {
+        return jwtGenerator.generateToken(context.getIdentity(), additionalData);
     }
 
     public JwtGenerator getJwtGenerator() {
         return jwtGenerator;
-    }
-
-    public String getIdentity() {
-        return identity;
     }
 
     public Map<String, String> getAdditionalData() {

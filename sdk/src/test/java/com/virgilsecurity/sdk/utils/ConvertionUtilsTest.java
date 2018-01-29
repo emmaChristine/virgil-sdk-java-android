@@ -32,15 +32,23 @@ package com.virgilsecurity.sdk.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.virgilsecurity.sdk.client.model.RawCardContent;
+import com.virgilsecurity.sdk.client.model.RawSignedModel;
 import com.virgilsecurity.sdk.common.ClassForSerialization;
+import com.virgilsecurity.sdk.common.Generator;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Base64;
 
 /**
  * Unit tests for {@linkplain ConvertionUtils}.
  *
  * @author Andrii Iakovenko
+ * @author Danylo Oliinyk
  *
  */
 public class ConvertionUtilsTest {
@@ -95,5 +103,35 @@ public class ConvertionUtilsTest {
 
         assertEquals(deserializedClassForSerialization.getName(), "Gregory");
         assertEquals(new String(deserializedClassForSerialization.getData()), "Gilbert");
+	}
+
+	@Test
+	public void deSerializationJson() {
+		String rawJson = "{ \"id\": \"12345\", \"content_snapshot\":\"AQIDBAU=\" }";
+		RawSignedModel cardModel = ConvertionUtils.deserializeFromJson(rawJson, RawSignedModel.class);
+
+		Assert.assertTrue(Arrays.equals(cardModel.getContentSnapshot(), ConvertionUtils.base64ToBytes("AQIDBAU=")));
+	}
+
+	@Test
+	public void byteEquals() {
+		String hello = "Hello";
+		byte[] bArr1 = hello.getBytes();
+		byte[] bArr2 = hello.getBytes();
+
+		assertTrue(Arrays.equals(bArr1, bArr2));
+	}
+
+	@Test
+	public void base64UrlConvertion() {
+		String raw = "This is the best string ever!";
+		String rawToB64 = ConvertionUtils.toBase64String(raw);
+
+		String encodedBase64Url = ConvertionUtils.toBase64Url(rawToB64);
+		String decodedBase64Url = ConvertionUtils.fromBase64Url(encodedBase64Url);
+
+		String base64toRaw = ConvertionUtils.base64ToString(decodedBase64Url);
+
+		assertEquals(raw, base64toRaw);
 	}
 }

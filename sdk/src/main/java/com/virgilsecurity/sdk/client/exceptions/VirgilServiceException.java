@@ -45,6 +45,7 @@ public abstract class VirgilServiceException extends RuntimeException {
     protected static final String ERROR_UNKNOWN = "Unknown error";
 
     private int errorCode = 0;
+    private String message;
 
     /**
      * Create a new instance of {@code VirgilServiceException}
@@ -60,6 +61,19 @@ public abstract class VirgilServiceException extends RuntimeException {
      */
     public VirgilServiceException(int code) {
         this.errorCode = code;
+    }
+
+    /**
+     * Create a new instance of {@code VirgilServiceException}
+     *
+     * @param code
+     *            The error code.
+     * @param message
+     *            The error message.
+     */
+    public VirgilServiceException(int code, String message) {
+        this.errorCode = code;
+        this.message = message;
     }
 
     /**
@@ -96,23 +110,26 @@ public abstract class VirgilServiceException extends RuntimeException {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Throwable#getMessage()
      */
     @Override
     public String getMessage() {
-        if (errorCode == -1) {
+        if (errorCode == -1)
             return super.getMessage();
-        }
-        ResourceBundle bundle = null;
+
         try {
-            bundle = ResourceBundle.getBundle(getMessageBundleName());
+            ResourceBundle bundle = ResourceBundle.getBundle(getMessageBundleName());
             String key = String.valueOf(this.errorCode);
-            if (bundle.containsKey(key)) {
+            if (bundle.containsKey(key))
                 return bundle.getString(key);
-            }
-        } catch (MissingResourceException e) {
+
+        } catch (MissingResourceException ignored) {
         }
+
+        if (message != null)
+            return message + ": " + errorCode;
+
         return ERROR_UNKNOWN + ": " + errorCode;
     }
 

@@ -33,13 +33,17 @@
 
 package com.virgilsecurity.sdk.cards;
 
+import com.sun.istack.internal.NotNull;
 import com.virgilsecurity.sdk.client.model.RawCardContent;
 import com.virgilsecurity.sdk.client.model.RawSignature;
 import com.virgilsecurity.sdk.client.model.RawSignedModel;
+import com.virgilsecurity.sdk.common.StringEncoding;
 import com.virgilsecurity.sdk.crypto.CardCrypto;
 import com.virgilsecurity.sdk.crypto.PublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.exception.NullArgumentException;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
+import com.virgilsecurity.sdk.utils.Validator;
 
 import java.util.*;
 
@@ -167,12 +171,24 @@ public class Card {
         return previousCard;
     }
 
+    /**
+     * Set previous Card that current card is used to override to
+     */
+    public void setPreviousCard(@NotNull Card previousCard) {
+        Validator.checkIllegalAgrument(previousCard, "Card -> 'previousCard' shoud not be null");
+        this.previousCard = previousCard;
+    }
+
     public List<CardSignature> getSignatures() {
         return signatures;
     }
 
     public boolean isOutdated() {
         return isOutdated;
+    }
+
+    public void setOutdated(boolean outdated) {
+        isOutdated = outdated;
     }
 
     public static Card parse(CardCrypto crypto, RawSignedModel cardModel) {
@@ -210,5 +226,28 @@ public class Card {
                              cardSignatures);
 
         return card;
+    }
+
+    public RawSignedModel getRawCard(CardCrypto cardCrypto) throws CryptoException {
+        RawCardContent cardContent = new RawCardContent(identity,
+                                                        ConvertionUtils.toString(cardCrypto.exportPublicKey(publicKey),
+                                                                                 StringEncoding.BASE64),
+                                                        version,
+                                                        createdAt,
+                                                        previousCardId);
+
+        byte[] snapshot = ConvertionUtils.captureSnapshot(cardContent);
+
+        RawSignedModel cardModel = new RawSignedModel(snapshot);
+
+        for (CardSignature signature : signatures) {
+            cardModel.getSignatures().add(new RawSignature(signature.getSignerId(),
+                                                           ConvertionUtils.toString(signature.getSnapshot(),
+                                                                                    StringEncoding.BASE64),
+                                                           signature.getSignerType(),
+                                                           signature.getSignature()));
+        }
+
+        return cardModel;
     }
 }

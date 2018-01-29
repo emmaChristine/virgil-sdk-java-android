@@ -95,6 +95,18 @@ public class CrossCompatibilityTest {
         assertEquals(cardModel.getSignatures().size(), 0);
     }
 
+    @Test
+    public void parseSnapsot() {
+        String snapshot = "eyJpZGVudGl0eSI6IlRFU1QiLCJwdWJsaWNfa2V5IjoiTUNvd0JRWURLMlZ3QXlFQVpUdHZkVmE2YnhLUENWcDZVW" +
+                "nBwMFhJNDdhN3lNTlNNb2FYZ0R5VHQvak09IiwidmVyc2lvbiI6IjUuMCIsImNyZWF0ZWRfYXQiOjE1MTc5MDQ2NzN9";
+
+        RawCardContent cardContent = ConvertionUtils.deserializeFromJson(ConvertionUtils.base64ToString(snapshot),
+                                                                         RawCardContent.class);
+
+        String serializedSnapshot = ConvertionUtils.toBase64String(ConvertionUtils.serializeToJson(cardContent));
+        assertEquals(snapshot, serializedSnapshot);
+    }
+
     private String readFile(String name) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         String line;

@@ -198,7 +198,7 @@ public class ConvertionUtils {
      * @return The taken snapshot.
      */
     public static byte[] captureSnapshot(Object snapshotModel) {
-        String snapshotModelJson = ConvertionUtils.getGson().toJson(snapshotModel);
+        String snapshotModelJson = serializeToJson(snapshotModel);
         byte[] takenSnapshot = ConvertionUtils.toBytes(snapshotModelJson);
 
         return takenSnapshot;
@@ -332,8 +332,13 @@ public class ConvertionUtils {
             case BASE64:
                 return toBase64String(inputBytes);
             case HEX:
-                String hex = inputBytes.toString();
-                return hex.replace("-", "").toLowerCase(Locale.getDefault());
+                StringBuilder stringBuilder = new StringBuilder();
+                for (byte inputByte : inputBytes)
+                    stringBuilder.append(String.format("%02X", inputByte));
+
+                return stringBuilder.toString()
+                                    .replace("-", "")
+                                    .toLowerCase(Locale.getDefault());
             case UTF8:
                 return new String(inputBytes, StandardCharsets.UTF_8);
             default:
@@ -348,9 +353,9 @@ public class ConvertionUtils {
      * @return base64url string
      */
     public static String toBase64Url(String input) {
-        return input.split("=")[0]
-                .replace("+", "-")
-                .replace("/", "_");
+        return input.replace("=", "")
+                    .replace("+", "-")
+                    .replace("/", "_");
     }
 
     /**

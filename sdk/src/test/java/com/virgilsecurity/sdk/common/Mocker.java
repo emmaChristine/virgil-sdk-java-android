@@ -36,17 +36,14 @@ package com.virgilsecurity.sdk.common;
 import com.sun.istack.internal.NotNull;
 import com.virgilsecurity.sdk.cards.*;
 import com.virgilsecurity.sdk.cards.validation.VerifierCredentials;
-import com.virgilsecurity.sdk.cards.validation.VirgilCardVerifier;
 import com.virgilsecurity.sdk.client.CardClient;
 import com.virgilsecurity.sdk.client.model.RawCardContent;
-import com.virgilsecurity.sdk.client.model.RawSignature;
 import com.virgilsecurity.sdk.client.model.RawSignedModel;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.jsonWebToken.Jwt;
 import com.virgilsecurity.sdk.jsonWebToken.JwtGenerator;
 import com.virgilsecurity.sdk.jsonWebToken.JwtVerifier;
-import com.virgilsecurity.sdk.jsonWebToken.TimeSpan;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
 import com.virgilsecurity.sdk.utils.ConvertionUtils;
@@ -83,7 +80,7 @@ public class Mocker extends PropertyManager {
                                         API_PUBLIC_KEY_IDENTIFIER,
                                         accessTokenSigner,
                                         APP_ID,
-                                        TimeSpan.fromTime(5, TimeUnit.MINUTES));
+                                        TimeSpan.fromTime(1, TimeUnit.HOURS));
 
         verifier = new JwtVerifier(crypto.importPublicKey(ConvertionUtils.base64ToBytes(API_PUBLIC_KEY)),
                                    API_PUBLIC_KEY_IDENTIFIER,
@@ -186,40 +183,6 @@ public class Mocker extends PropertyManager {
                                   .build());
     }
 
-    public RawSignedModel predefinedRawSignedModel(@NotNull String previousCardId) {
-        if (previousCardId == null)
-            throw new IllegalArgumentException("Mocker -> 'previousCardId' should not be null");
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2018);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 6);
-        calendar.set(Calendar.HOUR_OF_DAY, 10);
-
-        RawCardContent rawCardContent = new RawCardContent(IDENTITY,
-                                                           ConvertionUtils.toBase64String(PUBLIC_KEY.getBytes()),
-                                                           "5.0",
-                                                           calendar.getTime(),
-                                                           previousCardId);
-
-        return new RawSignedModel(ConvertionUtils.captureSnapshot(rawCardContent));
-    }
-
-    public RawSignedModel predefinedRawSignedModel() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2018);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 6);
-        calendar.set(Calendar.HOUR_OF_DAY, 10);
-
-        RawCardContent rawCardContent = new RawCardContent(IDENTITY,
-                                                           ConvertionUtils.toBase64String(PUBLIC_KEY.getBytes()),
-                                                           "5.0",
-                                                           calendar.getTime());
-
-        return new RawSignedModel(ConvertionUtils.captureSnapshot(rawCardContent));
-    }
-
     public RawSignedModel generateCardModel() throws CryptoException {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2018);
@@ -238,6 +201,7 @@ public class Mocker extends PropertyManager {
 
         RawSignedModel cardModel =
                 new RawSignedModel(ConvertionUtils.captureSnapshot(rawCardContent));
+
         ModelSigner signer = new ModelSigner(new VirgilCardCrypto());
         signer.selfSign(cardModel, privateKey);
 

@@ -33,25 +33,40 @@
 
 package com.virgilsecurity.sdk.jsonWebToken.accessProviders;
 
+import com.sun.istack.internal.NotNull;
+import com.virgilsecurity.sdk.jsonWebToken.TokenContext;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessToken;
 import com.virgilsecurity.sdk.jsonWebToken.contract.AccessTokenProvider;
 import com.virgilsecurity.sdk.jsonWebToken.Jwt;
+import com.virgilsecurity.sdk.utils.Validator;
 
 public class CallbackJwtProvider implements AccessTokenProvider {
 
     private Jwt jwtToken;
     private GetTokenCallback getTokenCallback;
 
-    @Override public AccessToken getToken(boolean forceReload) {
-        return getVirgilToken(forceReload);
+    public CallbackJwtProvider() {
     }
 
-    public Jwt getVirgilToken(boolean forceReload) {
-        if (forceReload || jwtToken == null || jwtToken.isExpired()) {
+    public CallbackJwtProvider(GetTokenCallback getTokenCallback) {
+        this.getTokenCallback = getTokenCallback;
+    }
+
+    @Override public AccessToken getToken(TokenContext context) {
+        Validator.checkIllegalAgrument(getTokenCallback,
+                                       "CallbackJwtProvider -> set getTokenCallback first");
+
+        if (context.isForceReload() || jwtToken == null || jwtToken.isExpired())
             return jwtToken = new Jwt(getTokenCallback.onGetToken());
-        } else {
+        else
             return jwtToken;
-        }
+    }
+
+    public void setGetTokenCallback(@NotNull GetTokenCallback getTokenCallback) {
+        Validator.checkIllegalAgrument(getTokenCallback,
+                                       "CallbackJwtProvider -> 'getTokenCallback' should not be null");
+
+        this.getTokenCallback = getTokenCallback;
     }
 
     public interface GetTokenCallback {
